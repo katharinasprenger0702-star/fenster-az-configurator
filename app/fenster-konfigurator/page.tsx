@@ -90,156 +90,117 @@ export default function ConfiguratorPage() {
 }
   }
 
-  function set<K extends keyof Config>(key: K, value: Config[K]) { setForm(prev => ({ ...prev, [key]: value })); }
-  const steps = ['Maße','Ausführung','Öffnung & Sicherheit','Glas & Farbe','Montage & Lieferung','Übersicht'];
-  const [step, setStep] = useState(0);
+  function setK<K extends keyof Config>(key: K, value: Config[K]) {
+  setForm((prev) => ({ ...prev, [key]: value })); }
 
-  return (
-    <div className="grid" style={{gap:24}}>
-      <div className="card">
-        <div className="stepper">{steps.map((s,i)=>(<div key={s} className={["step", i===step && "active"].filter(Boolean).join(' ')}>{i+1}. {s}</div>))}</div>
-        {step===0&&(<div className="grid">
-          <div className="row">
-            <div><div className="label">Produkt</div>
-              <select value={form.product} onChange={e=>set('product', e.target.value as any)}><option>Fenster</option><option>Türe</option></select>
-            </div>
-            <div><div className="label">Menge</div>
-              <input className="input" type="number" min={1} max={50} value={form.qty} onChange={e=>set('qty', Number(e.target.value))}/>
-            </div>
-          </div>
-          <div className="row">
-            <div><div className="label">Breite (mm)</div><input className="input" type="number" min={400} max={3000} value={form.width_mm} onChange={e=>set('width_mm', Number(e.target.value))}/></div>
-            <div><div className="label">Höhe (mm)</div><input className="input" type="number" min={400} max={3000} value={form.height_mm} onChange={e=>set('height_mm', Number(e.target.value))}/></div>
-          </div>
-          <div className="small">Zulässig: 400–3000 mm. Mindestflächen: Fenster 0,5 m², Türen 1,5 m².</div>
-        </div>)}
-        {step===1&&(<div className="grid"><div className="row">
-          <div><div className="label">Material</div><select value={form.material} onChange={e=>set('material', e.target.value as any)}><option>PVC</option><option>Aluminium</option><option>Holz</option></select></div>
-          <div><div className="label">Profil</div><select value={form.profile} onChange={e=>set('profile', e.target.value as any)}><option>Standard</option><option>ThermoPlus</option><option>Premium</option></select></div>
-        </div></div>)}
-        {step===2&&(<div className="grid">
-          <div className="row">
-            <div><div className="label">Öffnungsart</div><select value={form.opening} onChange={e=>set('opening', e.target.value as any)}>
-              <option>Festverglasung</option><option>Dreh-Kipp links</option><option>Dreh-Kipp rechts</option><option>Doppelflügelig (Stulp)</option>
-            </select></div>
-            <div><div className="label">Sicherheitsstufe</div><select value={form.security} onChange={e=>set('security', e.target.value as any)}>
-              <option>Basis</option><option>RC1N</option><option>RC2N</option>
-            </select></div>
-          </div>
-          <div className="row">
-            <div><div className="label">Griff</div><select value={form.handle} onChange={e=>set('handle', e.target.value as any)}><option>Standard</option><option>Premium</option></select></div>
-            <label style={{alignSelf:'end'}}><input type="checkbox" checked={form.trickleVent} onChange={e=>set('trickleVent', e.target.checked)}/> Falzlüfter</label>
-          </div>
-        </div>)}
-        {step===3&&(<div className="grid">
-          <div className="row">
-            <div><div className="label">Verglasung</div><select value={form.glazing} onChange={e=>set('glazing', e.target.value as any)}><option>2-fach</option><option>3-fach</option></select></div>
-            <div><div className="label">Farbe</div><select value={form.color} onChange={e=>set('color', e.target.value as any)}><option>Weiß</option><option>RAL</option><option>Holzdekor</option></select></div>
-          </div>
-          <div className="row">
-            <label><input type="checkbox" checked={form.warmEdge} onChange={e=>set('warmEdge', e.target.checked)}/> Warme Kante</label>
-            <label><input type="checkbox" checked={form.soundInsulation} onChange={e=>set('soundInsulation', e.target.checked)}/> Schallschutzglas</label>
-          </div>
-          <div className="row">
-            <label><input type="checkbox" checked={form.safetyGlass} onChange={e=>set('safetyGlass', e.target.checked)}/> Sicherheitsglas (VSG/ESG)</label>
-            <label><input type="checkbox" checked={form.sunProtection} onChange={e=>set('sunProtection', e.target.checked)}/> Sonnenschutzglas</label>
-          </div>
-          <div className="row">
-            <label><input type="checkbox" checked={form.insectScreen} onChange={e=>set('insectScreen', e.target.checked)}/> Insektenschutz</label>
-            <label><input type="checkbox" checked={form.rollerShutter} onChange={e=>set('rollerShutter', e.target.checked)}/> Rollladen</label>
-          </div>
-          <div className="row">
-            <label><input type="checkbox" checked={form.childLock} onChange={e=>set('childLock', e.target.checked)}/> Kindersicherung</label>
-          </div>
-        </div>)}
-        {step===4&&(<div className="grid">
-          <div className="row">
-            <div><div className="label">Montagepaket</div><select value={form.montage} onChange={e=>set('montage', e.target.value as any)}><option>Keine</option><option>Standard</option><option>Premium</option></select></div>
-{/* ==== BEGIN: echter Preis-Lookup aus Preistabellen ==== */}
-{(() => {
-  // Basispreis pro Stück aus den Preistabellen (EUR, Netto)
-  const basePerUnit =
-    lookupPriceEURFrom(
-      fensterPrices,
-      form.width_mm,          // Breite in mm
-      form.height_mm,         // Höhe in mm
-      {
-        // Optional enger filtern, falls du willst:
-        // source_file: 'IGLO 5 - FENSTER DK + DR+DK.xlsx',
-        // sheet: 'DK',
-        // Profil: form.profile,
-        // Öffnung: form.opening,
-        // Material: form.material,
-      }
-    ) ?? 0;
-{step === 4 && (
-  <div className="grid">
-    {(() => {
-      const { DATA, filter } = pickDatasetAndFilter(form);
+/* Schritt-Navigation */
+const steps = [
+  'Maße',
+  'Ausführung & Sicherheit',
+  'Glas & Farbe',
+  'Montage & Lieferung',
+  'Übersicht',
+];
+const [step, setStep] = useState(0);
 
-      const basePerUnit =
-        lookupPriceEURFrom(DATA, form.width_mm, form.height_mm, filter) ?? 0;
+/* Wählt Datensatz & Filter passend zu den Formularwerten */ function pickDatasetAndFilter(form: any) {
+  const DATA = form.product === 'Fenster' ? fensterPrices : balkontuerenPrices;
 
-      const qty = Number(form.qty ?? 1);
-      const netTotal = basePerUnit * qty;
-      const vat = netTotal * 0.19;
-      const grossTotal = netTotal + vat;
+  const filter: Record<string, string> = {};
+  const opening = String(form.opening ?? '').toLowerCase();
 
-      return (
-        <>
-          <h3>Übersicht</h3>
-          <table>
-            <tbody>
-              <tr><th>Produkt</th><td>{form.product}</td></tr>
-              <tr><th>Öffnung</th><td>{form.opening}</td></tr>
-              <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
-              <tr><th>Menge</th><td>{qty}</td></tr>
-              <tr><th>Basispreis / Stück</th><td>{basePerUnit.toFixed(2)} €</td></tr>
-              <tr><th>Netto gesamt</th><td>{netTotal.toFixed(2)} €</td></tr>
-              <tr><th>MwSt (19%)</th><td>{vat.toFixed(2)} €</td></tr>
-              <tr><th>Gesamt (inkl. MwSt.)</th><td className="price">{grossTotal.toFixed(2)} €</td></tr>
-            </tbody>
-          </table>
-        </>
-      );
-    })()}
-  </div>
-)}
-  return (
-    <>
-      <tr>
-        <th>Basispreis / Stk.</th>
-        <td>{basePerUnit.toFixed(2)} €</td>
-      </tr>
-      <tr>
-        <th>Menge</th>
-        <td>{qty}</td>
-      </tr>
-      <tr>
-        <th>Netto gesamt</th>
-        <td>{netTotal.toFixed(2)} €</td>
-      </tr>
-      <tr>
-        <th>MwSt (19%)</th>
-        <td>{vat.toFixed(2)} €</td>
-      </tr>
-      <tr>
-        <th>Gesamt (inkl. MwSt.)</th>
-        <td className="price">{grossTotal.toFixed(2)} €</td>
-      </tr>
-    </>
-  );
-})()}
-{/* ==== END: echter Preis-Lookup aus Preistabellen ==== */}
+  if (opening.includes('fest')) filter.source_file = 'FEST';
+  else if (opening.includes('dreh-kipp')) filter.source_file = 'DREH KIPP';
+  else if (opening.includes('dreh')) filter.source_file = 'DREH';
 
-          <button className="btn" onClick={()=>setStep(s=>Math.max(0,s-1))} disabled={step===0}>Zurück</button>
-          <div style={{display:'flex', gap:12}}>
-            <div className="badge">Gesamt: {breakdown.totalGross.toFixed(2)} €</div>
-            {step<5?(<button className="btn" onClick={()=>setStep(s=>Math.min(5,s+1))} disabled={!valid}>Weiter</button>):(<button className="btn" onClick={checkout} disabled={!valid}>Zur Kasse</button>)}
+  if (opening.includes('stulp'))
+    filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'STULP';
+  if (opening.includes('pfosten'))
+    filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'PFOSTEN';
+
+  return { DATA, filter };
+}
+
+return (
+  <div className="grid" style={{ gap: 24 }}>
+    <div className="card">
+      {/* Stepper */}
+      <div className="stepper">
+        {steps.map((s, i) => (
+          <div
+            key={s}
+            className={['step', i === step && 'active'].filter(Boolean).join(' ')}
+          >
+            {s}
           </div>
-        </div>
-        {!valid && <div className="small">Bitte prüfen Sie die Eingaben (Maße 400–3000 mm, Menge 1–50).</div>}
+        ))}
       </div>
+
+      {/* === STEP 0: Maße === */}
+      {step === 0 && (
+        <div className="grid">
+          {/* ... dein bestehendes Formular für Maße bleibt hier ... */}
+        </div>
+      )}
+
+      {/* === STEP 1: Ausführung & Sicherheit === */}
+      {step === 1 && (
+        <div className="grid">
+          {/* ... dein bestehendes Formular für Ausführung & Sicherheit ... */}
+        </div>
+      )}
+
+      {/* === STEP 2: Glas & Farbe === */}
+      {step === 2 && (
+        <div className="grid">
+          {/* ... dein bestehendes Formular für Glas & Farbe ... */}
+        </div>
+      )}
+
+      {/* === STEP 3: Montage & Lieferung === */}
+      {step === 3 && (
+        <div className="grid">
+          {/* ... dein bestehendes Formular für Montage & Lieferung ... */}
+        </div>
+      )}
+
+      {/* === STEP 4: Übersicht & Preis === */}
+      {step === 4 && (
+        <div className="grid">
+          {(() => {
+            const { DATA, filter } = pickDatasetAndFilter(form);
+
+            // Basispreis pro Stück (EUR, Netto) aus den Preistabellen
+            const basePerUnit =
+              lookupPriceEURFrom(DATA, form.width_mm, form.height_mm, filter) ?? 0;
+
+            const qty = Number(form.qty ?? 1);
+            const netTotal = basePerUnit * qty;
+            const vat = netTotal * 0.19;
+            const grossTotal = netTotal + vat;
+
+            return (
+              <>
+                <h3>Übersicht</h3>
+                <table>
+                  <tbody>
+                    <tr><th>Produkt</th><td>{form.product}</td></tr>
+                    <tr><th>Öffnung</th><td>{form.opening}</td></tr>
+                    <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
+                    <tr><th>Menge</th><td>{qty}</td></tr>
+                    <tr><th>Basispreis / Stück</th><td>{basePerUnit.toFixed(2)} €</td></tr>
+                    <tr><th>Netto gesamt</th><td>{netTotal.toFixed(2)} €</td></tr>
+                    <tr><th>MwSt (19%)</th><td>{vat.toFixed(2)} €</td></tr>
+                    <tr><th>Gesamt (inkl. MwSt.)</th><td className="price">{grossTotal.toFixed(2)} €</td></tr>
+                  </tbody>
+                </table>
+              </>
+            );
+          })()}
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
+/* <— Wichtig: Danach kommt nichts mehr, nächste Zeile schließt die Komponente: */ 
 }
