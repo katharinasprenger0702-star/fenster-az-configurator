@@ -13,7 +13,7 @@ export default function Home() {
         </p>
 
         <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
-          <Link className="btn" href="/configurator">Jetzt konfigurieren</Link>
+          <Link className="btn" href="/fenster-konfigurator">Jetzt konfigurieren</Link>
           <a className="btn btn-secondary" href="#vorteile">Unsere Vorteile</a>
         </div>
 
@@ -31,12 +31,12 @@ export default function Home() {
           <div className="tile">
             <h3>Fenster</h3>
             <p>Wärmedämmung, Schallschutz und Sicherheit – individuell nach Maß.</p>
-            <Link className="btn btn-outline" href="/configurator">Fenster konfigurieren</Link>
+            <Link className="btn btn-outline" href="/fenster-konfigurator">Fenster konfigurieren</Link>
           </div>
           <div className="tile">
             <h3>Haustüren</h3>
             <p>Starkes Design, hohe Sicherheit und Top-Energieeffizienz.</p>
-            <Link className="btn btn-outline" href="/configurator">Türen konfigurieren</Link>
+            <Link className="btn btn-outline" href="/fenster-konfigurator">Türen konfigurieren</Link>
           </div>
           <div className="tile">
             <h3>Service</h3>
@@ -60,7 +60,7 @@ export default function Home() {
       {/* CTA unten */}
       <section className="card" style={{ textAlign: "center" }}>
         <h2>Starten Sie jetzt mit Ihrer Konfiguration</h2>
-        <Link className="btn" href="/configurator">Jetzt konfigurieren</Link>
+        <Link className="btn" href="/fenster-konfigurator">Jetzt konfigurieren</Link>
         <p className="small">Unverbindlich & kostenlos – Angebot mit nur wenigen Klicks.</p>
       </section>
     </div>
