@@ -1,15 +1,19 @@
 
 'use client';
-export { default as fensterPrices } from "./groups/fenster.data"; 
-export { default as balkontuerenPrices } from "./groups/balkontueren.data"; 
-export { default as schiebetuerenPrices } from "./groups/schiebetueren.data"; 
-export { default as haustuerenPrices } from "./groups/haustueren.data";
-// +++ NEU: Preisdaten & Lookup +++
-import { lookupPriceEURFrom } from '@/lookup'; 
-import fensterPrices from '@/groups/fenster.data'; 
-import balkontuerenPrices from '@/groups/balkontueren.data';
+import { useMemo, useState } from 'react'; 
+import { z } from 'zod'; 
+import getStripe from '@/lib/stripeClient'; 
+import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
 
-const schema = z.object({
+// Preis-Daten (RELATIVE Pfade, 2 Ebenen hoch) 
+import fensterPrices from '../../groups/fenster.data'; 
+import balkontuerenPrices from '../../groups/balkontueren.data'; 
+import schiebetuerenPrices from '../../groups/schiebetueren.data';
+import haustuerenPrices from '../../groups/haustueren.data'; 
+import sonstigesPrices from '../../groups/sonstiges.data';
+// Lookup-Helfer
+import { lookupPriceEURFrom } from '@/lookup';
+
   product: z.enum(['Fenster', 'Türe']).default('Fenster'),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
