@@ -14,6 +14,7 @@ import sonstigesPrices from '../../groups/sonstiges.data';
 // Lookup-Helfer
 import { lookupPriceEURFrom } from '@/lookup';
 
+const schema = z.object({
   product: z.enum(['Fenster', 'Türe']).default('Fenster'),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -23,7 +24,7 @@ import { lookupPriceEURFrom } from '@/lookup';
   glazing: z.enum(['2-fach', '3-fach']).default('2-fach'),
   color: z.enum(['Weiß', 'RAL', 'Holzdekor']).default('Weiß'),
   handle: z.enum(['Standard', 'Premium']).default('Standard'),
-  security: z.enum(['Basis','RC1N','RC2N']).default('Basis'),
+  security: z.enum(['Basis', 'RC1N', 'RC2N']).default('Basis'),
   warmEdge: z.boolean().default(false),
   soundInsulation: z.boolean().default(false),
   safetyGlass: z.boolean().default(false),
@@ -31,11 +32,9 @@ import { lookupPriceEURFrom } from '@/lookup';
   trickleVent: z.boolean().default(false),
   insectScreen: z.boolean().default(false),
   rollerShutter: z.boolean().default(false),
-  childLock: z.boolean().default(false),
-  montage: z.enum(['Keine','Standard','Premium']).default('Keine'),
   oldWindowDisposal: z.boolean().default(false),
   delivery: z.enum(['Abholung','Hamburg (Zone 1)','Zone 2']).default('Abholung'),
-  qty: z.coerce.number().int().min(1).max(50).default(1)
+  qty: z.coerce.number().int().min(1).max(50).default(1),
 });
 
 export default function ConfiguratorPage() {
