@@ -4,6 +4,9 @@ import { useMemo, useState } from 'react';
 import { z } from 'zod';
 import getStripe from '@/lib/stripeClient';
 import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
+// +++ NEU: Preisdaten & Lookup +++
+import lookupPriceEURFrom from '@/lookup'; 
+import fensterPrices from '@/groups/fenster.data';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Türe']).default('Fenster'),
@@ -134,27 +137,56 @@ export default function ConfiguratorPage() {
         {step===4&&(<div className="grid">
           <div className="row">
             <div><div className="label">Montagepaket</div><select value={form.montage} onChange={e=>set('montage', e.target.value as any)}><option>Keine</option><option>Standard</option><option>Premium</option></select></div>
-            <label style={{alignSelf:'end'}}><input type="checkbox" checked={form.oldWindowDisposal} onChange={e=>set('oldWindowDisposal', e.target.checked)}/> Altfenster-Entsorgung (+25 € wenn Montage = Keine)</label>
-          </div>
-          <div><div className="label">Lieferung</div><select value={form.delivery} onChange={e=>set('delivery', e.target.value as any)}>
-            <option>Abholung</option><option>Hamburg (Zone 1)</option><option>Zone 2</option>
-          </select></div>
-        </div>)}
-        {step===5&&(<div className="grid"><div className="summary"><table><tbody>
-          <tr><th>Konfiguration</th><td>{configToLabel(form)}</td></tr>
-          <tr><th>Fläche (Kalkulation)</th><td>{breakdown.baseAreaM2.toFixed(2)} m²</td></tr>
-          <tr><th>Basispreis</th><td>{breakdown.basePrice.toFixed(2)} €</td></tr>
-          <tr><th>Faktoren</th><td>Öffnung ×{breakdown.openingFactor.toFixed(2)}, Verglasung ×{breakdown.glazingFactor.toFixed(2)}, Farbe ×{breakdown.colorFactor.toFixed(2)}, Sicherheit ×{breakdown.securityFactor.toFixed(2)}</td></tr>
-          {breakdown.perAreaAddons.map((o,i)=>(<tr key={'pa'+i}><th>{o.label}</th><td>{o.amount.toFixed(2)} €</td></tr>))}
-          {breakdown.perUnitAddons.map((o,i)=>(<tr key={'pu'+i}><th>{o.label}</th><td>{o.amount.toFixed(2)} €</td></tr>))}
-          <tr><th>Lieferung (anteilig)</th><td>{breakdown.deliveryPerUnit.toFixed(2)} €</td></tr>
-          <tr><th>Nettopreis / Stk.</th><td>{breakdown.netPerUnit.toFixed(2)} €</td></tr>
-          <tr><th>MwSt (19%) / Stk.</th><td>{breakdown.vatPerUnit.toFixed(2)} €</td></tr>
-          <tr><th>Brutto / Stk.</th><td>{breakdown.grossPerUnit.toFixed(2)} €</td></tr>
-          <tr><th>Gesamt (inkl. MwSt.)</th><td className="price">{breakdown.totalGross.toFixed(2)} €</td></tr>
-        </tbody></table></div><div className="small">Preise sind Demo-Werte. Echte Regeln pflegen wir nach eurer Preisliste ein.</div></div>)}
-        <hr/>
-        <div style={{display:'flex', gap:12, justifyContent:'space-between'}}>
+{/* ==== BEGIN: echter Preis-Lookup aus Preistabellen ==== */}
+{(() => {
+  // Basispreis pro Stück aus den Preistabellen (EUR, Netto)
+  const basePerUnit =
+    lookupPriceEURFrom(
+      fensterPrices,
+      form.width_mm,          // Breite in mm
+      form.height_mm,         // Höhe in mm
+      {
+        // Optional enger filtern, falls du willst:
+        // source_file: 'IGLO 5 - FENSTER DK + DR+DK.xlsx',
+        // sheet: 'DK',
+        // Profil: form.profile,
+        // Öffnung: form.opening,
+        // Material: form.material,
+      }
+    ) ?? 0;
+
+  const qty = Number(form.qty ?? 1);
+  const netTotal = basePerUnit * qty;       // Netto gesamt (ohne Montage/Extras)
+  const vat = netTotal * 0.19;              // 19 % MwSt
+  const grossTotal = netTotal + vat;        // Brutto gesamt
+
+  return (
+    <>
+      <tr>
+        <th>Basispreis / Stk.</th>
+        <td>{basePerUnit.toFixed(2)} €</td>
+      </tr>
+      <tr>
+        <th>Menge</th>
+        <td>{qty}</td>
+      </tr>
+      <tr>
+        <th>Netto gesamt</th>
+        <td>{netTotal.toFixed(2)} €</td>
+      </tr>
+      <tr>
+        <th>MwSt (19%)</th>
+        <td>{vat.toFixed(2)} €</td>
+      </tr>
+      <tr>
+        <th>Gesamt (inkl. MwSt.)</th>
+        <td className="price">{grossTotal.toFixed(2)} €</td>
+      </tr>
+    </>
+  );
+})()}
+{/* ==== END: echter Preis-Lookup aus Preistabellen ==== */}
+
           <button className="btn" onClick={()=>setStep(s=>Math.max(0,s-1))} disabled={step===0}>Zurück</button>
           <div style={{display:'flex', gap:12}}>
             <div className="badge">Gesamt: {breakdown.totalGross.toFixed(2)} €</div>
