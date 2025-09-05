@@ -1,9 +1,9 @@
 
 'use client';
-import { useMemo, useState } from 'react';
-import { z } from 'zod';
-import getStripe from '@/lib/stripeClient';
-import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
+export { default as fensterPrices } from "./groups/fenster.data"; 
+export { default as balkontuerenPrices } from "./groups/balkontueren.data"; 
+export { default as schiebetuerenPrices } from "./groups/schiebetueren.data"; 
+export { default as haustuerenPrices } from "./groups/haustueren.data";
 // +++ NEU: Preisdaten & Lookup +++
 import { lookupPriceEURFrom } from '@/lookup'; 
 import fensterPrices from '@/groups/fenster.data'; 
