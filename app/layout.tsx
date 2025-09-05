@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </div>
           <nav>
             <Link href="/" style={{marginRight:12}}>Start</Link>
-            <Link href="/configurator" style={{marginRight:12}}>Konfigurator</Link>
+            <Link href="/fenster-konfigurator" style={{marginRight:12}}>Konfigurator</Link>
             <Link href="/impressum">Impressum</Link>
           </nav>
         </header>
