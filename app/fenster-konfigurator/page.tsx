@@ -5,13 +5,8 @@ import getStripe from '@/lib/stripeClient';
 import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
 // Preis-Daten jetzt über index.ts (saubere zentrale Sammelstelle) 
 import {
-  fensterPrices,
-  balkontuerenPrices,
-  schiebetuerenPrices,
-  haustuerenPrices,
-  sonstigesPrices
+  fensterPrices, balkontuerenPrices, schiebetuerenPrices, haustuerenPrices, sonstigesPrices
 } from '@/index';
-// Lookup-Helper
 import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
@@ -57,18 +52,34 @@ export default function ConfiguratorPage() {
     const name = configToLabel(form);
     const successUrl = `${window.location.origin}/success`;
     const cancelUrl = `${window.location.origin}/cancel`;
-    const payload = {
-      lineItems: [{
-        quantity: form.qty,
-        price_data: {
-          currency: 'eur',
-          unit_amount: Math.round(breakdown.grossPerUnit * 100),
-          product_data: { name, description: 'Individuelle Konfiguration (inkl. MwSt.)' }
-        }
-      }],
-      successUrl, cancelUrl,
-      metadata: { config: JSON.stringify(form), label: name }
-    };
+    const cancelUrl = `${window.location.origin}/cancel`;
+    
+// Gesamtpreis (brutto) aus Lookup für Stripe berechnen 
+const totalForCheckout = (() => {
+  const { DATA, filter } = pickDatasetAndFilter(form);
+  const basePerUnit = lookupPriceEURFrom(DATA, form.width_mm, form.height_mm, filter) ?? 0;
+  const qty = Number(form.qty ?? 1);
+  const vat = 0.19;
+  return (basePerUnit * qty) * (1 + vat);
+})();
+
+const payload = {
+  lineItems: [{
+    quantity: form.qty,
+    price_data: {
+      currency: 'eur',
+      unit_amount: Math.round(totalForCheckout * 100), 
+      product_data: { 
+        name, 
+        description: 'Individuelle Konfiguration (inkl. MwSt.)'
+      }
+    },
+  }],
+  successUrl, 
+  cancelUrl,
+  metadata: { config: JSON.stringify(form), label: name } 
+};
+
     const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     const data = await res.json();
     if (data?.url) window.location.href = data.url;
