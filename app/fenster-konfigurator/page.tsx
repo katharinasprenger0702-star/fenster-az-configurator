@@ -149,33 +149,273 @@ return (
         ))}
       </div>
 
-      {/* === STEP 0: Maße === */}
-      {step === 0 && (
-        <div className="grid">
-          {/* ... dein bestehendes Formular für Maße bleibt hier ... */}
-        </div>
-      )}
+     {/* === STEP 0: Maße === */}
+{step === 0 && (
+  <div className="grid">
+    <div className="row">
+      <div className="label">Breite (mm)</div>
+      <input
+        type="number"
+        value={form.width_mm}
+        min={400}
+        max={3000}
+        onChange={e => setForm(prev => ({ ...prev, width_mm: Number(e.target.value) }))}
+      />
+    </div>
+    <div className="row">
+      <div className="label">Höhe (mm)</div>
+      <input
+        type="number"
+        value={form.height_mm}
+        min={400}
+        max={3000}
+        onChange={e => setForm(prev => ({ ...prev, height_mm: Number(e.target.value) }))}
+      />
+    </div>
+    <div className="row">
+      <div className="label">Öffnungsart</div>
+      <select
+        value={form.opening}
+        onChange={e => setForm(prev => ({ ...prev, opening: e.target.value as any }))}
+      >
+        <option>Dreh-Kipp links</option>
+        <option>Dreh-Kipp rechts</option>
+        <option>Doppelflügelig (Stulp)</option>
+        <option>Festverglasung</option>
+        <option>Dreh</option>
+        <option>Kipp</option>
+      </select>
+    </div>
+    <div className="row">
+      <div className="label">Menge</div>
+      <input
+        type="number"
+        value={form.qty}
+        min={1}
+        max={50}
+        onChange={e => setForm(prev => ({ ...prev, qty: Number(e.target.value) }))}
+      />
+    </div>
+    <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 12 }}>
+      <button className="btn" onClick={() => setStep(4)}>Zur Übersicht & Preis</button>
+    </div>
+  </div>
+)}
 
-      {/* === STEP 1: Ausführung & Sicherheit === */}
-      {step === 1 && (
-        <div className="grid">
-          {/* ... dein bestehendes Formular für Ausführung & Sicherheit ... */}
-        </div>
-      )}
+     {/* === STEP 1: Ausführung & Sicherheit === */} 
+{step === 1 && (
+  <div className="grid">
+    {/* Material */}
+    <div className="row">
+      <div className="label">Material</div>
+      <select
+        value={form.material}
+        onChange={e => setForm(p => ({ ...p, material: e.target.value as any }))}
+      >
+        <option value="PVC">PVC</option>
+        <option value="Aluminium">Aluminium</option>
+        <option value="Holz">Holz</option>
+      </select>
+    </div>
+    {/* Profil */}
+    <div className="row">
+      <div className="label">Profil</div>
+      <select
+        value={form.profile}
+        onChange={e => setForm(p => ({ ...p, profile: e.target.value as any }))}
+      >
+        <option value="Standard">Standard</option>
+        <option value="ThermoPlus">ThermoPlus</option>
+        <option value="Premium">Premium</option>
+      </select>
+    </div>
+    {/* Sicherheit */}
+    <div className="row">
+      <div className="label">Sicherheitsstufe</div>
+      <select
+        value={form.security}
+        onChange={e => setForm(p => ({ ...p, security: e.target.value as any }))}
+      >
+        <option value="Basis">Basis</option>
+        <option value="RC1N">RC1N</option>
+        <option value="RC2N">RC2N</option>
+      </select>
+    </div>
+    {/* Griff */}
+    <div className="row">
+      <div className="label">Griff</div>
+      <select
+        value={form.handle}
+        onChange={e => setForm(p => ({ ...p, handle: e.target.value as any }))}
+      >
+        <option value="Standard">Standard</option>
+        <option value="Premium">Premium</option>
+      </select>
+    </div>
+    {/* Zusatzoptionen (Checkboxen) */}
+    <div className="row">
+      <div className="label">Warme Kante</div>
+      <input
+        type="checkbox"
+        checked={form.warmEdge}
+        onChange={e => setForm(p => ({ ...p, warmEdge: e.target.checked }))}
+      />
+    </div>
+    <div className="row">
+      <div className="label">Schallschutz</div>
+      <input
+        type="checkbox"
+        checked={form.soundInsulation}
+        onChange={e => setForm(p => ({ ...p, soundInsulation: e.target.checked }))}
+      />
+    </div>
+    <div className="row">
+      <div className="label">Sicherheitsglas</div>
+      <input
+        type="checkbox"
+        checked={form.safetyGlass}
+        onChange={e => setForm(p => ({ ...p, safetyGlass: e.target.checked }))}
+      />
+    </div>
+    <div className="row">
+      <div className="label">Sonnenschutz</div>
+      <input
+        type="checkbox"
+        checked={form.sunProtection}
+        onChange={e => setForm(p => ({ ...p, sunProtection: e.target.checked }))}
+      />
+    </div>
+    <div className="row">
+      <div className="label">Lüftungsschlitz (Trickle Vent)</div>
+      <input
+        type="checkbox"
+        checked={form.trickleVent}
+        onChange={e => setForm(p => ({ ...p, trickleVent: e.target.checked }))}
+      />
+    </div>
+    <div className="row">
+      <div className="label">Insektenschutz</div>
+      <input
+        type="checkbox"
+        checked={form.insectScreen}
+        onChange={e => setForm(p => ({ ...p, insectScreen: e.target.checked }))}
+      />
+    </div>
+    <div className="row">
+      <div className="label">Rollladen</div>
+      <input
+        type="checkbox"
+        checked={form.rollerShutter}
+        onChange={e => setForm(p => ({ ...p, rollerShutter: e.target.checked }))}
+      />
+    </div>
+    <div className="row">
+      <div className="label">Kindersicherung</div>
+      <input
+        type="checkbox"
+        checked={form.childLock}
+        onChange={e => setForm(p => ({ ...p, childLock: e.target.checked }))}
+      />
+    </div>
+    {/* Navigation */}
+    <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
+      <button className="btn" onClick={() => setStep(0)}>Zurück</button>
+      <button className="btn" onClick={() => setStep(2)}>Weiter</button>
+    </div>
+  </div>
+)}
 
       {/* === STEP 2: Glas & Farbe === */}
-      {step === 2 && (
-        <div className="grid">
-          {/* ... dein bestehendes Formular für Glas & Farbe ... */}
-        </div>
-      )}
+{step === 2 && (
+  <div className="grid">
+    {/* Verglasung */}
+    <div className="row">
+      <div className="label">Verglasung</div>
+      <select
+        value={form.glazing}
+        onChange={e => setForm(p => ({ ...p, glazing: e.target.value as any }))}
+      >
+        <option value="2-fach">2-fach</option>
+        <option value="3-fach">3-fach</option>
+      </select>
+    </div>
+    {/* Farbe */}
+    <div className="row">
+      <div className="label">Farbe</div>
+      <select
+        value={form.color}
+        onChange={e => setForm(p => ({ ...p, color: e.target.value as any }))}
+      >
+        <option value="Weiß">Weiß</option>
+        <option value="RAL">RAL</option>
+        <option value="Holzdekor">Holzdekor</option>
+      </select>
+    </div>
+    {/* Navigation */}
+    <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
+      <button className="btn" onClick={() => setStep(1)}>Zurück</button>
+      <button className="btn" onClick={() => setStep(3)}>Weiter</button>
+    </div>
+  </div>
+)}
 
-      {/* === STEP 3: Montage & Lieferung === */}
-      {step === 3 && (
-        <div className="grid">
-          {/* ... dein bestehendes Formular für Montage & Lieferung ... */}
-        </div>
-      )}
+      {/* === STEP 3: Montage & Lieferung === */} 
+{step === 3 && (
+  <div className="grid">
+    {/* Montagepaket */}
+    <div className="row">
+      <div className="label">Montagepaket</div>
+      <select
+        value={form.montage}
+        onChange={e => setForm(p => ({ ...p, montage: e.target.value as any }))}
+      >
+        <option value="Keine">Keine</option>
+        <option value="Standard">Standard</option>
+        <option value="Premium">Premium</option>
+      </select>
+    </div>
+    {/* Lieferung */}
+    <div className="row">
+      <div className="label">Lieferung</div>
+      <select
+        value={form.delivery}
+        onChange={e => setForm(p => ({ ...p, delivery: e.target.value as any }))}
+      >
+        <option value="Abholung">Abholung</option>
+        <option value="Hamburg (Zone 1)">Hamburg (Zone 1)</option>
+        <option value="Zone 2">Zone 2</option>
+      </select>
+    </div>
+    {/* Altfenster-Entsorgung */}
+    <div className="row">
+      <div className="label">Altfenster-Entsorgung</div>
+      <label style={{ alignSelf: 'center' }}>
+        <input
+          type="checkbox"
+          checked={form.oldWindowDisposal}
+          onChange={e => setForm(p => ({ ...p, oldWindowDisposal: e.target.checked }))}
+        />{' '}
+        Altfenster entsorgen (+25 € wenn Montage gewählt)
+      </label>
+    </div>
+    { /* (optional) Menge – wenn du sie nicht im Überblick möchtest */}
+    <div className="row">
+      <div className="label">Menge</div>
+      <input
+        type="number"
+        min={1}
+        max={50}
+        value={form.qty}
+        onChange={e => setForm(p => ({ ...p, qty: Number(e.target.value || 1) }))}
+      />
+    </div>
+    {/* Navigation */}
+    <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
+      <button className="btn" onClick={() => setStep(2)}>Zurück</button>
+      <button className="btn" onClick={() => setStep(4)}>Weiter</button>
+    </div>
+  </div>
+)}
 
       {/* === STEP 4: Übersicht & Preis === */}
       {step === 4 && (
