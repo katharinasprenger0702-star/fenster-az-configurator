@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   if (!sk) {
     return NextResponse.json({ error: 'STRIPE_SECRET_KEY fehlt' }, { status: 500 });
   }
-  const stripe = new Stripe(sk, { apiVersion: '2024-06-20' });
+  const stripe = new Stripe(sk, { apiVersion: '2022-11-15' });
 
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
