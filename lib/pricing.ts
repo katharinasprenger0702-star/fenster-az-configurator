@@ -90,15 +90,13 @@ const HANDLE_SURCHARGE = {
   'Premium': 15,
 };
 
-// Add-ons per m² (apply to computed area)
 const PER_AREA_ADDONS = {
-  warmEdge: 12,          // €/m²
-  soundInsulation: 40,   // €/m²
-  safetyGlass: 55,       // €/m²
-  sunProtection: 45      // €/m²
+  warmEdge: 12,
+  soundInsulation: 40,
+  safetyGlass: 55,
+  sunProtection: 45
 };
 
-// Per unit surcharges
 const PER_UNIT_ADDONS = {
   trickleVent: 35,
   insectScreen: 59,
@@ -106,14 +104,12 @@ const PER_UNIT_ADDONS = {
   childLock: 12
 };
 
-// Montage packages (per unit)
 const MONTAGE_PER_UNIT: Record<Montage, number> = {
   'Keine': 0,
   'Standard': 139,
   'Premium': 219
 };
 
-// Delivery per order
 const DELIVERY_PER_ORDER: Record<Lieferzone, number> = {
   'Abholung': 0,
   'Hamburg (Zone 1)': 49,
@@ -139,34 +135,25 @@ export function calculatePrice(c: Config): PriceBreakdown {
   const securityFactor = SECURITY_FACTORS[c.security] ?? 1;
   const handle = HANDLE_SURCHARGE[c.handle];
 
-  // base
   const base = area * basePerM2 * openingFactor;
-  // multiplicative factors
-  const factorTotal = glazingFactor * colorFactor * securityFactor;
-  const factored = base * factorTotal;
+  const factored = base * glazingFactor * colorFactor * securityFactor;
 
-  // per-area add-ons
   const perArea: { label: string; amount: number }[] = [];
   if (c.warmEdge) perArea.push({ label: 'Warme Kante', amount: PER_AREA_ADDONS.warmEdge * area });
   if (c.soundInsulation) perArea.push({ label: 'Schallschutzglas', amount: PER_AREA_ADDONS.soundInsulation * area });
   if (c.safetyGlass) perArea.push({ label: 'Sicherheitsglas (VSG/ESG)', amount: PER_AREA_ADDONS.safetyGlass * area });
   if (c.sunProtection) perArea.push({ label: 'Sonnenschutzglas', amount: PER_AREA_ADDONS.sunProtection * area });
 
-  // per-unit add-ons
   const perUnit: { label: string; amount: number }[] = [];
   if (c.trickleVent) perUnit.push({ label: 'Falzlüfter', amount: PER_UNIT_ADDONS.trickleVent });
   if (c.insectScreen) perUnit.push({ label: 'Insektenschutz', amount: PER_UNIT_ADDONS.insectScreen });
   if (c.rollerShutter) perUnit.push({ label: 'Rollladen', amount: PER_UNIT_ADDONS.rollerShutter });
   if (c.childLock) perUnit.push({ label: 'Kindersicherung', amount: PER_UNIT_ADDONS.childLock });
 
-  // montage
   const montage = MONTAGE_PER_UNIT[c.montage] + (c.oldWindowDisposal && c.montage == 'Keine' ? 25 : 0);
-
-  // delivery apportion per unit
   const deliveryTotal = DELIVERY_PER_ORDER[c.delivery];
   const deliveryPerUnit = c.qty > 0 ? deliveryTotal / c.qty : 0;
 
-  // net calculation (per unit)
   let netPerUnit = factored + handle + montage + perUnit.reduce((s,o)=>s+o.amount,0) + perArea.reduce((s,o)=>s+o.amount,0) + deliveryPerUnit;
   netPerUnit = Math.round(netPerUnit * 100) / 100;
   const vatPerUnit = Math.round(netPerUnit * 0.19 * 100) / 100;
