@@ -79,13 +79,20 @@ const payload = {
   metadata: { config: JSON.stringify(form), label: name } 
 };
 
-    const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    const data = await res.json();
-    if (data?.url) window.location.href = data.url;
-    else if (data?.id) await stripe.redirectToCheckout({ sessionId: data.id });
-    else alert('Checkout fehlgeschlagen.');
-    function pickDatasetAndFilter(form: any) {
-  const DATA = form.product === 'Fenster' ? fensterPrices : balkontuerenPrices;
+   const res = await fetch('/api/price', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    width_mm: form.width_mm,
+    height_mm: form.height_mm,
+    opening: form.opening,
+    // später kannst du hier weitere Kriterien anhängen
+  }),
+});
+const data = await res.json();
+
+// Netto-EUR-Preis aus der API
+const eurNet = data?.price?.eur_net ?? 0;
 
   const filter: Record<string, string> = {};
   const opening = String(form.opening ?? '').toLowerCase();
