@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, useState } from 'react'; 
+import { useMemo, useState, useEffect } from 'react'; 
 import { z } from 'zod'; 
 import getStripe from '@/lib/stripeClient'; 
 import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
@@ -45,6 +45,37 @@ export default function ConfiguratorPage() {
   const parsed = schema.safeParse(form);
   const valid = parsed.success;
   const breakdown = useMemo(() => calculatePrice(form), [form]);
+// --- Preis aus /api/price laden (Excel-Tabellen) --- 
+const [price, setPrice] = useState<{ net: number; gross: number }>({ net: 0, gross: 0 });
+useEffect(() => {
+ // Datensatz + Filter aus den Formularwerten ableiten  
+const { DATA, filter } = pickDatasetAndFilter(form);
+ (async () => {
+   try {
+     const res = await fetch('/api/price', {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({
+         width_mm: form.width_mm,
+         height_mm: form.height_mm,
+         opening: form.opening,
+         qty: form.qty,
+         product: form.product,
+         filter,      // z. B. source_file: 'DREH KIPP', 'STULP', 'PFOSTEN', …
+         DATA,        // verweist auf die richtige Preisgruppe (Fenster/Balkontüren …)
+       }),
+     });
+     const data = await res.json();
+     if (data?.price) {
+       setPrice({ net: Number(data.price.eur_net || 0), gross: Number(data.price.eur_gross || 0) });
+     } else {
+       setPrice({ net: 0, gross: 0 });
+     }
+   } catch {
+     setPrice({ net: 0, gross: 0 });
+   }
+ })();
+}, [form]); // bei jeder Form-Änderung neu laden
 
   async function checkout() {
     if (!valid) return;
@@ -424,43 +455,21 @@ return (
   </div>
 )}
 
-      {/* === STEP 4: Übersicht & Preis === */}
-      {step === 4 && (
-        <div className="grid">
-          {(() => {
-            const { DATA, filter } = pickDatasetAndFilter(form);
-
-            // Basispreis pro Stück (EUR, Netto) aus den Preistabellen
-            const basePerUnit =
-              lookupPriceEURFrom(DATA, form.width_mm, form.height_mm, filter) ?? 0;
-
-            const qty = Number(form.qty ?? 1);
-            const netTotal = basePerUnit * qty;
-            const vat = netTotal * 0.19;
-            const grossTotal = netTotal + vat;
-
-            return (
-              <>
-                <h3>Übersicht</h3>
-                <table>
-                  <tbody>
-                    <tr><th>Produkt</th><td>{form.product}</td></tr>
-                    <tr><th>Öffnung</th><td>{form.opening}</td></tr>
-                    <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
-                    <tr><th>Menge</th><td>{qty}</td></tr>
-                    <tr><th>Basispreis / Stück</th><td>{basePerUnit.toFixed(2)} €</td></tr>
-                    <tr><th>Netto gesamt</th><td>{netTotal.toFixed(2)} €</td></tr>
-                    <tr><th>MwSt (19%)</th><td>{vat.toFixed(2)} €</td></tr>
-                    <tr><th>Gesamt (inkl. MwSt.)</th><td className="price">{grossTotal.toFixed(2)} €</td></tr>
-                  </tbody>
-                </table>
-              </>
-            );
-          })()}
-        </div>
-      )}
-    </div>
+    {/* === STEP 4: Übersicht & Preis === */} 
+{step === 4 && (
+  <div className="grid">
+    {/* Übersichtstabelle mit Preisen aus /api/price */}
+    <h3>Übersicht</h3>
+    <table>
+      <tbody>
+        <tr><th>Produkt</th><td>{form.product}</td></tr>
+        <tr><th>Öffnung</th><td>{form.opening}</td></tr>
+        <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
+        <tr><th>Menge</th><td>{form.qty}</td></tr>
+        {/* Netto + Brutto aus API */}
+        <tr><th>Netto gesamt</th><td>{price.net.toFixed(2)} €</td></tr>
+        <tr><th>Gesamt (inkl. MwSt.)</th><td className="price">{price.gross.toFixed(2)} €</td></tr>
+      </tbody>
+    </table>
   </div>
-);
-/* <— Wichtig: Danach kommt nichts mehr, nächste Zeile schließt die Komponente: */ 
-}
+)}
