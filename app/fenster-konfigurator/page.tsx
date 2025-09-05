@@ -52,7 +52,6 @@ export default function ConfiguratorPage() {
     const name = configToLabel(form);
     const successUrl = `${window.location.origin}/success`;
     const cancelUrl = `${window.location.origin}/cancel`;
-    const cancelUrl = `${window.location.origin}/cancel`;
     
 // Gesamtpreis (brutto) aus Lookup für Stripe berechnen 
 const totalForCheckout = (() => {
