@@ -5,8 +5,9 @@ import { z } from 'zod';
 import getStripe from '@/lib/stripeClient';
 import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
 // +++ NEU: Preisdaten & Lookup +++
-import lookupPriceEURFrom from '@/lookup'; 
-import fensterPrices from '@/groups/fenster.data';
+import { lookupPriceEURFrom } from '@/lookup'; 
+import fensterPrices from '@/groups/fenster.data'; 
+import balkontuerenPrices from '@/groups/balkontueren.data';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Türe']).default('Fenster'),
@@ -70,6 +71,23 @@ export default function ConfiguratorPage() {
     if (data?.url) window.location.href = data.url;
     else if (data?.id) await stripe.redirectToCheckout({ sessionId: data.id });
     else alert('Checkout fehlgeschlagen.');
+    function pickDatasetAndFilter(form: any) {
+  const DATA = form.product === 'Fenster' ? fensterPrices : balkontuerenPrices;
+
+  const filter: Record<string, string> = {};
+  const opening = String(form.opening ?? '').toLowerCase();
+
+  if (opening.includes('fest')) filter.source_file = 'FEST';
+  else if (opening.includes('dreh-kipp')) filter.source_file = 'DREH KIPP';
+  else if (opening.includes('dreh')) filter.source_file = 'DREH';
+
+  if (opening.includes('stulp'))
+    filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'STULP';
+  if (opening.includes('pfosten'))
+    filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'PFOSTEN';
+
+  return { DATA, filter };
+}
   }
 
   function set<K extends keyof Config>(key: K, value: Config[K]) { setForm(prev => ({ ...prev, [key]: value })); }
@@ -154,12 +172,39 @@ export default function ConfiguratorPage() {
         // Material: form.material,
       }
     ) ?? 0;
+{step === 4 && (
+  <div className="grid">
+    {(() => {
+      const { DATA, filter } = pickDatasetAndFilter(form);
 
-  const qty = Number(form.qty ?? 1);
-  const netTotal = basePerUnit * qty;       // Netto gesamt (ohne Montage/Extras)
-  const vat = netTotal * 0.19;              // 19 % MwSt
-  const grossTotal = netTotal + vat;        // Brutto gesamt
+      const basePerUnit =
+        lookupPriceEURFrom(DATA, form.width_mm, form.height_mm, filter) ?? 0;
 
+      const qty = Number(form.qty ?? 1);
+      const netTotal = basePerUnit * qty;
+      const vat = netTotal * 0.19;
+      const grossTotal = netTotal + vat;
+
+      return (
+        <>
+          <h3>Übersicht</h3>
+          <table>
+            <tbody>
+              <tr><th>Produkt</th><td>{form.product}</td></tr>
+              <tr><th>Öffnung</th><td>{form.opening}</td></tr>
+              <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
+              <tr><th>Menge</th><td>{qty}</td></tr>
+              <tr><th>Basispreis / Stück</th><td>{basePerUnit.toFixed(2)} €</td></tr>
+              <tr><th>Netto gesamt</th><td>{netTotal.toFixed(2)} €</td></tr>
+              <tr><th>MwSt (19%)</th><td>{vat.toFixed(2)} €</td></tr>
+              <tr><th>Gesamt (inkl. MwSt.)</th><td className="price">{grossTotal.toFixed(2)} €</td></tr>
+            </tbody>
+          </table>
+        </>
+      );
+    })()}
+  </div>
+)}
   return (
     <>
       <tr>
