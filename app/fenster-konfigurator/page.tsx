@@ -1,17 +1,17 @@
-
 'use client';
 import { useMemo, useState } from 'react'; 
 import { z } from 'zod'; 
 import getStripe from '@/lib/stripeClient'; 
 import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
-
-// Preis-Daten (RELATIVE Pfade, 2 Ebenen hoch) 
-import fensterPrices from '../../groups/fenster.data'; 
-import balkontuerenPrices from '../../groups/balkontueren.data'; 
-import schiebetuerenPrices from '../../groups/schiebetueren.data';
-import haustuerenPrices from '../../groups/haustueren.data'; 
-import sonstigesPrices from '../../groups/sonstiges.data';
-// Lookup-Helfer
+// Preis-Daten jetzt über index.ts (saubere zentrale Sammelstelle) 
+import {
+  fensterPrices,
+  balkontuerenPrices,
+  schiebetuerenPrices,
+  haustuerenPrices,
+  sonstigesPrices
+} from '@/index';
+// Lookup-Helper
 import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
