@@ -100,14 +100,16 @@ const openingKey = keysLC(rows[0]).find(k =>
 ) ?? null;
 if (openingKey) {
   const val = String(criteria.opening ?? '').toLowerCase();
-  candidates = rows.filter(r => String(r.cols[openingKey] ?? '').toLowerCase().includes(val)); 
-} 
-      for (const n of nameVariants) {
-        const key = Object.keys(r.cols).find(k => k.toLowerCase() === n);
-        if (key && r.cols[key] !== null && !isNaN(Number(r.cols[key]))) return Number(r.cols[key]);
-      }
-return null;
+  function getNum(r: PriceRow, names: string[]): number | null {
+  for (const n of names) {
+    const key = Object.keys(r.cols).find(k => k.toLowerCase() === n);
+    if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]!))) {
+      return Number(r.cols[key]);
+    }
+  }
+  return null;
 }
+
 const widthKeys  = ['breite', 'b', 'mm_breite', 'b_mm', 'breite_mm', 'breite (mm)', 'b (mm)', 'b(mm)'];
 const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höhe_mm', 'höhe (mm)', 'h (mm)', 'h(mm)'];
     // Distanzfunktion (kleinste Abweichung)
@@ -150,7 +152,7 @@ const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höh
       base_pln: basePln,      
       eur_buy_net: eurBuyNet,  
       eur_sell_net: eurSellNet, 
-      eur_sell_gross: eurSellGross 
+      eur_sell_gross: eurSellGross, 
     },
   });
 } catch (err: any) {
