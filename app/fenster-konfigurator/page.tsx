@@ -469,12 +469,11 @@ return (
   <div className="grid" style={{ gap: 24 }}>
     {price ? (
       <>
-        {/* ... deine Tabelle/Übersicht ... */}
+        <h3>Übersicht</h3>
+        {/* …hier bleibt deine Tabelle… */}
       </>
     ) : (
-      <div className="card">
-        <p>Preis wird berechnet …</p>
-      </div>
+      <p>Preis wird berechnet …</p>
     )}
   </div>
 )}
