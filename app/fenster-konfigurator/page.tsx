@@ -46,26 +46,33 @@ export default function ConfiguratorPage() {
   const valid = parsed.success;
   const breakdown = useMemo(() => calculatePrice(form), [form]);
 // --- Preis aus /api/price laden (Excel-Tabellen) --- 
-const [price, setPrice] = useState<{ net: number; gross: number }>({ net: 0, gross: 0 });
+const [price, setPrice] = useState<{ unit: number; net: number; gross: number } | null>(null);
+
 useEffect(() => {
- // Datensatz + Filter aus den Formularwerten ableiten  
-const { DATA, filter } = pickDatasetAndFilter(form);
- (async () => {
-   try {
-     const res = await fetch('/api/price', {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({
-         width_mm: form.width_mm,
-         height_mm: form.height_mm,
-         opening: form.opening,
-         qty: form.qty,
-         product: form.product,
-         filter,      // z. B. source_file: 'DREH KIPP', 'STULP', 'PFOSTEN', …
-         DATA,        // verweist auf die richtige Preisgruppe (Fenster/Balkontüren …)
-       }),
-     });
-     const data = await res.json();
+  let active = true;
+  (async () => {
+    const res = await fetch('/api/price', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        width_mm: form.width_mm,
+        height_mm: form.height_mm,
+        opening: form.opening,
+        qty: form.qty,
+      }),
+    });
+    const data = await res.json();
+
+    const unit = Number(data?.price?.eur_sell_net ?? 0);
+    const qty = Number(form.qty ?? 1);
+    const net = unit * qty;
+    const gross = net * 1.19;
+
+    if (active) setPrice({ unit, net, gross });
+  })();
+  return () => { active = false; };
+}, [form.width_mm, form.height_mm, form.opening, form.qty]);
+
      if (data?.price) {
        setPrice({ net: Number(data.price.eur_net || 0), gross: Number(data.price.eur_gross || 0) });
      } else {
@@ -454,24 +461,32 @@ return (
   </div>
 )}
 
-   {/* === STEP 4: Übersicht & Preis === */}
+  {/* === STEP 4: Übersicht & Preis === */} 
 {step === 4 && (
-  <div className="grid">
-    <>
-      <h3>Übersicht</h3>
-      <table>
-        <tbody>
-          <tr><th>Produkt</th><td>{form.product}</td></tr>
-          <tr><th>Öffnung</th><td>{form.opening}</td></tr>
-          <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
-          <tr><th>Menge</th><td>{form.qty}</td></tr>
-          <tr><th>Basispreis / Stück</th><td>{price.net.toFixed(2)} €</td></tr>
-          <tr><th>Netto gesamt</th><td>{(price.net * (form.qty ?? 1)).toFixed(2)} €</td></tr>
-          <tr><th>MwSt (19%)</th><td>{((price.net * (form.qty ?? 1)) * 0.19).toFixed(2)} €</td></tr>
-          <tr><th>Gesamt (inkl. MwSt.)</th>
-              <td className="price">{(price.gross * (form.qty ?? 1)).toFixed(2)} €</td></tr>
-        </tbody>
-      </table>
-    </>
+  <div className="grid" style={{ gap: 24 }}>
+    {price ? (
+      <>
+        <h3>Übersicht</h3>
+        <table>
+          <tbody>
+            <tr><th>Produkt</th><td>{form.product}</td></tr>
+            <tr><th>Öffnung</th><td>{form.opening}</td></tr>
+            <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
+            <tr><th>Menge</th><td>{form.qty}</td></tr>
+
+            <tr><th>Basispreis / Stück</th><td>{price.unit.toFixed(2)} €</td></tr>
+            <tr><th>Netto gesamt</th><td>{price.net.toFixed(2)} €</td></tr>
+            <tr><th>MwSt (19%)</th><td>{(price.net * 0.19).toFixed(2)} €</td></tr>
+            <tr>
+              <th>Gesamt (inkl. MwSt.)</th>
+              <td className="price">{price.gross.toFixed(2)} €</td>
+            </tr>
+          </tbody>
+        </table>
+      </>
+    ) : (
+      <p>Preis wird berechnet…</p>
+    )}
   </div>
 )}
+
