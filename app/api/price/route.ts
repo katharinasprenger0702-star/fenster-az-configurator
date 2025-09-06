@@ -100,21 +100,19 @@ const openingKey = keysLC(rows[0]).find(k =>
 ) ?? null;
 if (openingKey) {
   const val = String(criteria.opening ?? '').toLowerCase();
-  candidates = rows.filter(r =>
+  function getNum(r: PriceRow, nameVariants: string[]): number | null {
+    for (const n of nameVariants) {
+      const key = Object.keys(r.cols).find((k) => k.toLowerCase() === n);
+      if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]!))) {
+        return Number(r.cols[key] as number);
+      }
+    }
+    return null;
+  }
+  candidates = rows.filter((r) =>
     String(r.cols[openingKey] ?? '').toLowerCase().includes(val)
   );
-}
-
-// Hilfsfunktion: Zahl aus mehreren möglichen Spalten holen function getNum(r: PriceRow, nameVariants: string[]): number | null {
-  for (const n of nameVariants) {
-    const key = Object.keys(r.cols).find(k => k.toLowerCase() === n);
-    if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]))) {
-      return Number(r.cols[key] as number);
-    }
-  }
-  return null;
-}
-
+}  
 const widthKeys  = ['breite', 'b', 'mm_breite', 'b_mm', 'breite_mm', 'breite (mm)', 'b (mm)', 'b(mm)'];
 const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höhe_mm', 'höhe (mm)', 'h (mm)', 'h(mm)'];
     // Distanzfunktion (kleinste Abweichung)
@@ -157,8 +155,8 @@ return NextResponse.json({
     base_pln: basePln,          // Tabellen-Rohwert (PLN, ohne Rabatt)
     eur_buy_net: eurBuyNet,     // Einkauf netto (EUR)
     eur_sell_net: eurSellNet,   // Verkauf netto (EUR)
-    eur_sell_gross: eurSellGross// Verkauf brutto (EUR)
-  }
+    eur_sell_gross: eurSellGross, // Verkauf brutto (EUR)
+  },
 });
 } catch (err: any) {
   console.error(err);
