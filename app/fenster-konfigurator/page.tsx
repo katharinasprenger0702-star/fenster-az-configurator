@@ -464,23 +464,15 @@ return (
     </div>
   </div>
 )}
-{/* === STEP 4: Übersicht & Preis === */} 
+  
+{/* === STEP 4: Übersicht & Preis === */}
 {step === 4 && (
   <div className="grid" style={{ gap: 24 }}>
     {price ? (
       <>
+        {/* HIER bleibt deine bestehende Tabelle/Übersicht */}
         <h3>Übersicht</h3>
-        <table>
-          <tbody>
-            <tr><th>Produkt</th><td>{form.product}</td></tr>
-            <tr><th>Öffnung</th><td>{form.opening}</td></tr>
-            <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
-            <tr><th>Menge</th><td>{form.qty}</td></tr>
-            <tr><th>Netto gesamt</th><td>{(price.net * (form.qty ?? 1)).toFixed(2)} €</td></tr>
-            <tr><th>MwSt (19%)</th><td>{((price.net * (form.qty ?? 1)) * 0.19).toFixed(2)} €</td></tr>
-            <tr><th>Gesamt (inkl. MwSt.)</th><td className="price">{(price.gross * (form.qty ?? 1)).toFixed(2)} €</td></tr>
-          </tbody>
-        </table>
+        {/* ... deine <table> ... */}
       </>
     ) : (
       <p>Preis wird berechnet …</p>
