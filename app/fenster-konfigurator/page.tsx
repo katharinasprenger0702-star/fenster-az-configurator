@@ -179,7 +179,8 @@ const [step, setStep] = useState(0);
     filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'STULP';
   if (opening.includes('pfosten'))
     filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'PFOSTEN';
-return (
+return { DATA, filter };
+}
   <div className="grid" style={{ gap: 24 }}>
     <div className="card">
       {/* Stepper */}
