@@ -131,7 +131,7 @@ const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höh
   });
 
   // Rohwert aus Tabelle (PLN, ohne Rabatt)
-  let basePln = (best && priceKey) ? Number((best.cols as any)[priceKey]) : NaN;
+  const basePln = (best && priceKey) ? Number((best.cols as any)[priceKey]) : NaN;
   if (isNaN(basePln)) basePln = NaN;
 
   // Umrechnung nach deiner Vorgabe:
@@ -145,7 +145,7 @@ const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höh
   const eurSellGross = eurSellNet * (1 + 0.19);
 
   // Antwort
-  return NextResponse.json({
+  NextResponse.json({
     match: best ?? null,
     price: {
       base_pln: basePln,        // Tabellen-Rohwert (PLN, ohne Rabatt)
