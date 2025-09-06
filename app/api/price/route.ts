@@ -129,8 +129,7 @@ const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höh
     const kk = k.toLowerCase();
     return kk.includes('preis') || kk.includes('pln') || kk.includes('netto');
   });
-
-  // Rohwert aus Tabelle (PLN, ohne Rabatt)
+        
   const basePln = (best && priceKey) ? Number((best.cols as any)[priceKey]) : NaN;
   if (isNaN(basePln)) basePln = NaN;
 
@@ -145,7 +144,7 @@ const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höh
   const eurSellGross = eurSellNet * (1 + 0.19);
 
   // Antwort
-  NextResponse.json({
+  return NextResponse.json({
     match: best ?? null,
     price: {
       base_pln: basePln,        // Tabellen-Rohwert (PLN, ohne Rabatt)
