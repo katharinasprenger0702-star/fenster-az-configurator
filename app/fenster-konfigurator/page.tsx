@@ -72,13 +72,6 @@ useEffect(() => {
   })();
   return () => { active = false; };
 }, [form.width_mm, form.height_mm, form.opening, form.qty]);
-
-     if (data?.price) {
-       setPrice({ net: Number(data.price.eur_net || 0), gross: Number(data.price.eur_gross || 0) });
-     } else {
-       setPrice({ net: 0, gross: 0 });
-     }
-   } catch {
      setPrice({ net: 0, gross: 0 });
    }
  })();
