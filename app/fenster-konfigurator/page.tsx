@@ -179,22 +179,20 @@ const [step, setStep] = useState(0);
     filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'STULP';
   if (opening.includes('pfosten'))
     filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'PFOSTEN';
-const result = { DATA, filter };
 return (
   <div className="grid" style={{ gap: 24 }}>
     <div className="card">
       {/* Stepper */}
       <div className="stepper">
         {steps.map((s, i) => (
-          <div
-            key={s}
-            className={['step', i === step && 'active'].filter(Boolean).join(' ')}
-          >
+          <div key={i} className={['step', i === step && 'active'].filter(Boolean).join(' ')}>
             {s}
           </div>
         ))}
       </div>
-
+    </div>
+   </div>
+  );
      {/* === STEP 0: Maße === */}
 {step === 0 && (
   <div className="grid">
