@@ -169,10 +169,8 @@ const [step, setStep] = useState(0);
   if (opening.includes('pfosten'))
     filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'PFOSTEN';
 
-  return { DATA, filter };
-  
+  return{ DATA, filter };
 }
-
 return (
   <div className="grid" style={{ gap: 24 }}>
     <div className="card">
