@@ -464,18 +464,17 @@ return (
     </div>
   </div>
 )}
-  
-{/* === STEP 4: Übersicht & Preis === */}
+{/* === STEP 4: Übersicht & Preis === */} 
 {step === 4 && (
   <div className="grid" style={{ gap: 24 }}>
     {price ? (
       <>
-        {/* HIER bleibt deine bestehende Tabelle/Übersicht */}
-        <h3>Übersicht</h3>
-        {/* ... deine <table> ... */}
+        {/* ... deine Tabelle/Übersicht ... */}
       </>
     ) : (
-      <p>Preis wird berechnet …</p>
+      <div className="card">
+        <p>Preis wird berechnet …</p>
+      </div>
     )}
   </div>
 )}
