@@ -100,10 +100,10 @@ const openingKey = keysLC(rows[0]).find(k =>
 ) ?? null;
 if (openingKey) {
   const val = String(criteria.opening ?? '').toLowerCase();
-  function getNum(r: PriceRow, names: string[]): number | null {
-  for (const n of names) {
+  function getNum(r: PriceRow, nameVariants: string[]): number | null {
+  for (const n of nameVariants) {
     const key = Object.keys(r.cols).find(k => k.toLowerCase() === n);
-    if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]!))) {
+    if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]))) {
       return Number(r.cols[key]);
     }
   }
@@ -146,17 +146,17 @@ const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höh
   const eurSellGross = eurSellNet * (1 + 0.19);
 
   // Antwort
-  return NextResponse.json({
-    match: best ?? null,
-    price: {
-      base_pln: basePln,      
-      eur_buy_net: eurBuyNet,  
-      eur_sell_net: eurSellNet, 
-      eur_sell_gross: eurSellGross, 
-    },
-  });
+ return NextResponse.json({
+  match: best ?? null,
+  price: {
+    base_pln: basePln,           // Tabellen-Rohwert (PLN, ohne Rabatt)
+    eur_buy_net: eurBuyNet,      // Einkauf netto (EUR)
+    eur_sell_net: eurSellNet,    // Verkauf netto (EUR)
+    eur_sell_gross: eurSellGross // Verkauf brutto (EUR)
+  }
+});
 } catch (err: any) {
   console.error(err);
-  return NextResponse.json({ error: err?.message ?? 'Unknown error' }, { status: 500 }); 
-}
+  return NextResponse.json({ error: err?.message ?? 'Unknown error' }, { status: 500 }); }
+
 
