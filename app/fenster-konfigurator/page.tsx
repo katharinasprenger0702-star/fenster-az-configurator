@@ -46,36 +46,47 @@ export default function ConfiguratorPage() {
   const valid = parsed.success;
   const breakdown = useMemo(() => calculatePrice(form), [form]);
 // --- Preis aus /api/price laden (Excel-Tabellen) --- 
-const [price, setPrice] = useState<{ unit: number; net: number; gross: number } | null>(null);
+const [price, setPrice] = useState<{
+  base_pln: number;
+  eur_buy_net: number;
+  eur_sell_net: number;
+  eur_sell_gross: number;
+}>({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
 
 useEffect(() => {
-  let active = true;
+  const { DATA, filter } = pickDatasetAndFilter(form);
   (async () => {
-    const res = await fetch('/api/price', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        width_mm: form.width_mm,
-        height_mm: form.height_mm,
-        opening: form.opening,
-        qty: form.qty,
-      }),
-    });
-    const data = await res.json();
-
-    const unit = Number(data?.price?.eur_sell_net ?? 0);
-    const qty = Number(form.qty ?? 1);
-    const net = unit * qty;
-    const gross = net * 1.19;
-
-    if (active) setPrice({ unit, net, gross });
+    try {
+      const res = await fetch('/api/price', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          width_mm: form.width_mm,
+          height_mm: form.height_mm,
+          opening: form.opening,
+          qty: form.qty,
+          product: form.product,
+          filter,
+          DATA,
+        }),
+      });
+      const data = await res.json();
+      if (data?.price) {
+        setPrice({
+          base_pln: Number(data.price.base_pln ?? 0),
+          eur_buy_net: Number(data.price.eur_buy_net ?? 0),
+          eur_sell_net: Number(data.price.eur_sell_net ?? 0),
+          eur_sell_gross: Number(data.price.eur_sell_gross ?? 0),
+        });
+      } else {
+        setPrice({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
+      }
+    } catch {
+      setPrice({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
+    }
   })();
-  return () => { active = false; };
-}, [form.width_mm, form.height_mm, form.opening, form.qty]);
-     setPrice({ net: 0, gross: 0 });
-   }
- })();
-}, [form]); // bei jeder Form-Änderung neu laden
+}, [form]);
+
 
   async function checkout() {
     if (!valid) return;
@@ -467,10 +478,11 @@ return (
             <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
             <tr><th>Menge</th><td>{form.qty}</td></tr>
 
-            <tr><th>Basispreis / Stück</th><td>{price.unit.toFixed(2)} €</td></tr>
-            <tr><th>Netto gesamt</th><td>{price.net.toFixed(2)} €</td></tr>
-            <tr><th>MwSt (19%)</th><td>{(price.net * 0.19).toFixed(2)} €</td></tr>
-            <tr>
+        <tr><th>Basispreis / Stück</th><td>{basePerUnit.toFixed(2)} €</td></tr>
+ <tr><th>Netto gesamt</th><td>{netTotal.toFixed(2)} €</td></tr>
+ <tr><th>MwSt (19%)</th><td>{vat.toFixed(2)} €</td></tr>
+ <tr><th>Gesamt (inkl. MwSt.)</th><td className="price">{grossTotal.toFixed(2)} €</td></tr>
+
               <th>Gesamt (inkl. MwSt.)</th>
               <td className="price">{price.gross.toFixed(2)} €</td>
             </tr>
