@@ -92,23 +92,24 @@ export async function POST(req: Request) {
     const height = Number(criteria.height_mm);
     const opening = String(criteria.opening ?? '').toLowerCase();
     // 1) Kandidaten mit Öffnungsart (wenn es eine Öffnungs-Spalte gibt)
-    let candidates = rows.filter(r => {
-      const keys = Object.keys(r.cols).map(k => k.toLowerCase());
-      const openingKey = keys.find(k => k.includes('öffnung') || k.includes('oeffnung') || k.includes('öffnungart') || k.includes('open'));
-      if (!openingKey) return true; // keine Spalte => nicht filtern
-      const val = String(r.cols[openingKey] ?? '').toLowerCase();
-      return val.includes(opening) || opening === '';
-    });
-    // 2) Nächster Nachbar per Breite/Höhe (wenn diese Spalten vorhanden sind)
-    function getNum(r: PriceRow, nameVariants: string[]): number | null {
+   const keysLC = (r: PriceRow) => Object.keys(r.cols).map(k => k.toLowerCase());
+const openingKey = keysLC(rows[0]).find(k =>
+  k.includes('öffnung') || k.includes('öffnungs') || k.includes('oeffnung') ||
+  k.includes('oeffnungs') || k.includes('öffnungstyp') || k.includes('öffnungsart') ||
+  k.includes('open') || k.includes('system') || k.includes('öffnung / system')
+) ?? null;
+if (openingKey) {
+  const val = String(criteria.opening ?? '').toLowerCase();
+  candidates = rows.filter(r => String(r.cols[openingKey] ?? '').toLowerCase().includes(val)); 
+} 
       for (const n of nameVariants) {
         const key = Object.keys(r.cols).find(k => k.toLowerCase() === n);
         if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]))) return Number(r.cols[key]);
       }
       return null;
     }
-    const widthKeys = ['breite', 'b', 'width', 'mm_breite', 'b_mm'];
-    const heightKeys = ['höhe', 'hoehe', 'h', 'height', 'mm_höhe', 'mm_hoehe', 'h_mm'];
+const widthKeys  = ['breite', 'b', 'mm_breite', 'b_mm', 'breite_mm', 'breite (mm)', 'b (mm)', 'b(mm)'];
+const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höhe_mm', 'höhe (mm)', 'h (mm)', 'h(mm)'];
     // Distanzfunktion (kleinste Abweichung)
     candidates = candidates
       .map(r => {
@@ -122,12 +123,35 @@ export async function POST(req: Request) {
       .map(x => x.r);
     const best = candidates[0];
     // Preisfeld erraten (du kannst hier hart die Spaltennamen setzen)
-    const priceKey =
-      best && Object.keys(best.cols).find(k =>
-        k.toLowerCase().includes('preis') ||
-        k.toLowerCase().includes('pln') ||
-        k.toLowerCase().includes('netto')
-      );
+      const priceKey =
+  let basePln = (best && priceKey) ? Number(best.cols[priceKey]) : NaN; 
+if (isNaN(basePln)) basePln = NaN;
+
+// 1) PLN -> EUR
+const EUR_PER_PLN = 1 / 4.1894;             // ≈ 0.2388
+const eurFromPln  = basePln * EUR_PER_PLN;
+
+// 2) -43 % Rabatt => Einkaufspreis netto (EUR) 
+const eurBuyNet = eurFromPln * (1 - 0.43);
+
+// 3) VK netto = 2x EK netto
+const eurSellNet = eurBuyNet * 2;
+
+// 4) MwSt 19 % -> VK brutto
+const VAT_RATE   = 0.19;
+const eurSellGross = eurSellNet * (1 + VAT_RATE);
+
+// Antwort
+return NextResponse.json({
+  match: best,
+  price: {
+    base_pln: basePln,        // Rohwert aus Tabelle (PLN, ohne Rabatt)
+    eur_buy_net: eurBuyNet,   // Einkauf netto (EUR)
+    eur_sell_net: eurSellNet, // Verkauf netto (EUR)
+    eur_sell_gross: eurSellGross // Verkauf brutto (EUR)
+  },
+});
+
     let basePln = best && priceKey ? Number(best.cols[priceKey]) : NaN;
     if (!isNaN(basePln)) {
       // Deine Formel: Preis (PLN) -> Rabatt 43% -> / 4,1894 -> EUR
