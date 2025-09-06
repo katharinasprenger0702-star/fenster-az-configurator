@@ -104,7 +104,7 @@ if (openingKey) {
   for (const n of nameVariants) {
     const key = Object.keys(r.cols).find(k => k.toLowerCase() === n);
     if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]))) {
-      return Number(r.cols[key]);
+      return Number(r.cols[key]) as number);
     }
   }
   return null;
