@@ -99,16 +99,16 @@ const openingKey = keysLC(rows[0]).find(k =>
   k.includes('open') || k.includes('system') || k.includes('öffnung / system')
 ) ?? null;
 if (openingKey) {
-  const val = String(criteria.opening ?? '').toLowerCase();
-  function getNum(r: PriceRow, nameVariants: string[]): number | null {
-    for (const n of nameVariants) {
-      const key = Object.keys(r.cols).find((k) => k.toLowerCase() === n);
-      if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]!))) {
-        return Number(r.cols[key] as number);
-      }
+// Hilfsfunktion: numerischen Spaltenwert holen 
+const getNum = (r: PriceRow, nameVariants: string[]): number | null => {
+  for (const n of nameVariants) {
+    const key = Object.keys(r.cols).find(k => k.toLowerCase() === n);
+    if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]))) {
+      return Number(r.cols[key] as number);
     }
-    return null;
   }
+  return null;
+};
   candidates = rows.filter((r) =>
     String(r.cols[openingKey] ?? '').toLowerCase().includes(val)
   );
@@ -152,10 +152,10 @@ const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höh
 return NextResponse.json({
   match: best ?? null,
   price: {
-    base_pln: basePln,          // Tabellen-Rohwert (PLN, ohne Rabatt)
-    eur_buy_net: eurBuyNet,     // Einkauf netto (EUR)
-    eur_sell_net: eurSellNet,   // Verkauf netto (EUR)
-    eur_sell_gross: eurSellGross, // Verkauf brutto (EUR)
+    base_pln: basePln,           // Tabellen-Rohwert (PLN, ohne Rabatt)
+    eur_buy_net: eurBuyNet,      // Einkauf netto (EUR)
+    eur_sell_net: eurSellNet,    // Verkauf netto (EUR)
+    eur_sell_gross: eurSellGross // Verkauf brutto (EUR)
   },
 });
 } catch (err: any) {
