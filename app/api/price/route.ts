@@ -107,7 +107,7 @@ if (openingKey) {
         if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]))) return Number(r.cols[key]);
       }
       return null;
-    }
+};
 const widthKeys  = ['breite', 'b', 'mm_breite', 'b_mm', 'breite_mm', 'breite (mm)', 'b (mm)', 'b(mm)'];
 const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höhe_mm', 'höhe (mm)', 'h (mm)', 'h(mm)'];
     // Distanzfunktion (kleinste Abweichung)
@@ -118,57 +118,43 @@ const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höh
         const dw = w != null && !isNaN(width) ? Math.abs(w - width) : 0;
         const dh = h != null && !isNaN(height) ? Math.abs(h - height) : 0;
         return { r, score: dw + dh };
-      })
+     candidates = candidates
       .sort((a, b) => a.score - b.score)
       .map(x => x.r);
-    const best = candidates[0];
-    // Preisfeld erraten (du kannst hier hart die Spaltennamen setzen)
-      const priceKey =
-  let basePln = (best && priceKey) ? Number(best.cols[priceKey]) : NaN; 
-if (isNaN(basePln)) basePln = NaN;
+     // Besten Treffer nehmen
+  const best = candidates[0];
 
-// 1) PLN -> EUR
-const EUR_PER_PLN = 1 / 4.1894;             // ≈ 0.2388
-const eurFromPln  = basePln * EUR_PER_PLN;
+  // Preis-Spalte erraten (Passe die Bedingungen bei Bedarf an)
+  const priceKey = best && Object.keys(best.cols).find(k => {
+    const kk = k.toLowerCase();
+    return kk.includes('preis') || kk.includes('pln') || kk.includes('netto');
+  });
 
-// 2) -43 % Rabatt => Einkaufspreis netto (EUR) 
-const eurBuyNet = eurFromPln * (1 - 0.43);
+  // Rohwert aus Tabelle (PLN, ohne Rabatt)
+  let basePln = (best && priceKey) ? Number((best.cols as any)[priceKey]) : NaN;
+  if (isNaN(basePln)) basePln = NaN;
 
-// 3) VK netto = 2x EK netto
-const eurSellNet = eurBuyNet * 2;
+  // Umrechnung nach deiner Vorgabe:
+  // 1) Rabatt 43% -> Netto-Einkauf in PLN
+  const discounted = basePln * (1 - 0.43);
+  // 2) PLN -> EUR (Fixkurs 4,1894)
+  const eurBuyNet = discounted / 4.1894;
+  // 3) VK netto = 2 × EK netto
+  const eurSellNet = eurBuyNet * 2;
+  // 4) MwSt 19% -> VK brutto
+  const eurSellGross = eurSellNet * (1 + 0.19);
 
-// 4) MwSt 19 % -> VK brutto
-const VAT_RATE   = 0.19;
-const eurSellGross = eurSellNet * (1 + VAT_RATE);
-
-// Antwort
-return NextResponse.json({
-  match: best,
-  price: {
-    base_pln: basePln,        // Rohwert aus Tabelle (PLN, ohne Rabatt)
-    eur_buy_net: eurBuyNet,   // Einkauf netto (EUR)
-    eur_sell_net: eurSellNet, // Verkauf netto (EUR)
-    eur_sell_gross: eurSellGross // Verkauf brutto (EUR)
-  },
-});
-
-    let basePln = best && priceKey ? Number(best.cols[priceKey]) : NaN;
-    if (!isNaN(basePln)) {
-      // Deine Formel: Preis (PLN) -> Rabatt 43% -> / 4,1894 -> EUR
-      const discounted = basePln * (1 - 0.43);
-      const eur = discounted / 4.1894;
-      return NextResponse.json({
-        match: best,
-        price: {
-          base_pln: basePln,
-          eur_net: eur,
-        },
-      });
+  // Antwort
+  return NextResponse.json({
+    match: best ?? null,
+    price: {
+      base_pln: basePln,        // Tabellen-Rohwert (PLN, ohne Rabatt)
+      eur_buy_net: eurBuyNet,   // Einkauf netto (EUR)
+      eur_sell_net: eurSellNet, // Verkauf netto (EUR)
+      eur_sell_gross: eurSellGross // Verkauf brutto (EUR)
     }
-    return NextResponse.json({ match: best ?? null, price: null });
-  } catch (err: any) {
-    console.error(err);
-    return NextResponse.json({ error: err?.message ?? 'Unknown error' }, { status: 500 });
-  }
-}
+  });
+} catch (err: any) {
+  console.error(err);
+  return NextResponse.json({ error: err?.message ?? 'Unknown error' }, { status: 500 }); }
 
