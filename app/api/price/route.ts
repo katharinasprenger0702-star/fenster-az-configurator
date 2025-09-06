@@ -106,8 +106,7 @@ if (openingKey) {
         const key = Object.keys(r.cols).find(k => k.toLowerCase() === n);
         if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]))) return Number(r.cols[key]);
       }
-return null;
-};
+return null}
 const widthKeys  = ['breite', 'b', 'mm_breite', 'b_mm', 'breite_mm', 'breite (mm)', 'b (mm)', 'b(mm)'];
 const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höhe_mm', 'höhe (mm)', 'h (mm)', 'h(mm)'];
     // Distanzfunktion (kleinste Abweichung)
@@ -147,10 +146,10 @@ const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höh
   return NextResponse.json({
     match: best ?? null,
     price: {
-      base_pln: basePln,        // Tabellen-Rohwert (PLN, ohne Rabatt)
-      eur_buy_net: eurBuyNet,   // Einkauf netto (EUR)
-      eur_sell_net: eurSellNet, // Verkauf netto (EUR)
-      eur_sell_gross: eurSellGross // Verkauf brutto (EUR)
+      base_pln: basePln,      
+      eur_buy_net: eurBuyNet,  
+      eur_sell_net: eurSellNet, 
+      eur_sell_gross: eurSellGross 
     }
   });
 } catch (err: any) {
