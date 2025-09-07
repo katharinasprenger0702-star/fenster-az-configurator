@@ -8,8 +8,8 @@ export default function Home() {
         <p className="kicker">Fenstermann24.de · eine Marke der AZ Fenster und Türen GmbH</p>
         <h1 style={{ marginTop: 6 }}>Fenster & Türen direkt online konfigurieren</h1>
         <p style={{ maxWidth: 720 }}>
-          Qualität vom Fachbetrieb: PVC, Aluminium und Holz – individuell nach Maß,
-          mit sofortiger Preisberechnung. Lieferung & Montage auf Wunsch.
+          Qualität vom Fachbetrieb: PVC, Aluminium und Holz – individuell nach Maß.
+          Lieferung & Montage auf Wunsch.
         </p>
 
         <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
@@ -50,7 +50,6 @@ export default function Home() {
       <section id="vorteile" className="card">
         <h2>Warum Fenstermann24?</h2>
         <ul className="benefits">
-          <li><strong>Transparente Preise:</strong> Sofort sehen, was es kostet.</li>
           <li><strong>Individuelle Fertigung:</strong> Millimetergenau nach Ihrem Bedarf.</li>
           <li><strong>Montage vom Profi:</strong> Eigene, geschulte Monteure.</li>
           <li><strong>Regionale Nähe:</strong> Kurze Wege, schnelle Termine.</li>
