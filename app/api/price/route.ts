@@ -1,111 +1,44 @@
-import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import * as XLSX from 'xlsx';
-import { berechneVKundEK } from '@/lib/preis-berechnung'; // <--- NEU
+import fs from "fs";
+import path from "path";
+import { NextRequest } from "next/server";
+import csvParse from "csv-parse/lib/sync";
 
-export type PriceRow = {
-  cols: Record<string, string | number>;
-  file: string;
-  rowIndex: number;
-};
-
-function readAllPriceFiles(): PriceRow[] {
-  const priceDir = path.join(process.cwd(), 'data', 'prices');
-  const files = fs.readdirSync(priceDir).filter(f => f.endsWith('.xlsx'));
-  const rows: PriceRow[] = [];
-  for (const file of files) {
-    const workbook = XLSX.readFile(path.join(priceDir, file));
-    for (const sheetName of workbook.SheetNames) {
-      const sheet = workbook.Sheets[sheetName];
-      const sheetRows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
-      for (let i = 0; i < sheetRows.length; i++) {
-        rows.push({
-          cols: sheetRows[i] as Record<string, string | number>,
-          file,
-          rowIndex: i,
-        });
-      }
-    }
+/**
+ * Robuste Preis-Suchfunktion für das Backend.
+ * Vergleicht Werte aus Request und CSV (Produkt, Breite, Höhe).
+ */
+function calcPrice(prices: any[], product: string, width: number | string, height: number | string) {
+  function normalize(val: any) {
+    return String(val).trim().toLowerCase();
   }
-  return rows;
+  const candidates = prices.filter(row =>
+    normalize(row.product) === normalize(product) &&
+    Number(row.width_mm) === Number(width) &&
+    Number(row.height_mm) === Number(height)
+  );
+  if (candidates.length === 0) return undefined;
+  if (candidates.length > 1) {
+    console.warn("Mehrere Preistreffer gefunden:", candidates);
+  }
+  return Number(candidates[0].vk_brutto_eur);
 }
 
-export async function POST(req: Request) {
-  try {
-    const criteria = await req.json();
-    const rows = readAllPriceFiles();
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const { product, width_mm, height_mm } = body;
 
-    // Filterung und Auswahl des besten Eintrags
-    const width = Number(criteria.width_mm);
-    const height = Number(criteria.height_mm);
-    const opening = String(criteria.opening ?? '').toLowerCase();
+  // Passe den Pfad ggf. an!
+  const filePath = path.join(process.cwd(), "data", "preise_min.csv");
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const prices = csvParse(fileContent, {
+    columns: true,
+    skip_empty_lines: true,
+    delimiter: ",",
+  });
 
-    const keysLC = (r: PriceRow) => Object.keys(r.cols).map(k => k.toLowerCase());
-    let candidates: PriceRow[] = rows;
-    const openingKey = rows.length > 0 ? keysLC(rows[0]).find(k =>
-      k.includes('öffnung') || k.includes('öffnungs') || k.includes('oeffnung') ||
-      k.includes('oeffnungs') || k.includes('öffnungstyp') || k.includes('öffnungsart') ||
-      k.includes('open') || k.includes('system') || k.includes('öffnung / system')
-    ) : null;
-    if (openingKey) {
-      candidates = rows.filter(r =>
-        String(r.cols[openingKey] ?? '').toLowerCase().includes(opening)
-      );
-    }
+  const price = calcPrice(prices, product, width_mm, height_mm);
 
-    function getNum(r: PriceRow, nameVariants: string[]): number | null {
-      for (const n of nameVariants) {
-        const key = Object.keys(r.cols).find(k => k.toLowerCase() === n);
-        if (key && r.cols[key] != null && !isNaN(Number(r.cols[key]))) {
-          return Number(r.cols[key]) as number;
-        }
-      }
-      return null;
-    }
-
-    const widthKeys  = ['breite', 'b', 'mm_breite', 'b_mm', 'breite_mm', 'breite (mm)', 'b (mm)', 'b(mm)'];
-    const heightKeys = ['höhe', 'hoehe', 'h', 'mm_höhe', 'mm_hoehe', 'h_mm', 'höhe_mm', 'höhe (mm)', 'h (mm)', 'h(mm)'];
-
-    const scored = candidates.map(r => {
-      const w = getNum(r, widthKeys);
-      const h = getNum(r, heightKeys);
-      const dw = w != null && !isNaN(width) ? Math.abs(w - width) : 0;
-      const dh = h != null && !isNaN(height) ? Math.abs(h - height) : 0;
-      return { r, score: dw + dh };
-    });
-
-    scored.sort((a, b) => a.score - b.score);
-    const best = scored.length > 0 ? scored[0].r : null;
-
-    const priceKey = best && Object.keys(best.cols).find(k => {
-      const kk = k.toLowerCase();
-      return kk.includes('preis') || kk.includes('pln') || kk.includes('netto');
-    });
-
-    let basePln = (best && priceKey) ? Number((best.cols as any)[priceKey]) : NaN;
-    if (isNaN(basePln)) basePln = NaN;
-
-    // --- FLEXIBLE VK/EK-BERECHNUNG ---
-    const rabatt = criteria.rabatt ?? 0.43;
-    const wechselkurs = process.env.KURS_EUR_PLN ? Number(process.env.KURS_EUR_PLN) : 4.1894;
-    const aufschlag = criteria.aufschlag ?? 1.0;
-    const mwst = 0.19;
-
-    const preis = berechneVKundEK({
-      listenpreis_pln: basePln,
-      rabatt,
-      wechselkurs,
-      aufschlag,
-      mwst,
-    });
-
-    return NextResponse.json({
-      match: best ?? null,
-      price: preis,
-    });
-  } catch (err: any) {
-    console.error(err);
-    return NextResponse.json({ error: err?.message ?? 'Unknown error' }, { status: 500 });
-  }
+  return Response.json({
+    price: price !== undefined ? price : null
+  });
 }
