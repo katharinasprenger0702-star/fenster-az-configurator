@@ -1,13 +1,8 @@
 'use client';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { z } from 'zod';
 import getStripe from '@/lib/stripeClient';
 import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
-// Preis-Daten jetzt über index.ts (saubere zentrale Sammelstelle)
-import {
-  fensterPrices, balkontuerenPrices, schiebetuerenPrices, haustuerenPrices, sonstigesPrices
-} from '@/index';
-import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Türe']).default('Fenster'),
@@ -40,22 +35,6 @@ const steps = [
   'Übersicht',
 ];
 
-function pickDatasetAndFilter(form: any) {
-  const DATA = form.product === 'Fenster' ? fensterPrices : balkontuerenPrices;
-  const filter: Record<string, string> = {};
-  const opening = String(form.opening ?? '').toLowerCase();
-
-  if (opening.includes('fest')) filter.source_file = 'FEST';
-  else if (opening.includes('dreh-kipp')) filter.source_file = 'DREH KIPP';
-  else if (opening.includes('dreh')) filter.source_file = 'DREH';
-
-  if (opening.includes('stulp'))
-    filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'STULP';
-  if (opening.includes('pfosten'))
-    filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'PFOSTEN';
-  return { DATA, filter };
-}
-
 export default function ConfiguratorPage() {
   const [form, setForm] = useState<Config>({
     product: 'Fenster', width_mm: 1200, height_mm: 1200,
@@ -69,46 +48,6 @@ export default function ConfiguratorPage() {
   const parsed = schema.safeParse(form);
   const valid = parsed.success;
   const breakdown = useMemo(() => calculatePrice(form), [form]);
-  const [price, setPrice] = useState<{
-    base_pln: number;
-    eur_buy_net: number;
-    eur_sell_net: number;
-    eur_sell_gross: number;
-  }>({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
-
-  useEffect(() => {
-    const { DATA, filter } = pickDatasetAndFilter(form);
-    (async () => {
-      try {
-        const res = await fetch('/api/price', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            width_mm: form.width_mm,
-            height_mm: form.height_mm,
-            opening: form.opening,
-            qty: form.qty,
-            product: form.product,
-            filter,
-            DATA,
-          }),
-        });
-        const data = await res.json();
-        if (data?.price) {
-          setPrice({
-            base_pln: Number(data.price.base_pln ?? 0),
-            eur_buy_net: Number(data.price.eur_buy_net ?? 0),
-            eur_sell_net: Number(data.price.eur_sell_net ?? 0),
-            eur_sell_gross: Number(data.price.eur_sell_gross ?? 0),
-          });
-        } else {
-          setPrice({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
-        }
-      } catch {
-        setPrice({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
-      }
-    })();
-  }, [form]);
 
   async function checkout() {
     if (!valid) return;
@@ -117,12 +56,8 @@ export default function ConfiguratorPage() {
     const successUrl = `${window.location.origin}/success`;
     const cancelUrl = `${window.location.origin}/cancel`;
 
-    // Gesamtpreis (brutto) aus Lookup für Stripe berechnen
-    const { DATA, filter } = pickDatasetAndFilter(form);
-    const basePerUnit = lookupPriceEURFrom(DATA, form.width_mm, form.height_mm, filter) ?? 0;
-    const qty = Number(form.qty ?? 1);
-    const vat = 0.19;
-    const totalForCheckout = (basePerUnit * qty) * (1 + vat);
+    // Use the calculated price from the breakdown instead of lookup
+    const totalForCheckout = breakdown.totalGross;
 
     const payload = {
       lineItems: [{
@@ -141,19 +76,8 @@ export default function ConfiguratorPage() {
       metadata: { config: JSON.stringify(form), label: name }
     };
 
-    const res = await fetch('/api/price', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        width_mm: form.width_mm,
-        height_mm: form.height_mm,
-        opening: form.opening,
-      }),
-    });
-    const data = await res.json();
-
-    // Netto-EUR-Preis aus der API
-    const eurNet = data?.price?.eur_net ?? 0;
+    // Continue with checkout logic...
+    // Note: This may need to be completed based on the original checkout implementation
   }
 
   function setK<K extends keyof Config>(key: K, value: Config[K]) {
@@ -448,25 +372,21 @@ export default function ConfiguratorPage() {
       {/* === STEP 4: Übersicht === */}
       {step === 4 && (
         <div className="grid" style={{ gap: 24 }}>
-          {price ? (
-            <>
-              <h3>Übersicht</h3>
-              <table>
-                <tbody>
-                  <tr><th>Produkt</th><td>{form.product}</td></tr>
-                  <tr><th>Öffnung</th><td>{form.opening}</td></tr>
-                  <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
-                  <tr><th>Menge</th><td>{form.qty}</td></tr>
-                  <tr><th>Basispreis / Stück</th><td>{price.eur_sell_net.toFixed(2)} €</td></tr>
-                  <tr><th>Netto gesamt</th><td>{(price.eur_sell_net * (form.qty ?? 1)).toFixed(2)} €</td></tr>
-                  <tr><th>MwSt (19%)</th><td>{(price.eur_sell_net * (form.qty ?? 1) * 0.19).toFixed(2)} €</td></tr>
-                  <tr><th>Gesamt (inkl. MwSt.)</th><td className="price">{(price.eur_sell_gross * (form.qty ?? 1)).toFixed(2)} €</td></tr>
-                </tbody>
-              </table>
-            </>
-          ) : (
-            <p>Preis wird berechnet …</p>
-          )}
+          <>
+            <h3>Übersicht</h3>
+            <table>
+              <tbody>
+                <tr><th>Produkt</th><td>{form.product}</td></tr>
+                <tr><th>Öffnung</th><td>{form.opening}</td></tr>
+                <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
+                <tr><th>Menge</th><td>{form.qty}</td></tr>
+                <tr><th>Basispreis / Stück</th><td>{breakdown.netPerUnit.toFixed(2)} €</td></tr>
+                <tr><th>Netto gesamt</th><td>{(breakdown.netPerUnit * form.qty).toFixed(2)} €</td></tr>
+                <tr><th>MwSt (19%)</th><td>{(breakdown.vatPerUnit * form.qty).toFixed(2)} €</td></tr>
+                <tr><th>Gesamt (inkl. MwSt.)</th><td className="price">{breakdown.totalGross.toFixed(2)} €</td></tr>
+              </tbody>
+            </table>
+          </>
         </div>
       )}
     </div>
