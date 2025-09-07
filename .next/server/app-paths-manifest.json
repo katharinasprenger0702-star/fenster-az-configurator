@@ -1,5 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/fenster-konfigurator/page": "app/fenster-konfigurator/page.js",
-  "/api/price/route": "app/api/price/route.js"
-}

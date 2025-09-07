@@ -45,14 +45,16 @@ function pickDatasetAndFilter(form: any) {
   const filter: Record<string, string> = {};
   const opening = String(form.opening ?? '').toLowerCase();
 
+  // Match the actual source_file patterns in the data
   if (opening.includes('fest')) filter.source_file = 'FEST';
-  else if (opening.includes('dreh-kipp')) filter.source_file = 'DREH KIPP';
+  else if (opening.includes('dreh-kipp')) filter.source_file = 'DK + DR+DK'; // Match "FENSTER DK + DR+DK"
   else if (opening.includes('dreh')) filter.source_file = 'DREH';
 
   if (opening.includes('stulp'))
     filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'STULP';
   if (opening.includes('pfosten'))
     filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'PFOSTEN';
+  
   return { DATA, filter };
 }
 
