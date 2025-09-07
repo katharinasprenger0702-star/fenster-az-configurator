@@ -23,7 +23,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <nav>
             <Link href="/" style={{marginRight:12}}>Start</Link>
             <Link href="/fenster-konfigurator" style={{marginRight:12}}>Konfigurator</Link>
-            <Link href="/impressum">Impressum</Link>
+            <Link href="/impressum" style={{marginRight:12}}>Impressum</Link>
+            <a href="mailto:info@fenstermann24.de" style={{marginRight:12, color: '#0a6cf1', textDecoration: 'none'}}>📧 E-Mail</a>
           </nav>
         </header>
         <main className="container">{children}</main>
