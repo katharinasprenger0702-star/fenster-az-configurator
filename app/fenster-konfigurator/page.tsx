@@ -173,6 +173,8 @@ export default function ConfiguratorPage() {
             <div
               key={s}
               className={['step', i === step && 'active'].filter(Boolean).join(' ')}
+              onClick={() => setStep(i)}
+              style={{ cursor: 'pointer' }}
             >
               {s}
             </div>
