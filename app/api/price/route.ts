@@ -26,9 +26,17 @@ export async function POST(request: NextRequest) {
   const prodKey = Object.keys(pricesData).find(
     key => key.trim().toLowerCase() === product.trim().toLowerCase()
   );
-  const price = prodKey ? findPrice(prodKey, width_mm, height_mm) : null;
+  const priceNet = prodKey ? findPrice(prodKey, width_mm, height_mm) : null;
 
-  return Response.json({
-    price: price !== null ? price : null
-  });
+  let response = { price: null };
+  if (priceNet !== null) {
+    const priceGross = Math.round(priceNet * 1.19 * 100) / 100;
+    response.price = {
+      net: priceNet,
+      gross: priceGross,
+      currency: "EUR"
+    };
+  }
+
+  return Response.json(response);
 }
