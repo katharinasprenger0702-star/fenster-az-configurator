@@ -1,72 +1,34 @@
-// app/api/price/route.ts
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-import { NextResponse } from 'next/server'; 
-import fs from 'fs'; 
-import path from 'path'; 
+import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 import * as XLSX from 'xlsx';
+import { berechneVKundEK } from '@/lib/preis-berechnung'; // <--- NEU
 
-type PriceRow = {
-  source_file: string;
-  sheet: string;
+export type PriceRow = {
+  cols: Record<string, string | number>;
+  file: string;
   rowIndex: number;
-  cols: Record<string, string | number | null>;
 };
 
-function readWorkbookAbs(absFile: string): PriceRow[] {
-  const buf = fs.readFileSync(absFile);
-  const wb = XLSX.read(buf, { type: 'buffer' });
+function readAllPriceFiles(): PriceRow[] {
+  const priceDir = path.join(process.cwd(), 'data', 'prices');
+  const files = fs.readdirSync(priceDir).filter(f => f.endsWith('.xlsx'));
   const rows: PriceRow[] = [];
-  for (const sheetName of wb.SheetNames) {
-    const ws = wb.Sheets[sheetName];
-    const aoa = XLSX.utils.sheet_to_json<Record<string, any>>(ws, { defval: null });
-    aoa.forEach((obj, idx) => {
-      rows.push({
-        source_file: path.basename(absFile),
-        sheet: sheetName,
-        rowIndex: idx,
-        cols: obj,
-      });
-    });
+  for (const file of files) {
+    const workbook = XLSX.readFile(path.join(priceDir, file));
+    for (const sheetName of workbook.SheetNames) {
+      const sheet = workbook.Sheets[sheetName];
+      const sheetRows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+      for (let i = 0; i < sheetRows.length; i++) {
+        rows.push({
+          cols: sheetRows[i] as Record<string, string | number>,
+          file,
+          rowIndex: i,
+        });
+      }
+    }
   }
   return rows;
-}
-
-function readAllPriceFiles(): PriceRow[] {
-  const root = process.cwd();
-  const rawDir = path.join(root, 'raw-prices');
-  if (!fs.existsSync(rawDir)) return [];
-  const files = fs.readdirSync(rawDir)
-    .filter(f => f.toLowerCase().endsWith('.xlsx'));
-  let all: PriceRow[] = [];
-  for (const f of files) {
-    const abs = path.join(rawDir, f);
-    try {
-      all = all.concat(readWorkbookAbs(abs));
-    } catch (err) {
-      console.error('Fehler beim Lesen', f, err);
-    }
-  }
-  return all;
-}
-
-export async function GET(req: Request) {
-  try {
-    const url = new URL(req.url);
-    const fileFilter = url.searchParams.get('file');
-    const sheetFilter = url.searchParams.get('sheet');
-    let rows = readAllPriceFiles();
-    if (fileFilter) {
-      rows = rows.filter(r => r.source_file === fileFilter);
-    }
-    if (sheetFilter) {
-      rows = rows.filter(r => r.sheet === sheetFilter);
-    }
-    return NextResponse.json({ count: rows.length, rows });
-  } catch (err: any) {
-    console.error(err);
-    return NextResponse.json({ error: err?.message ?? 'Unknown error' }, { status: 500 });
-  }
 }
 
 export async function POST(req: Request) {
@@ -74,13 +36,13 @@ export async function POST(req: Request) {
     const criteria = await req.json();
     const rows = readAllPriceFiles();
 
+    // Filterung und Auswahl des besten Eintrags
     const width = Number(criteria.width_mm);
     const height = Number(criteria.height_mm);
     const opening = String(criteria.opening ?? '').toLowerCase();
 
     const keysLC = (r: PriceRow) => Object.keys(r.cols).map(k => k.toLowerCase());
     let candidates: PriceRow[] = rows;
-
     const openingKey = rows.length > 0 ? keysLC(rows[0]).find(k =>
       k.includes('öffnung') || k.includes('öffnungs') || k.includes('oeffnung') ||
       k.includes('oeffnungs') || k.includes('öffnungstyp') || k.includes('öffnungsart') ||
@@ -124,19 +86,23 @@ export async function POST(req: Request) {
     let basePln = (best && priceKey) ? Number((best.cols as any)[priceKey]) : NaN;
     if (isNaN(basePln)) basePln = NaN;
 
-    const discounted = basePln * (1 - 0.43);
-    const eurBuyNet = discounted / 4.1894;
-    const eurSellNet = eurBuyNet * 2;
-    const eurSellGross = eurSellNet * (1 + 0.19);
+    // --- FLEXIBLE VK/EK-BERECHNUNG ---
+    const rabatt = criteria.rabatt ?? 0.43;
+    const wechselkurs = process.env.KURS_EUR_PLN ? Number(process.env.KURS_EUR_PLN) : 4.1894;
+    const aufschlag = criteria.aufschlag ?? 1.0;
+    const mwst = 0.19;
+
+    const preis = berechneVKundEK({
+      listenpreis_pln: basePln,
+      rabatt,
+      wechselkurs,
+      aufschlag,
+      mwst,
+    });
 
     return NextResponse.json({
       match: best ?? null,
-      price: {
-        base_pln: basePln,
-        eur_buy_net: eurBuyNet,
-        eur_sell_net: eurSellNet,
-        eur_sell_gross: eurSellGross
-      },
+      price: preis,
     });
   } catch (err: any) {
     console.error(err);
