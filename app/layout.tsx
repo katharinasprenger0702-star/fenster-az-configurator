@@ -23,6 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <nav>
             <Link href="/" style={{marginRight:12}}>Start</Link>
             <Link href="/fenster-konfigurator" style={{marginRight:12}}>Konfigurator</Link>
+            <Link href="/preisliste" style={{marginRight:12}}>Preisliste</Link>
             <Link href="/impressum">Impressum</Link>
           </nav>
         </header>
