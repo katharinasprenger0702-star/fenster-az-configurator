@@ -1,5 +1,8 @@
 import { NextRequest } from "next/server";
-import pricesData from "@/preise_kompakt.json";
+import pricesDataJson from "@/preise_kompakt.json";
+
+// Typisierung fix: String-Key-Objekt
+const pricesData: Record<string, number[][]> = pricesDataJson;
 
 /**
  * Preis-Suchfunktion für JSON-Struktur wie preise_kompakt.json
