@@ -15,6 +15,7 @@ export default function Home() {
         <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
           <Link className="btn" href="/fenster-konfigurator">Jetzt konfigurieren</Link>
           <a className="btn btn-secondary" href="#vorteile">Unsere Vorteile</a>
+          <a className="btn btn-secondary" href="mailto:info@fenstermann24.de?subject=Anfrage Fenster & Türen">E-Mail Kontakt</a>
         </div>
 
         <ul className="trust" aria-label="Vertrauen">
