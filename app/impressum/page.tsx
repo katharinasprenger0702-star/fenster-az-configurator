@@ -19,7 +19,7 @@ export default function Impressum() {
         <h2>Kontakt</h2>
         <p>
           <strong>Telefon:</strong> <a href="tel:[TELEFONNUMMER]">[TELEFONNUMMER]</a><br />
-          <strong>E-Mail:</strong> <a href="mailto:[EMAIL]">[EMAIL]</a><br />
+          <strong>E-Mail:</strong> <a href="mailto:info@fenstermann24.de">info@fenstermann24.de</a><br />
           <strong>Internet:</strong> <a href="https://www.fenster-az.de" target="_blank" rel="noopener noreferrer">www.fenster-az.de</a>
         </p>
       </section>
