@@ -1,44 +1,31 @@
-import fs from "fs";
-import path from "path";
 import { NextRequest } from "next/server";
-import csvParse from "csv-parse/lib/sync";
+import pricesData from "@/preise_kompakt.json";
 
 /**
- * Robuste Preis-Suchfunktion für das Backend.
- * Vergleicht Werte aus Request und CSV (Produkt, Breite, Höhe).
+ * Preis-Suchfunktion für JSON-Struktur wie preise_kompakt.json
+ * @param product Produktname (String, exakt wie JSON-Key)
+ * @param width Breite (Number)
+ * @param height Höhe (Number)
+ * @returns Preis (Number) | null
  */
-function calcPrice(prices: any[], product: string, width: number | string, height: number | string) {
-  function normalize(val: any) {
-    return String(val).trim().toLowerCase();
-  }
-  const candidates = prices.filter(row =>
-    normalize(row.product) === normalize(product) &&
-    Number(row.width_mm) === Number(width) &&
-    Number(row.height_mm) === Number(height)
-  );
-  if (candidates.length === 0) return undefined;
-  if (candidates.length > 1) {
-    console.warn("Mehrere Preistreffer gefunden:", candidates);
-  }
-  return Number(candidates[0].vk_brutto_eur);
+function findPrice(product: string, width: number, height: number): number | null {
+  const entries = pricesData[product];
+  if (!entries) return null;
+  // Finde das passende Tupel [width, height, price]
+  const match = entries.find(([w, h]) => Number(w) === Number(width) && Number(h) === Number(height));
+  return match ? match[2] : null;
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const { product, width_mm, height_mm } = body;
+  const { product, width_mm, height_mm } = await request.json();
 
-  // Passe den Pfad ggf. an!
-  const filePath = path.join(process.cwd(), "data", "preise_min.csv");
-  const fileContent = fs.readFileSync(filePath, "utf-8");
-  const prices = csvParse(fileContent, {
-    columns: true,
-    skip_empty_lines: true,
-    delimiter: ",",
-  });
-
-  const price = calcPrice(prices, product, width_mm, height_mm);
+  // Robust: Optionale Normalisierung des Produkt-Namens
+  const prodKey = Object.keys(pricesData).find(
+    key => key.trim().toLowerCase() === product.trim().toLowerCase()
+  );
+  const price = prodKey ? findPrice(prodKey, width_mm, height_mm) : null;
 
   return Response.json({
-    price: price !== undefined ? price : null
+    price: price !== null ? price : null
   });
 }
