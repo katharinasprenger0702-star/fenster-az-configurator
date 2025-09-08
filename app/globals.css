@@ -338,4 +338,4 @@ td,th{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left}
 .benefits li{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px}
 .benefits li:last-child{margin-bottom:0}
 .benefit-icon{width:24px;height:24px;flex-shrink:0;margin-top:2px}
-main
+main { /* Styles */ }
