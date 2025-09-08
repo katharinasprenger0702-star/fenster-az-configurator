@@ -731,21 +731,13 @@ export function validateTechnicalCompliance(config: Config): ValidationResult {
     ...performanceCheck.warnings,
   ];
 
-  // Generate compliance information
+  // Generate compliance information (DIN/EN standards should only appear in error messages)
   const complianceInfo: string[] = [];
   
   if (allErrors.length === 0) {
-    complianceInfo.push('✓ Konfiguration entspricht DIN 18055');
-    complianceInfo.push('✓ Konfiguration entspricht a.R.d.T.');
+    complianceInfo.push('✓ Konfiguration ist technisch zulässig');
     
-    // Add door-specific compliance information
-    if (config.product === 'Haustüren') {
-      complianceInfo.push('✓ Türkonfiguration berücksichtigt EN-Standards');
-      complianceInfo.push('✓ Sicherheitsklassifizierung nach EN 1627-1630');
-      complianceInfo.push('✓ Leistungsmerkmale nach EN 14351-1');
-    }
-    
-    // Add specific compliance notes
+    // Add specific compliance notes without referencing standards
     const area = calculateArea(config.width_mm, config.height_mm);
     const limits = DIN_18055_LIMITS[config.opening];
     
