@@ -110,7 +110,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WEBSITE STATUS CHECK SECTION */}
+      {/* WEBSITE STATUS SECTION */}
       <section style={{ 
         padding: '80px 60px',
         background: 'white',
@@ -124,7 +124,7 @@ export default function Home() {
             color: '#111827',
             marginBottom: '16px'
           }}>
-            Website-Status Überprüfung
+            Website-Status
           </h2>
           <p style={{ 
             fontSize: '1rem',
@@ -132,7 +132,7 @@ export default function Home() {
             maxWidth: '600px',
             margin: '0 auto'
           }}>
-            Automatische Prüfung der Website www.fenstermann24.de auf Aufbau-Hinweise und Gewähr-Ausschlüsse.
+            Aktueller Status der Website www.fenstermann24.de
           </p>
         </div>
         <WebsiteAnalyzer />
