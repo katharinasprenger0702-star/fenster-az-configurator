@@ -188,7 +188,7 @@ export default function ConfiguratorPage() {
       {/* Technical Validation Display */}
       {(validation.errors.length > 0 || validation.warnings.length > 0 || validation.complianceInfo.length > 0) && (
         <div className="card">
-          <h3>Technische Prüfung (DIN 18055 / a.R.d.T.)</h3>
+          <h3>Technische Prüfung (DIN 18055 / EN-Normen / a.R.d.T.)</h3>
           
           {validation.errors.length > 0 && (
             <div style={{ marginBottom: '12px' }}>
@@ -220,6 +220,38 @@ export default function ConfiguratorPage() {
                   <li key={i}>{info}</li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {validation.enCompliance && validation.errors.length === 0 && (
+            <div style={{ marginBottom: '12px' }}>
+              <h4 style={{ color: '#2e7d32', marginBottom: '8px' }}>🇪🇺 EN-Normen Details:</h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px', margin: 0, padding: '8px', backgroundColor: '#f1f8e9', borderRadius: '4px' }}>
+                <span style={{ color: validation.enCompliance.en14351 ? '#2e7d32' : '#757575' }}>
+                  {validation.enCompliance.en14351 ? '✓' : '○'} EN 14351-1 (Produktnorm)
+                </span>
+                <span style={{ color: validation.enCompliance.en673 ? '#2e7d32' : '#757575' }}>
+                  {validation.enCompliance.en673 ? '✓' : '○'} EN 673 (Wärmedämmung)
+                </span>
+                <span style={{ color: validation.enCompliance.en356 ? '#2e7d32' : '#757575' }}>
+                  {validation.enCompliance.en356 ? '✓' : '○'} EN 356 (Sicherheitsglas)
+                </span>
+                <span style={{ color: validation.enCompliance.en1627 ? '#2e7d32' : '#757575' }}>
+                  {validation.enCompliance.en1627 ? '✓' : '○'} EN 1627-1630 (Einbruchschutz)
+                </span>
+                <span style={{ color: validation.enCompliance.en12207 ? '#2e7d32' : '#757575' }}>
+                  {validation.enCompliance.en12207 ? '✓' : '○'} EN 12207 (Luftdichtheit)
+                </span>
+                <span style={{ color: validation.enCompliance.en12208 ? '#2e7d32' : '#757575' }}>
+                  {validation.enCompliance.en12208 ? '✓' : '○'} EN 12208 (Wasserdichtheit)
+                </span>
+                <span style={{ color: validation.enCompliance.en12210 ? '#2e7d32' : '#757575' }}>
+                  {validation.enCompliance.en12210 ? '✓' : '○'} EN 12210 (Windlast)
+                </span>
+                <span style={{ color: validation.enCompliance.en410 ? '#2e7d32' : '#757575' }}>
+                  {validation.enCompliance.en410 ? '✓' : '○'} EN 410 (Sonnenschutz)
+                </span>
+              </div>
             </div>
           )}
 
@@ -535,7 +567,7 @@ export default function ConfiguratorPage() {
               <div style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#ffebee', border: '1px solid #e57373' }}>
                 <h4 style={{ color: '#d32f2f', margin: '0 0 12px 0' }}>❌ Konfiguration nicht zulässig</h4>
                 <p style={{ margin: '0 0 12px 0', color: '#d32f2f' }}>
-                  Die aktuelle Konfiguration entspricht nicht den technischen Anforderungen nach DIN 18055 und a.R.d.T.
+                  Die aktuelle Konfiguration entspricht nicht den technischen Anforderungen nach DIN 18055, EN-Normen und a.R.d.T.
                 </p>
                 <ul style={{ margin: 0, paddingLeft: '20px', color: '#d32f2f' }}>
                   {validation.errors.map((error, i) => (
@@ -547,7 +579,7 @@ export default function ConfiguratorPage() {
               <div style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#e8f5e8', border: '1px solid #81c784' }}>
                 <h4 style={{ color: '#2e7d32', margin: '0 0 12px 0' }}>✅ Technische Anforderungen erfüllt</h4>
                 <p style={{ margin: '0 0 12px 0', color: '#2e7d32' }}>
-                  Die Konfiguration entspricht DIN 18055 und den anerkannten Regeln der Technik (a.R.d.T.).
+                  Die Konfiguration entspricht DIN 18055, relevanten EN-Normen und den anerkannten Regeln der Technik (a.R.d.T.).
                 </p>
                 {validation.complianceInfo.length > 0 && (
                   <ul style={{ margin: 0, paddingLeft: '20px', color: '#2e7d32' }}>

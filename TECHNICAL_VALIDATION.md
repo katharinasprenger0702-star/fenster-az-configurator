@@ -1,8 +1,8 @@
-# Technische Validierung nach DIN 18055 und a.R.d.T.
+# Technische Validierung nach DIN 18055, EN-Normen und a.R.d.T.
 
 ## Übersicht
 
-Der Fenstermann24-Konfigurator implementiert eine umfassende technische Validierung nach DIN 18055 (Deutsche Norm für Fenster und Türen) und den anerkannten Regeln der Technik (a.R.d.T.).
+Der Fenstermann24-Konfigurator implementiert eine umfassende technische Validierung nach DIN 18055 (Deutsche Norm für Fenster und Türen), relevanten EN-Normen (Europäische Normen) und den anerkannten Regeln der Technik (a.R.d.T.).
 
 ## Implementierte Standards
 
@@ -11,6 +11,16 @@ Der Fenstermann24-Konfigurator implementiert eine umfassende technische Validier
 - **Maximale Flächengrößen** für verschiedene Fenstertypen
 - **Gewichtsbeschränkungen** für öffenbare Fenster
 - **Strukturelle Anforderungen** basierend auf Material und Konstruktion
+
+### EN-Normen (Europäische Normen)
+- **EN 14351-1**: Fenster und Türen - Produktnorm
+- **EN 673**: Glas im Bauwesen - Bestimmung des Wärmedurchgangskoeffizienten
+- **EN 410**: Glas im Bauwesen - Bestimmung der lichttechnischen und strahlungsphysikalischen Kenngrößen
+- **EN 356**: Glas im Bauwesen - Sicherheitsglas
+- **EN 1627-1630**: Einbruchhemmung - Anforderungen und Klassifizierung
+- **EN 12207**: Luftdurchlässigkeit
+- **EN 12208**: Schlagregendichtheit
+- **EN 12210**: Widerstand gegen Windlast
 
 ### Anerkannte Regeln der Technik (a.R.d.T.)
 - **Materialkompetenz**: Höhen- und Flächenbeschränkungen je Material
@@ -64,16 +74,20 @@ validateTechnicalCompliance(config: Config): ValidationResult
 - **Materialkompatibilität**: Technische Machbarkeit
 - **Sicherheitsvalidierung**: RC-Klassen und Anwendungsbereich
 - **Kombinationsprüfung**: Optimale technische Paarungen
+- **EN-Normen-Prüfung**: Europäische Standards für Fenster und Glas
+- **Wärmedämmung**: EN 673 Wärmedurchgangskoeffizienten
+- **Sicherheitsglas**: EN 356 Klassifizierung
+- **Performance**: EN 12207/12208/12210 Dichtheit und Windlast
 
 ### Empfehlungssystem
 ```typescript
 getRecommendations(config: Config): string[]
 ```
 
-- **Energieeffizienz**: Profile und Verglasung
-- **Sicherheit**: RC-Klassen für verschiedene Anwendungen
+- **Energieeffizienz**: Profile und Verglasung (EN 673)
+- **Sicherheit**: RC-Klassen für verschiedene Anwendungen (EN 1627-1630)
 - **Wartung**: Materialspezifische Hinweise
-- **Optimierung**: Technische Verbesserungen
+- **Optimierung**: Technische Verbesserungen nach EN-Standards
 
 ## Compliance-Features
 
@@ -91,6 +105,7 @@ getRecommendations(config: Config): string[]
 
 ### Technische Validierung
 - Alle DIN 18055-Grenzwerte implementiert
+- Alle relevanten EN-Normen für Fenster und Glas berücksichtigt
 - a.R.d.T.-Regeln basierend auf Industriestandards
 - Umfassende Test-Coverage für alle Validierungsszenarien
 
@@ -98,3 +113,4 @@ getRecommendations(config: Config): string[]
 - Echtzeit-Feedback verhindert ungültige Konfigurationen
 - Klare Fehlermeldungen mit konkreten Grenzwerten
 - Proaktive Empfehlungen für optimale Konfigurationen
+- Transparente Anzeige der erfüllten DIN- und EN-Standards

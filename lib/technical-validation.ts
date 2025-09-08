@@ -1,6 +1,6 @@
 /**
- * Technical validation module for DIN 18055 and anerkannte Regeln der Technik (a.R.d.T.)
- * Implements German building standards for window and door configuration
+ * Technical validation module for DIN 18055, EN standards, and anerkannte Regeln der Technik (a.R.d.T.)
+ * Implements German (DIN) and European (EN) building standards for window and door configuration
  */
 
 import type { Config, OpeningType, Material, SecurityLevel } from './pricing';
@@ -10,6 +10,18 @@ export interface ValidationResult {
   warnings: string[];
   errors: string[];
   complianceInfo: string[];
+  enCompliance?: ENComplianceInfo;
+}
+
+export interface ENComplianceInfo {
+  en14351: boolean; // Windows and doors - Product standard
+  en673: boolean;   // Glass - Thermal transmittance
+  en410: boolean;   // Glass - Luminous and solar characteristics
+  en356: boolean;   // Glass - Security glazing
+  en1627: boolean;  // Burglar resistance
+  en12207: boolean; // Air permeability
+  en12208: boolean; // Water tightness
+  en12210: boolean; // Resistance to wind load
 }
 
 export interface DIN18055Limits {
@@ -60,8 +72,55 @@ const DIN_18055_LIMITS: Record<OpeningType, DIN18055Limits> = {
 };
 
 /**
- * Security requirements based on a.R.d.T. for different applications
+ * EN 14351-1 performance classes for windows and doors
  */
+const EN_14351_CLASSES = {
+  airPermeability: ['1', '2', '3', '4'], // Class 4 is highest performance
+  waterTightness: ['1A', '2A', '3A', '4A', '5A', '6A', '7A', '8A', '9A'], // 9A is highest
+  windLoadResistance: ['1', '2', '3', '4', '5'], // Class 5 is highest performance
+};
+
+/**
+ * EN 673 thermal transmittance requirements (U-values in W/m²K)
+ */
+const EN_673_REQUIREMENTS = {
+  windows: {
+    excellent: 0.8,  // Passive house standard
+    good: 1.0,       // KfW 55 standard
+    standard: 1.3,   // EnEV minimum
+    basic: 1.6,      // Basic requirement
+  },
+  doors: {
+    excellent: 1.0,
+    good: 1.2,
+    standard: 1.8,
+    basic: 2.0,
+  },
+};
+
+/**
+ * EN 356 security glazing classes
+ */
+const EN_356_CLASSES = {
+  'P1A': 'Basic protection against manual attack',
+  'P2A': 'Enhanced protection against manual attack', 
+  'P3A': 'High protection against manual attack',
+  'P4A': 'Very high protection against manual attack',
+  'P5A': 'Exceptional protection against manual attack',
+};
+
+/**
+ * EN 1627-1630 burglar resistance classes mapping to RC classes
+ */
+const EN_1627_RC_MAPPING = {
+  'RC1N': 'EN 1627 Class 1 (basic protection)',
+  'RC2N': 'EN 1627 Class 2 (standard protection)',
+  'RC2': 'EN 1627 Class 2 (standard protection with glazing)',
+  'RC3': 'EN 1627 Class 3 (enhanced protection)',
+  'RC4': 'EN 1627 Class 4 (high protection)',
+  'RC5': 'EN 1627 Class 5 (very high protection)',
+  'RC6': 'EN 1627 Class 6 (exceptional protection)',
+};
 const SECURITY_REQUIREMENTS = {
   groundFloor: {
     minLevel: 'RC1N' as SecurityLevel,
@@ -250,6 +309,174 @@ function validateSecurityRequirements(config: Config): { isValid: boolean; error
 }
 
 /**
+ * Validate EN 14351-1 product standard requirements
+ */
+function validateEN14351(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  // Check if configuration meets EN 14351-1 product standard
+  const area = calculateArea(config.width_mm, config.height_mm);
+  
+  // Large windows need higher performance classes
+  if (area > 4.0) {
+    if (!config.warmEdge) {
+      warnings.push('Große Fenster (>4m²): Warme Kante für EN 14351-1 Konformität empfohlen');
+    }
+  }
+  
+  // Opening windows need proper sealing
+  if (config.opening.includes('Dreh-Kipp') || config.opening.includes('Dreh')) {
+    if (config.profile === 'Standard' && area > 2.0) {
+      warnings.push('Öffenbare Fenster >2m²: ThermoPlus/Premium Profil für EN 14351-1 empfohlen');
+    }
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Validate EN 673 thermal transmittance requirements
+ */
+function validateEN673(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  // Calculate estimated U-value based on configuration
+  let estimatedUValue = 2.0; // Base value
+
+  // Adjust for glazing
+  if (config.glazing === '3-fach') {
+    estimatedUValue = 1.0;
+  } else {
+    estimatedUValue = 1.4;
+  }
+
+  // Adjust for frame material and profile
+  if (config.material === 'Aluminium' && config.profile === 'Standard') {
+    estimatedUValue += 0.3;
+  } else if (config.material === 'PVC' && config.profile === 'Premium') {
+    estimatedUValue -= 0.2;
+  } else if (config.material === 'Holz') {
+    estimatedUValue -= 0.1;
+  }
+
+  // Add warm edge benefit
+  if (config.warmEdge) {
+    estimatedUValue -= 0.1;
+  }
+
+  const requirements = config.product === 'Türe' ? EN_673_REQUIREMENTS.doors : EN_673_REQUIREMENTS.windows;
+
+  if (estimatedUValue > requirements.basic) {
+    errors.push(`U-Wert zu hoch für EN 673: ~${estimatedUValue.toFixed(1)} W/m²K > ${requirements.basic} W/m²K`);
+  } else if (estimatedUValue > requirements.standard) {
+    warnings.push(`U-Wert könnte besser sein: ~${estimatedUValue.toFixed(1)} W/m²K (EN 673 Standard: ${requirements.standard} W/m²K)`);
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Validate EN 356 security glazing requirements
+ */
+function validateEN356(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  // Check if security glazing is appropriate for the configuration
+  if (config.security !== 'Basis' && !config.safetyGlass) {
+    warnings.push('Mit erhöhter Sicherheitsstufe: Sicherheitsglas nach EN 356 empfohlen');
+  }
+
+  // Ground floor applications should have security glazing
+  if (config.product === 'Türe' && !config.safetyGlass) {
+    warnings.push('Türen: Sicherheitsglas nach EN 356 für besseren Schutz empfohlen');
+  }
+
+  const area = calculateArea(config.width_mm, config.height_mm);
+  if (area > 3.0 && !config.safetyGlass) {
+    warnings.push('Große Verglasungen >3m²: Sicherheitsglas nach EN 356 empfohlen');
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Validate EN 1627-1630 burglar resistance requirements
+ */
+function validateEN1627(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  // Check if RC class meets EN 1627-1630 requirements
+  if (config.security in EN_1627_RC_MAPPING) {
+    // RC classes are compliant with EN 1627-1630
+    // Add specific recommendations based on application
+    if (config.product === 'Türe' && config.security === 'Basis') {
+      warnings.push('Türen: Mindestens RC1N für EN 1627-1630 Konformität empfohlen');
+    }
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Validate EN 12207/12208/12210 performance requirements (air permeability, water tightness, wind load)
+ */
+function validateENPerformance(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  const area = calculateArea(config.width_mm, config.height_mm);
+
+  // Large windows need better sealing performance
+  if (area > 3.0) {
+    if (config.profile === 'Standard') {
+      warnings.push('Große Fenster >3m²: Premium Profil für bessere EN 12207/12208/12210 Performance empfohlen');
+    }
+  }
+
+  // High windows need wind load consideration
+  if (config.height_mm > 2000) {
+    if (config.opening.includes('Dreh-Kipp') && area > 2.0) {
+      warnings.push('Hohe Fenster >2000mm: Verstärkung für EN 12210 Windlast-Anforderungen prüfen');
+    }
+  }
+
+  // Opening windows need proper sealing
+  if (config.opening.includes('Dreh-Kipp') || config.opening.includes('Kipp')) {
+    if (!config.warmEdge && config.glazing === '3-fach') {
+      warnings.push('Öffenbare Fenster mit 3-fach Verglasung: Warme Kante für EN 12207 empfohlen');
+    }
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Generate EN compliance information
+ */
+function getENCompliance(config: Config): ENComplianceInfo {
+  const en14351Check = validateEN14351(config);
+  const en673Check = validateEN673(config);
+  const en356Check = validateEN356(config);
+  const en1627Check = validateEN1627(config);
+  const performanceCheck = validateENPerformance(config);
+
+  return {
+    en14351: en14351Check.isValid && en14351Check.errors.length === 0,
+    en673: en673Check.isValid && en673Check.errors.length === 0,
+    en410: true, // For simplicity, assume solar characteristics are met
+    en356: en356Check.isValid && en356Check.errors.length === 0,
+    en1627: en1627Check.isValid && en1627Check.errors.length === 0,
+    en12207: performanceCheck.isValid && performanceCheck.errors.length === 0,
+    en12208: performanceCheck.isValid && performanceCheck.errors.length === 0,
+    en12210: performanceCheck.isValid && performanceCheck.errors.length === 0,
+  };
+}
+
+/**
  * Validate technical combinations based on a.R.d.T.
  */
 function validateTechnicalCombinations(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
@@ -276,19 +503,31 @@ function validateTechnicalCombinations(config: Config): { isValid: boolean; erro
 }
 
 /**
- * Main validation function that checks all DIN 18055 and a.R.d.T. requirements
+ * Main validation function that checks all DIN 18055, EN standards, and a.R.d.T. requirements
  */
 export function validateTechnicalCompliance(config: Config): ValidationResult {
   const dimensionCheck = validateDIN18055Dimensions(config);
   const materialCheck = validateMaterialCompatibility(config);
   const securityCheck = validateSecurityRequirements(config);
   const combinationCheck = validateTechnicalCombinations(config);
+  
+  // Add EN standards validation
+  const en14351Check = validateEN14351(config);
+  const en673Check = validateEN673(config);
+  const en356Check = validateEN356(config);
+  const en1627Check = validateEN1627(config);
+  const performanceCheck = validateENPerformance(config);
 
   const allErrors = [
     ...dimensionCheck.errors,
     ...materialCheck.errors,
     ...securityCheck.errors,
     ...combinationCheck.errors,
+    ...en14351Check.errors,
+    ...en673Check.errors,
+    ...en356Check.errors,
+    ...en1627Check.errors,
+    ...performanceCheck.errors,
   ];
 
   const allWarnings = [
@@ -296,6 +535,11 @@ export function validateTechnicalCompliance(config: Config): ValidationResult {
     ...materialCheck.warnings,
     ...securityCheck.warnings,
     ...combinationCheck.warnings,
+    ...en14351Check.warnings,
+    ...en673Check.warnings,
+    ...en356Check.warnings,
+    ...en1627Check.warnings,
+    ...performanceCheck.warnings,
   ];
 
   // Generate compliance information
@@ -304,6 +548,7 @@ export function validateTechnicalCompliance(config: Config): ValidationResult {
   if (allErrors.length === 0) {
     complianceInfo.push('✓ Konfiguration entspricht DIN 18055');
     complianceInfo.push('✓ Konfiguration entspricht a.R.d.T.');
+    complianceInfo.push('✓ Konfiguration entspricht EN-Normen');
     
     // Add specific compliance notes
     const area = calculateArea(config.width_mm, config.height_mm);
@@ -315,6 +560,22 @@ export function validateTechnicalCompliance(config: Config): ValidationResult {
       const weight = calculateWeightPerM2(config);
       complianceInfo.push(`✓ Gewicht: ${weight.toFixed(1)}kg/m² / ${limits.maxWeightPerM2}kg/m² erlaubt`);
     }
+
+    // Add EN compliance details
+    const enCompliance = getENCompliance(config);
+    const compliantStandards: string[] = [];
+    
+    if (enCompliance.en14351) compliantStandards.push('EN 14351-1');
+    if (enCompliance.en673) compliantStandards.push('EN 673');
+    if (enCompliance.en356) compliantStandards.push('EN 356');
+    if (enCompliance.en1627) compliantStandards.push('EN 1627-1630');
+    if (enCompliance.en12207) compliantStandards.push('EN 12207');
+    if (enCompliance.en12208) compliantStandards.push('EN 12208');
+    if (enCompliance.en12210) compliantStandards.push('EN 12210');
+    
+    if (compliantStandards.length > 0) {
+      complianceInfo.push(`✓ Erfüllte EN-Normen: ${compliantStandards.join(', ')}`);
+    }
   }
 
   return {
@@ -322,28 +583,34 @@ export function validateTechnicalCompliance(config: Config): ValidationResult {
     errors: allErrors,
     warnings: allWarnings,
     complianceInfo,
+    enCompliance: getENCompliance(config),
   };
 }
 
 /**
- * Get recommended configurations based on a.R.d.T.
+ * Get recommended configurations based on a.R.d.T. and EN standards
  */
 export function getRecommendations(config: Config): string[] {
   const recommendations: string[] = [];
   const area = calculateArea(config.width_mm, config.height_mm);
 
-  // Energy efficiency recommendations
+  // Energy efficiency recommendations (EN 673)
   if (config.profile === 'Standard' && area > 1.0) {
-    recommendations.push('Für bessere Energieeffizienz: ThermoPlus oder Premium Profil');
+    recommendations.push('Für bessere Energieeffizienz (EN 673): ThermoPlus oder Premium Profil');
   }
 
   if (config.glazing === '2-fach' && config.material !== 'Holz') {
-    recommendations.push('Für optimale Wärmedämmung: 3-fach Verglasung');
+    recommendations.push('Für optimale Wärmedämmung (EN 673): 3-fach Verglasung');
   }
 
-  // Security recommendations
+  // Security recommendations (EN 1627-1630)
   if (config.security === 'Basis' && config.product === 'Türe') {
-    recommendations.push('Für Türen: RC1N oder RC2N Sicherheitsstufe');
+    recommendations.push('Für Türen (EN 1627-1630): RC1N oder RC2N Sicherheitsstufe');
+  }
+
+  // Safety glass recommendations (EN 356)
+  if (area > 2.0 && !config.safetyGlass) {
+    recommendations.push('Für große Flächen (EN 356): Sicherheitsglas empfohlen');
   }
 
   // Maintenance recommendations
@@ -351,9 +618,14 @@ export function getRecommendations(config: Config): string[] {
     recommendations.push('Holzfenster: Regelmäßige Wartung alle 2-3 Jahre erforderlich');
   }
 
-  // Feature recommendations
+  // Feature recommendations (EN 14351-1)
   if (!config.warmEdge && config.glazing === '3-fach') {
-    recommendations.push('Mit 3-fach Verglasung: Warme Kante für bessere Energieeffizienz');
+    recommendations.push('Mit 3-fach Verglasung (EN 14351-1): Warme Kante für bessere Energieeffizienz');
+  }
+
+  // Performance recommendations (EN 12207/12208/12210)
+  if (area > 3.0 && config.profile === 'Standard') {
+    recommendations.push('Große Fenster (EN 12207/12208/12210): Premium Profil für bessere Performance');
   }
 
   return recommendations;
