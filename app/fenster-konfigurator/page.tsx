@@ -366,19 +366,6 @@ export default function ConfiguratorPage() {
             <div className="label">Produkttyp</div>
             <select
               value={form.product}
-              onChange={e => setForm(prev => ({ ...prev, product: e.target.value as any }))}
-              style={{
-                borderColor: '#d1d5db'
-              }}
-            >
-              <option value="Fenster">Fenster</option>
-              <option value="Haustüren">Haustür</option>
-            </select>
-          </div>
-          <div className="row">
-            <div className="label">Produkttyp</div>
-            <select
-              value={form.product}
               onChange={e => {
                 const newProduct = e.target.value as any;
                 const availableOpenings = getOpeningTypesForProduct(newProduct);
