@@ -14,16 +14,22 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <header className="header">
           <div className="logo">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="3" ry="3" stroke="#0a6cf1" strokeWidth="2"/>
-              <rect x="7" y="7" width="10" height="10" rx="1" ry="1" fill="#0a6cf1"/>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="3" ry="3" stroke="url(#gradient)" strokeWidth="2"/>
+              <rect x="7" y="7" width="10" height="10" rx="1" ry="1" fill="url(#gradient)"/>
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#0a6cf1"/>
+                  <stop offset="100%" stopColor="#0e7ef5"/>
+                </linearGradient>
+              </defs>
             </svg>
             <span>Fenstermann24 | Online‑Konfigurator</span>
           </div>
-          <nav>
-            <Link href="/" style={{marginRight:12}}>Start</Link>
-            <Link href="/fenster-konfigurator" style={{marginRight:12}}>Konfigurator</Link>
-            <Link href="/impressum">Impressum</Link>
+          <nav style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+            <Link href="/" style={{marginRight:8, fontWeight: 600}}>Start</Link>
+            <Link href="/fenster-konfigurator" style={{marginRight:8, fontWeight: 600}}>Konfigurator</Link>
+            <Link href="/impressum" style={{ fontWeight: 600 }}>Impressum</Link>
           </nav>
         </header>
         <main className="container">{children}</main>
