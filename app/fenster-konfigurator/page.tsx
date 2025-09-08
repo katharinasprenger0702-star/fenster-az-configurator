@@ -12,6 +12,7 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren']).default('Fenster'),
+  manufacturer: z.enum(['IGLO 5', 'Rehau', 'Schüco', 'Salamander', 'VEKA']).default('IGLO 5'),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
   material: z.enum(['PVC', 'Aluminium', 'Holz']).default('PVC'),
@@ -35,6 +36,7 @@ const schema = z.object({
 
 const steps = [
   'Produktauswahl',
+  'Hersteller',
   'Maße',
   'Ausführung & Sicherheit',
   'Glas & Farbe',
@@ -59,6 +61,15 @@ function getOpeningTypesForProduct(product: string): string[] {
 
 function pickDatasetAndFilter(form: any) {
   let DATA;
+  
+  // Note: Currently only IGLO 5 data is available
+  // Additional manufacturer data would be added here
+  if (form.manufacturer !== 'IGLO 5') {
+    // For non-IGLO 5 manufacturers, fallback to IGLO 5 data
+    // This is where additional manufacturer datasets would be loaded
+    console.warn(`Manufacturer ${form.manufacturer} data not available, using IGLO 5 data`);
+  }
+  
   switch (form.product) {
     case 'Fenster':
       DATA = fensterPrices;
@@ -95,7 +106,7 @@ function pickDatasetAndFilter(form: any) {
 
 export default function ConfiguratorPage() {
   const [form, setForm] = useState<Config>({
-    product: 'Fenster', width_mm: 1200, height_mm: 1200,
+    product: 'Fenster', manufacturer: 'IGLO 5', width_mm: 1200, height_mm: 1200,
     material: 'PVC', profile: 'Standard', opening: 'Dreh-Kipp links',
     glazing: '2-fach', color: 'Weiß', handle: 'Standard', security: 'Basis',
     warmEdge: false, soundInsulation: false, safetyGlass: false, sunProtection: false,
@@ -402,8 +413,46 @@ export default function ConfiguratorPage() {
         </div>
       )}
 
-      {/* === STEP 1: Maße === */}
+      {/* === STEP 1: Hersteller === */}
       {step === 1 && (
+        <div className="grid">
+          <div className="row">
+            <div className="label">Hersteller auswählen</div>
+            <select
+              value={form.manufacturer}
+              onChange={e => setForm(prev => ({ ...prev, manufacturer: e.target.value as any }))}
+            >
+              <option value="IGLO 5">IGLO 5</option>
+              <option value="Rehau">Rehau (Demo)</option>
+              <option value="Schüco">Schüco (Demo)</option>
+              <option value="Salamander">Salamander (Demo)</option>
+              <option value="VEKA">VEKA (Demo)</option>
+            </select>
+          </div>
+          
+          {form.manufacturer !== 'IGLO 5' && (
+            <div style={{ 
+              padding: '12px', 
+              background: '#fef3c7', 
+              border: '1px solid #f59e0b', 
+              borderRadius: '8px',
+              fontSize: '14px',
+              color: '#92400e'
+            }}>
+              <strong>Hinweis:</strong> Aktuell sind nur IGLO 5 Produkte verfügbar. 
+              Weitere Hersteller werden mit IGLO 5 Preisen angezeigt.
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
+            <button className="btn" onClick={() => setStep(0)}>Zurück</button>
+            <button className="btn" onClick={() => setStep(2)}>Weiter</button>
+          </div>
+        </div>
+      )}
+
+      {/* === STEP 2: Maße === */}
+      {step === 2 && (
         <div className="grid">
           <div className="row">
             <div className="label">Breite (mm)</div>
@@ -460,14 +509,14 @@ main
             />
           </div>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(0)}>Zurück</button>
-            <button className="btn" onClick={() => setStep(2)}>Weiter</button>
+            <button className="btn" onClick={() => setStep(1)}>Zurück</button>
+            <button className="btn" onClick={() => setStep(3)}>Weiter</button>
           </div>
         </div>
       )}
 
-      {/* === STEP 2: Ausführung & Sicherheit === */}
-      {step === 2 && (
+      {/* === STEP 3: Ausführung & Sicherheit === */}
+      {step === 3 && (
         <div className="grid">
           {/* Material Selection with Visual Options */}
           <div>
@@ -589,14 +638,14 @@ main
           </div>
           {/* Navigation */}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(1)}>Zurück</button>
-            <button className="btn" onClick={() => setStep(3)}>Weiter</button>
+            <button className="btn" onClick={() => setStep(2)}>Zurück</button>
+            <button className="btn" onClick={() => setStep(4)}>Weiter</button>
           </div>
         </div>
       )}
 
-      {/* === STEP 3: Glas & Farbe === */}
-      {step === 3 && (
+      {/* === STEP 4: Glas & Farbe === */}
+      {step === 4 && (
         <div className="grid">
           {/* Verglasung */}
           <div className="row">
@@ -623,14 +672,14 @@ main
           </div>
           {/* Navigation */}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(2)}>Zurück</button>
-            <button className="btn" onClick={() => setStep(4)}>Weiter</button>
+            <button className="btn" onClick={() => setStep(3)}>Zurück</button>
+            <button className="btn" onClick={() => setStep(5)}>Weiter</button>
           </div>
         </div>
       )}
 
-      {/* === STEP 4: Montage & Lieferung === */}
-      {step === 4 && (
+      {/* === STEP 5: Montage & Lieferung === */}
+      {step === 5 && (
         <div className="grid">
           {/* Montagepaket */}
           <div className="row">
@@ -681,14 +730,14 @@ main
           </div>
           {/* Navigation */}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(3)}>Zurück</button>
-            <button className="btn" onClick={() => setStep(5)}>Weiter</button>
+            <button className="btn" onClick={() => setStep(4)}>Zurück</button>
+            <button className="btn" onClick={() => setStep(6)}>Weiter</button>
           </div>
         </div>
       )}
 
-      {/* === STEP 5: Übersicht === */}
-      {step === 5 && (
+      {/* === STEP 6: Übersicht === */}
+      {step === 6 && (
         <div className="grid" style={{ gap: 24 }}>
           {/* Technical Validation Summary */}
           <div className="card">
@@ -750,6 +799,7 @@ main
               <h3>Preisübersicht</h3>
               <table>
                 <tbody>
+                  <tr><th>Hersteller</th><td>{form.manufacturer}</td></tr>
                   <tr><th>Produkt</th><td>{form.product}</td></tr>
                   <tr><th>Öffnung</th><td>{form.opening}</td></tr>
                   <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
