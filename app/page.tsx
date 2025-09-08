@@ -109,6 +109,222 @@ export default function Home() {
         </div>
       </section>
 
+      {/* TRUST & BENEFITS BAR */}
+      <section style={{ 
+        padding: '40px 60px',
+        background: '#1e40af',
+        color: 'white'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ 
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '32px',
+            textAlign: 'center'
+          }}>
+            <div>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🚚</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Kostenlose Lieferung</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Ab 5 Fenstern deutschlandweit</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>⚡</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Express-Fertigung</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Lieferung in nur 3-4 Wochen</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🛡️</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>5 Jahre Garantie</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Vollumfänglicher Schutz</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>💰</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Bestpreis-Garantie</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Faire Preise, keine Nachverhandlung</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🔧</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Profi-Montage</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Eigene, geschulte Fachkräfte</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS PROCESS */}
+      <section style={{ 
+        padding: '80px 60px',
+        background: 'white'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <h2 style={{ 
+              fontSize: '2.5rem',
+              fontWeight: '800',
+              color: '#111827',
+              marginBottom: '16px'
+            }}>
+              So einfach geht's
+            </h2>
+            <p style={{ 
+              fontSize: '1.1rem',
+              color: '#6b7280',
+              maxWidth: '600px',
+              margin: '0 auto'
+            }}>
+              Von der ersten Konfiguration bis zur professionellen Montage – 
+              in nur wenigen Schritten zu Ihren neuen Fenstern und Türen.
+            </p>
+          </div>
+
+          <div style={{ 
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '48px'
+          }}>
+            {/* Step 1 */}
+            <div style={{ textAlign: 'center', position: 'relative' }}>
+              <div style={{
+                width: '80px',
+                height: '80px',
+                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 24px auto',
+                color: 'white',
+                fontSize: '2rem',
+                fontWeight: '800',
+                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
+              }}>
+                1
+              </div>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Online Konfigurieren
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Wählen Sie Material, Größe, Farbe und alle Extras. 
+                Sofortige Preisberechnung inklusive.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div style={{ textAlign: 'center', position: 'relative' }}>
+              <div style={{
+                width: '80px',
+                height: '80px',
+                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 24px auto',
+                color: 'white',
+                fontSize: '2rem',
+                fontWeight: '800',
+                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
+              }}>
+                2
+              </div>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Aufmaß & Beratung
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Unsere Experten nehmen vor Ort präzise Maße und beraten Sie 
+                zu allen Details.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div style={{ textAlign: 'center', position: 'relative' }}>
+              <div style={{
+                width: '80px',
+                height: '80px',
+                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 24px auto',
+                color: 'white',
+                fontSize: '2rem',
+                fontWeight: '800',
+                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
+              }}>
+                3
+              </div>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Individuelle Fertigung
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Millimetergenaue Produktion in unserer eigenen Manufaktur. 
+                Höchste Qualität garantiert.
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div style={{ textAlign: 'center', position: 'relative' }}>
+              <div style={{
+                width: '80px',
+                height: '80px',
+                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 24px auto',
+                color: 'white',
+                fontSize: '2rem',
+                fontWeight: '800',
+                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
+              }}>
+                4
+              </div>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Profi-Montage
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Fachgerechte Installation durch unsere erfahrenen Monteure. 
+                Inklusive Entsorgung der alten Fenster.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CLEAN PRODUCTS SECTION */}
       <section style={{ 
         padding: '80px 60px',
@@ -303,6 +519,188 @@ export default function Home() {
               }}>
                 Kontakt aufnehmen
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* MATERIALS & TECHNOLOGY */}
+      <section style={{ 
+        padding: '80px 60px',
+        background: '#f9fafb',
+        borderTop: '1px solid #e5e7eb'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <h2 style={{ 
+              fontSize: '2.5rem',
+              fontWeight: '800',
+              color: '#111827',
+              marginBottom: '16px'
+            }}>
+              Premium Materialien & Technologie
+            </h2>
+            <p style={{ 
+              fontSize: '1.1rem',
+              color: '#6b7280',
+              maxWidth: '600px',
+              margin: '0 auto'
+            }}>
+              Modernste Materialien und bewährte Technologien für beste Wärmedämmung, 
+              Sicherheit und Langlebigkeit.
+            </p>
+          </div>
+
+          <div style={{ 
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '32px'
+          }}>
+            {/* PVC Material */}
+            <div style={{
+              background: 'white',
+              padding: '32px',
+              borderRadius: '12px',
+              border: '1px solid #e5e7eb',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+            }}>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                background: '#eff6ff',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '20px',
+                fontSize: '1.5rem'
+              }}>
+                🏗️
+              </div>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Premium PVC-Profile
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6',
+                marginBottom: '16px'
+              }}>
+                6-Kammer-Profiltechnik mit bis zu 84mm Bautiefe. 
+                Optimale Wärmedämmung und Stabilität.
+              </p>
+              <ul style={{
+                color: '#6b7280',
+                fontSize: '0.9rem',
+                lineHeight: '1.6',
+                paddingLeft: '16px'
+              }}>
+                <li>Uw-Wert bis 0,74 W/(m²K)</li>
+                <li>RAL-gütegesichert</li>
+                <li>100% recyclebar</li>
+              </ul>
+            </div>
+
+            {/* Glazing Technology */}
+            <div style={{
+              background: 'white',
+              padding: '32px',
+              borderRadius: '12px',
+              border: '1px solid #e5e7eb',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+            }}>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                background: '#eff6ff',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '20px',
+                fontSize: '1.5rem'
+              }}>
+                🔷
+              </div>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Hochleistungsglas
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6',
+                marginBottom: '16px'
+              }}>
+                3-fach Verglasung mit Edelgas-Füllung und warmer Kante 
+                für maximale Energieeffizienz.
+              </p>
+              <ul style={{
+                color: '#6b7280',
+                fontSize: '0.9rem',
+                lineHeight: '1.6',
+                paddingLeft: '16px'
+              }}>
+                <li>Ug-Wert bis 0,5 W/(m²K)</li>
+                <li>Schallschutz bis 45 dB</li>
+                <li>Optional: Einbruchschutz P4A</li>
+              </ul>
+            </div>
+
+            {/* Hardware & Security */}
+            <div style={{
+              background: 'white',
+              padding: '32px',
+              borderRadius: '12px',
+              border: '1px solid #e5e7eb',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+            }}>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                background: '#eff6ff',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '20px',
+                fontSize: '1.5rem'
+              }}>
+                🔐
+              </div>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Sicherheitstechnik
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6',
+                marginBottom: '16px'
+              }}>
+                Hochwertige Beschläge und Sicherheitstechnik für 
+                optimalen Einbruchschutz nach DIN-Norm.
+              </p>
+              <ul style={{
+                color: '#6b7280',
+                fontSize: '0.9rem',
+                lineHeight: '1.6',
+                paddingLeft: '16px'
+              }}>
+                <li>RC2-Sicherheit verfügbar</li>
+                <li>Pilzkopfverriegelung</li>
+                <li>Sicherheitsglas P4A</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -632,6 +1030,152 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SERVICE AREAS */}
+      <section style={{ 
+        padding: '80px 60px',
+        background: 'white',
+        borderTop: '1px solid #e5e7eb'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <h2 style={{ 
+              fontSize: '2.5rem',
+              fontWeight: '800',
+              color: '#111827',
+              marginBottom: '16px'
+            }}>
+              Unser Servicegebiet
+            </h2>
+            <p style={{ 
+              fontSize: '1.1rem',
+              color: '#6b7280',
+              maxWidth: '600px',
+              margin: '0 auto'
+            }}>
+              Wir sind deutschlandweit für Sie da – mit eigenem Montage-Service 
+              und kostenfreier Lieferung ab 5 Fenstern.
+            </p>
+          </div>
+
+          <div style={{ 
+            display: 'grid',
+            gridTemplateColumns: '1fr 2fr',
+            gap: '64px',
+            alignItems: 'center'
+          }}>
+            {/* Service info */}
+            <div>
+              <h3 style={{
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '24px'
+              }}>
+                Deutschlandweiter Service
+              </h3>
+              
+              <div style={{ marginBottom: '24px' }}>
+                <h4 style={{
+                  fontSize: '1.1rem',
+                  fontWeight: '600',
+                  color: '#111827',
+                  marginBottom: '8px'
+                }}>
+                  Kostenlose Lieferung:
+                </h4>
+                <p style={{
+                  color: '#6b7280',
+                  lineHeight: '1.6'
+                }}>
+                  Ab 5 Fenstern liefern wir deutschlandweit kostenfrei bis zur Bordsteinkante.
+                </p>
+              </div>
+
+              <div style={{ marginBottom: '24px' }}>
+                <h4 style={{
+                  fontSize: '1.1rem',
+                  fontWeight: '600',
+                  color: '#111827',
+                  marginBottom: '8px'
+                }}>
+                  Montage-Service:
+                </h4>
+                <p style={{
+                  color: '#6b7280',
+                  lineHeight: '1.6'
+                }}>
+                  Durch unser eigenes Fachpersonal in ganz Deutschland. 
+                  Terminvereinbarung nach Absprache.
+                </p>
+              </div>
+
+              <div style={{ marginBottom: '32px' }}>
+                <h4 style={{
+                  fontSize: '1.1rem',
+                  fontWeight: '600',
+                  color: '#111827',
+                  marginBottom: '8px'
+                }}>
+                  Aufmaß-Service:
+                </h4>
+                <p style={{
+                  color: '#6b7280',
+                  lineHeight: '1.6'
+                }}>
+                  Kostenloses Aufmaß vor Ort durch unsere erfahrenen Experten.
+                </p>
+              </div>
+
+              <div style={{ 
+                display: 'flex',
+                gap: '32px',
+                flexWrap: 'wrap'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontSize: '1.2rem' }}>✓</span>
+                  <span style={{ fontWeight: '600', color: '#374151' }}>Eigene Monteure</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontSize: '1.2rem' }}>✓</span>
+                  <span style={{ fontWeight: '600', color: '#374151' }}>Kostenfreie Lieferung</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontSize: '1.2rem' }}>✓</span>
+                  <span style={{ fontWeight: '600', color: '#374151' }}>Deutschlandweit</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Map placeholder */}
+            <div style={{
+              height: '400px',
+              background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
+              borderRadius: '12px',
+              position: 'relative',
+              overflow: 'hidden',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                textAlign: 'center',
+                color: '#6b7280'
+              }}>
+                <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🗺️</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: '600' }}>
+                  Deutschland-Karte
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.7 }}>
+                  Unser Servicegebiet im Überblick
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* WHY CHOOSE US */}
       <section style={{ 
         padding: '80px 60px',
@@ -812,6 +1356,163 @@ export default function Home() {
               }}>
                 Einfach online konfigurieren und Preis berechnen. 
                 Schnell, unkompliziert und jederzeit verfügbar.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ SECTION */}
+      <section style={{ 
+        padding: '80px 60px',
+        background: 'white'
+      }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <h2 style={{ 
+              fontSize: '2.5rem',
+              fontWeight: '800',
+              color: '#111827',
+              marginBottom: '16px'
+            }}>
+              Häufige Fragen
+            </h2>
+            <p style={{ 
+              fontSize: '1.1rem',
+              color: '#6b7280',
+              maxWidth: '600px',
+              margin: '0 auto'
+            }}>
+              Die wichtigsten Antworten zu Ihrem Fenster- und Türenprojekt.
+            </p>
+          </div>
+
+          <div style={{ 
+            display: 'grid',
+            gap: '24px'
+          }}>
+            {/* FAQ 1 */}
+            <div style={{
+              background: '#f9fafb',
+              padding: '24px',
+              borderRadius: '12px',
+              border: '1px solid #e5e7eb'
+            }}>
+              <h3 style={{
+                fontSize: '1.1rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Wie lange dauert die Lieferung und Montage?
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Nach Auftragsbestätigung beträgt die Lieferzeit 3-4 Wochen. 
+                Die Montage erfolgt durch unser eigenes Fachpersonal und dauert 
+                je nach Umfang 1-3 Tage.
+              </p>
+            </div>
+
+            {/* FAQ 2 */}
+            <div style={{
+              background: '#f9fafb',
+              padding: '24px',
+              borderRadius: '12px',
+              border: '1px solid #e5e7eb'
+            }}>
+              <h3 style={{
+                fontSize: '1.1rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Welche Garantie bieten Sie auf Ihre Produkte?
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Wir gewähren 5 Jahre Vollgarantie auf alle Fenster und Türen sowie 
+                2 Jahre auf die Montage. Die Herstellergarantie auf Profile beträgt 
+                bis zu 10 Jahre.
+              </p>
+            </div>
+
+            {/* FAQ 3 */}
+            <div style={{
+              background: '#f9fafb',
+              padding: '24px',
+              borderRadius: '12px',
+              border: '1px solid #e5e7eb'
+            }}>
+              <h3 style={{
+                fontSize: '1.1rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Sind die Preise im Konfigurator verbindlich?
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Ja, die angezeigten Preise sind Festpreise inklusive Mehrwertsteuer. 
+                Nach dem kostenlosen Aufmaß erhalten Sie ein verbindliches Angebot 
+                ohne Nachverhandlung.
+              </p>
+            </div>
+
+            {/* FAQ 4 */}
+            <div style={{
+              background: '#f9fafb',
+              padding: '24px',
+              borderRadius: '12px',
+              border: '1px solid #e5e7eb'
+            }}>
+              <h3 style={{
+                fontSize: '1.1rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Können Sie auch Sondermaße und individuelle Formen fertigen?
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Selbstverständlich! Wir fertigen alle Fenster und Türen individuell 
+                nach Ihren Maßen. Auch Rundbögen, Dreiecke und andere Sonderformen 
+                sind möglich.
+              </p>
+            </div>
+
+            {/* FAQ 5 */}
+            <div style={{
+              background: '#f9fafb',
+              padding: '24px',
+              borderRadius: '12px',
+              border: '1px solid #e5e7eb'
+            }}>
+              <h3 style={{
+                fontSize: '1.1rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Was ist bei der Entsorgung der alten Fenster enthalten?
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Die fachgerechte Demontage und Entsorgung Ihrer alten Fenster und Türen 
+                ist im Service enthalten. Wir entsorgen umweltgerecht und kostenfrei 
+                für Sie.
               </p>
             </div>
           </div>
