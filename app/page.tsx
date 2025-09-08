@@ -12,9 +12,10 @@ export default function Home() {
           mit sofortiger Preisberechnung. Lieferung & Montage auf Wunsch.
         </p>
 
-        <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+        <div style={{ display: "flex", gap: 12, marginTop: 8, flexWrap: "wrap" }}>
           <Link className="btn" href="/fenster-konfigurator">Jetzt konfigurieren</Link>
           <a className="btn btn-secondary" href="#vorteile">Unsere Vorteile</a>
+          <a className="btn btn-secondary" href="tel:+49-[TELEFONNUMMER]">📞 Direkt anrufen</a>
           <a className="btn btn-secondary" href="mailto:info@fenstermann24.de">✉ E-Mail Kontakt</a>
         </div>
 

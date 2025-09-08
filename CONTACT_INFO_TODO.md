@@ -25,6 +25,7 @@ Die Kontaktdaten (E-Mail, Telefon, Homepage) von https://www.fenster-az.de/ soll
 - `[Straße und Hausnummer]` → Echte Adresse
 - `[PLZ Ort]` → Echte PLZ und Ort
 - `[TELEFONNUMMER]` → Echte Telefonnummer (Format: +49...)
+  - **Hinweis**: Dieser Platzhalter wird sowohl im Impressum als auch im neuen "Direkt anrufen" Button auf der Homepage verwendet
 - `[EMAIL]` → Echte E-Mail-Adresse
 - `[Geschäftsführer/Vertretungsberechtigte Person]` → Name der verantwortlichen Person
 - `[Amtsgericht]` → Zuständiges Amtsgericht
