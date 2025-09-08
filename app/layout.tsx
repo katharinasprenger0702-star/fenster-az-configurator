@@ -14,27 +14,25 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <header className="header">
           <div className="logo">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              {/* Window frame */}
-              <rect x="2" y="2" width="20" height="20" rx="2" ry="2" stroke="#0a6cf1" strokeWidth="1.5" fill="none"/>
-              {/* Window cross dividers */}
-              <line x1="12" y1="2" x2="12" y2="22" stroke="#0a6cf1" strokeWidth="1.5"/>
-              <line x1="2" y1="12" x2="22" y2="12" stroke="#0a6cf1" strokeWidth="1.5"/>
-              {/* Window panes with subtle fill */}
-              <rect x="3" y="3" width="8" height="8" fill="#0a6cf1" fillOpacity="0.1"/>
-              <rect x="13" y="3" width="8" height="8" fill="#0a6cf1" fillOpacity="0.1"/>
-              <rect x="3" y="13" width="8" height="8" fill="#0a6cf1" fillOpacity="0.1"/>
-              <rect x="13" y="13" width="8" height="8" fill="#0a6cf1" fillOpacity="0.1"/>
-              {/* Window handles */}
-              <circle cx="19" cy="9" r="1" fill="#0a6cf1"/>
-              <circle cx="19" cy="15" r="1" fill="#0a6cf1"/>
+            
+copilot/fix-dd77b6f1-92a1-45ad-a530-f1ffda84c1d2
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="3" ry="3" stroke="url(#gradient)" strokeWidth="2"/>
+              <rect x="7" y="7" width="10" height="10" rx="1" ry="1" fill="url(#gradient)"/>
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#0a6cf1"/>
+                  <stop offset="100%" stopColor="#0e7ef5"/>
+                </linearGradient>
+              </defs>
+ main
             </svg>
             <span>Fenstermann24 | Online‑Konfigurator</span>
           </div>
-          <nav>
-            <Link href="/" style={{marginRight:12}}>Start</Link>
-            <Link href="/fenster-konfigurator" style={{marginRight:12}}>Konfigurator</Link>
-            <Link href="/impressum">Impressum</Link>
+          <nav style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+            <Link href="/" style={{marginRight:8, fontWeight: 600}}>Start</Link>
+            <Link href="/fenster-konfigurator" style={{marginRight:8, fontWeight: 600}}>Konfigurator</Link>
+            <Link href="/impressum" style={{ fontWeight: 600 }}>Impressum</Link>
           </nav>
         </header>
         <main className="container">{children}</main>
