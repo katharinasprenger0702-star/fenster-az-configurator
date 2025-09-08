@@ -292,8 +292,6 @@ export default function ConfiguratorPage() {
               <option>Dreh-Kipp rechts</option>
               <option>Doppelflügelig (Stulp)</option>
               <option>Festverglasung</option>
-              <option>Dreh</option>
-              <option>Kipp</option>
             </select>
           </div>
           <div className="row">
