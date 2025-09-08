@@ -5,7 +5,14 @@ import type { ReactNode } from 'react';
 
 export const metadata = {
   title: 'Fenstermann24 – Online‑Konfigurator',
-  description: 'Fenstermann24.de – eine Marke der AZ Fenster und Türen GmbH'
+  description: 'Fenstermann24.de – eine Marke der AZ Fenster und Türen GmbH. Fenster & Türen direkt online konfigurieren mit sofortiger Preisberechnung.',
+  keywords: 'Fenster, Türen, Haustüren, PVC, Aluminium, Holz, Konfigurator, Preiskalkulator, AZ Fenster',
+  robots: 'index, follow'
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
