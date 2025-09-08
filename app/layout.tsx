@@ -15,8 +15,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <header className="header">
           <div className="logo">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="3" ry="3" stroke="#0a6cf1" strokeWidth="2"/>
-              <rect x="7" y="7" width="10" height="10" rx="1" ry="1" fill="#0a6cf1"/>
+              {/* Window frame */}
+              <rect x="2" y="2" width="20" height="20" rx="2" ry="2" stroke="#0a6cf1" strokeWidth="1.5" fill="none"/>
+              {/* Window cross dividers */}
+              <line x1="12" y1="2" x2="12" y2="22" stroke="#0a6cf1" strokeWidth="1.5"/>
+              <line x1="2" y1="12" x2="22" y2="12" stroke="#0a6cf1" strokeWidth="1.5"/>
+              {/* Window panes with subtle fill */}
+              <rect x="3" y="3" width="8" height="8" fill="#0a6cf1" fillOpacity="0.1"/>
+              <rect x="13" y="3" width="8" height="8" fill="#0a6cf1" fillOpacity="0.1"/>
+              <rect x="3" y="13" width="8" height="8" fill="#0a6cf1" fillOpacity="0.1"/>
+              <rect x="13" y="13" width="8" height="8" fill="#0a6cf1" fillOpacity="0.1"/>
+              {/* Window handles */}
+              <circle cx="19" cy="9" r="1" fill="#0a6cf1"/>
+              <circle cx="19" cy="15" r="1" fill="#0a6cf1"/>
             </svg>
             <span>Fenstermann24 | Online‑Konfigurator</span>
           </div>

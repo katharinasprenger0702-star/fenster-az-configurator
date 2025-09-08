@@ -272,6 +272,38 @@ export default function ConfiguratorPage() {
       {/* === STEP 0: Produktauswahl === */}
       {step === 0 && (
         <div className="grid">
+          {/* Visual Preview */}
+          <div className="window-preview">
+            <h4>Vorschau: {form.product} {form.opening}</h4>
+            <div 
+              className="preview-window"
+              style={{
+                width: Math.max(120, Math.min(200, form.width_mm / 10)),
+                height: Math.max(100, Math.min(160, form.height_mm / 10))
+              }}
+            >
+              <div className="window-frame vertical"></div>
+              <div className="window-frame horizontal"></div>
+              {form.opening.includes('Dreh') && <div className="window-handle"></div>}
+            </div>
+            <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '8px' }}>
+              {form.width_mm} × {form.height_mm} mm | Material: {form.material}
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="label">Produkttyp</div>
+            <select
+              value={form.product}
+              onChange={e => setForm(prev => ({ ...prev, product: e.target.value as any }))}
+              style={{
+                borderColor: '#d1d5db'
+              }}
+            >
+              <option value="Fenster">Fenster</option>
+              <option value="Türe">Haustür</option>
+            </select>
+          </div>
           <div className="row">
             <div className="label">Produkttyp</div>
             <select
@@ -344,6 +376,22 @@ export default function ConfiguratorPage() {
             />
           </div>
           <div className="row">
+            <div className="label">Öffnungsart</div>
+            <select
+              value={form.opening}
+              onChange={e => setForm(prev => ({ ...prev, opening: e.target.value as any }))}
+              style={{
+                borderColor: validation.errors.some(e => e.includes('Öffnung') || e.includes(form.opening)) ? '#d32f2f' : '#d1d5db'
+              }}
+            >
+              <option>Dreh-Kipp links</option>
+              <option>Dreh-Kipp rechts</option>
+              <option>Doppelflügelig (Stulp)</option>
+              <option>Festverglasung</option>
+            </select>
+          </div>
+          <div className="row">
+main
             <div className="label">Menge</div>
             <input
               type="number"
@@ -363,17 +411,23 @@ export default function ConfiguratorPage() {
       {/* === STEP 2: Ausführung & Sicherheit === */}
       {step === 2 && (
         <div className="grid">
-          {/* Material */}
-          <div className="row">
+          {/* Material Selection with Visual Options */}
+          <div>
             <div className="label">Material</div>
-            <select
-              value={form.material}
-              onChange={e => setForm(p => ({ ...p, material: e.target.value as any }))}
-            >
-              <option value="PVC">PVC</option>
-              <option value="Aluminium">Aluminium</option>
-              <option value="Holz">Holz</option>
-            </select>
+            <div className="material-selector">
+              {['PVC', 'Aluminium', 'Holz'].map(material => (
+                <div
+                  key={material}
+                  className={`material-option ${form.material === material ? 'selected' : ''}`}
+                  onClick={() => setForm(p => ({ ...p, material: material as any }))}
+                >
+                  <div className={`material-icon material-${material.toLowerCase()}`}></div>
+                  <div style={{ fontSize: '14px', fontWeight: form.material === material ? '600' : '400' }}>
+                    {material}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
           {/* Profil */}
           <div className="row">

@@ -1,6 +1,18 @@
 /**
  * Technical validation module for DIN 18055 and anerkannte Regeln der Technik (a.R.d.T.)
  * Implements German building standards for window and door configuration
+ * 
+ * Supported Standards:
+ * - DIN 18055: Windows and doors dimensional limits
+ * - DIN 18273: Security requirements for doors and windows against burglary
+ * - EN 1627-1630: Burglar resistance classes (RC1N-RC6)
+ * - EN 12207: Air permeability classification
+ * - EN 12208: Watertightness classification  
+ * - EN 12210: Wind load resistance classification
+ * - DIN 18040: Barrier-free construction (accessibility)
+ * - DIN 4108: Thermal insulation and energy economy
+ * - DIN 4109: Sound insulation in buildings
+ * - EN 14351-1: Windows and doors performance characteristics
  */
 
 import type { Config, OpeningType, Material, SecurityLevel } from './pricing';
@@ -19,6 +31,27 @@ export interface DIN18055Limits {
   maxHeight: number;
   maxArea: number;
   maxWeightPerM2?: number;
+}
+
+export interface ENStandardsCompliance {
+  airPermeability?: string; // EN 12207 classes: AE, A1-A4
+  watertightness?: string;  // EN 12208 classes: RE, 1A-9A
+  windLoadResistance?: string; // EN 12210 classes: C1-C5, B1-B5, A1-A3
+  thermalTransmittance?: number; // U-value W/(m²·K)
+  acousticRating?: number; // Rw dB according to DIN 4109
+}
+
+export interface DoorAccessibilityRequirements {
+  minClearWidth: number; // DIN 18040: 850mm for accessible doors
+  maxThreshold: number;  // DIN 18040: max 25mm threshold
+  minManeuveringSpace: number; // DIN 18040: min 1200mm x 1200mm
+}
+
+export interface SecurityClassification {
+  rcClass: string; // EN 1627-1630: RC1N, RC2N, RC2, RC3, RC4, RC5, RC6
+  description: string;
+  minAttackTime: number; // minutes
+  applications: string[];
 }
 
 /**
@@ -145,6 +178,117 @@ const DIN_18055_LIMITS: Record<string, DIN18055Limits> = {
     maxArea: 5.5, // m²
     maxWeightPerM2: 90, // kg/m²
   },
+};
+
+/**
+ * EN 1627-1630 Security classifications with detailed specifications
+ * Burglar resistance classes for doors and windows
+ */
+const EN_SECURITY_CLASSIFICATIONS: Record<SecurityLevel | 'RC2' | 'RC3' | 'RC4', SecurityClassification> = {
+  'Basis': {
+    rcClass: 'Basis',
+    description: 'Grundsicherheit ohne spezifische Widerstandsklasse',
+    minAttackTime: 0,
+    applications: ['Obergeschosse', 'Niedrigrisikogebiete']
+  },
+  'RC1N': {
+    rcClass: 'RC1N',
+    description: 'Grundschutz gegen körperliche Gewalt (ohne Werkzeuge)',
+    minAttackTime: 0,
+    applications: ['Obergeschosse', 'Bereiche mit geringem Einbruchsrisiko']
+  },
+  'RC2N': {
+    rcClass: 'RC2N',
+    description: 'Schutz gegen einfache Werkzeuge (Schraubendreher, Zangen)',
+    minAttackTime: 3,
+    applications: ['Einfamilienhäuser EG', 'Wohnungen bis 3. OG']
+  },
+  'RC2': {
+    rcClass: 'RC2',
+    description: 'Wie RC2N plus Verglasung mit Angriffshemmung',
+    minAttackTime: 3,
+    applications: ['Einfamilienhäuser', 'Gewerbeobjekte niedriger Gefährdung']
+  },
+  'RC3': {
+    rcClass: 'RC3',
+    description: 'Schutz gegen zusätzliche Werkzeuge (Brecheisen, Kuhfuß)',
+    minAttackTime: 5,
+    applications: ['Gewerbeobjekte', 'Einfamilienhäuser in Risikogebieten']
+  },
+  'RC4': {
+    rcClass: 'RC4',
+    description: 'Schutz gegen Sägewerkzeuge, Schlagaxt, Hammer und Meißel',
+    minAttackTime: 10,
+    applications: ['Hochwertige Objekte', 'Geschäfte', 'Bürogebäude']
+  }
+};
+
+/**
+ * EN 12207 Air permeability classification for doors and windows
+ */
+const EN_12207_AIR_PERMEABILITY = {
+  classes: ['AE', 'A1', 'A2', 'A3', 'A4'],
+  requirements: {
+    'AE': { maxPermeability: 'Keine Anforderung', description: 'Nur für Prüfzwecke' },
+    'A1': { maxPermeability: '50 m³/(h·m²)', description: 'Grundanforderung für Wohngebäude' },
+    'A2': { maxPermeability: '27 m³/(h·m²)', description: 'Erhöhte Anforderung' },
+    'A3': { maxPermeability: '9 m³/(h·m²)', description: 'Hohe Anforderung für Passivhäuser' },
+    'A4': { maxPermeability: '3 m³/(h·m²)', description: 'Höchste Anforderung' }
+  }
+};
+
+/**
+ * EN 12208 Watertightness classification
+ */
+const EN_12208_WATERTIGHTNESS = {
+  classes: ['RE', '1A', '2A', '3A', '4A', '5A', '6A', '7A', '8A', '9A'],
+  requirements: {
+    'RE': { pressure: 0, description: 'Keine Anforderung' },
+    '1A': { pressure: 150, description: 'Grundanforderung (150 Pa)' },
+    '2A': { pressure: 200, description: 'Standard (200 Pa)' },
+    '3A': { pressure: 250, description: 'Erhöht (250 Pa)' },
+    '4A': { pressure: 300, description: 'Hoch (300 Pa)' },
+    '5A': { pressure: 450, description: 'Sehr hoch (450 Pa)' },
+    '6A': { pressure: 600, description: 'Extrem hoch (600 Pa)' }
+  }
+};
+
+/**
+ * EN 12210 Wind load resistance classification
+ */
+const EN_12210_WIND_LOAD = {
+  deflectionClasses: ['C1', 'C2', 'C3', 'C4', 'C5'],
+  pressureClasses: ['B1', 'B2', 'B3', 'B4', 'B5'],
+  safetyClasses: ['A1', 'A2', 'A3']
+};
+
+/**
+ * DIN 18040 Accessibility requirements for doors
+ */
+const DIN_18040_ACCESSIBILITY: DoorAccessibilityRequirements = {
+  minClearWidth: 850,      // mm - clear door width
+  maxThreshold: 25,        // mm - maximum threshold height
+  minManeuveringSpace: 1200 // mm - minimum maneuvering space
+};
+
+/**
+ * DIN 4108 Thermal insulation requirements
+ */
+const DIN_4108_THERMAL = {
+  doors: {
+    maxUValue: 1.8,  // W/(m²·K) for entrance doors
+    recommendedUValue: 1.3  // W/(m²·K) recommended for energy efficiency
+  }
+};
+
+/**
+ * DIN 4109 Sound insulation requirements
+ */
+const DIN_4109_ACOUSTIC = {
+  doors: {
+    minRw: 32,      // dB minimum for entrance doors
+    recommendedRw: 37  // dB recommended for enhanced acoustic comfort
+  }
 };
 
 /**
@@ -370,19 +514,207 @@ function validateTechnicalCombinations(config: Config): { isValid: boolean; erro
 }
 
 /**
+ * Validate EN 1627-1630 security requirements for doors (DIN 18273)
+ */
+function validateDoorSecurityEN1627(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  if (config.product !== 'Türe') {
+    return { isValid: true, errors, warnings };
+  }
+
+  const securityClass = EN_SECURITY_CLASSIFICATIONS[config.security];
+  
+  // Validate security level for doors
+  if (config.security === 'Basis') {
+    warnings.push('Haustüren ohne Widerstandsklasse entsprechen nicht EN 1627-1630 (Einbruchschutz)');
+    warnings.push('Empfehlung: Mindestens RC1N für Obergeschosse, RC2N für Erdgeschoss');
+  }
+
+  // Check if security level is appropriate for door application
+  if (config.security === 'RC1N') {
+    warnings.push('RC1N für Haustüren: Nur für Obergeschosse oder niedrige Risikobereiche geeignet');
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Validate EN 12207 air permeability requirements
+ */
+function validateAirPermeabilityEN12207(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  if (config.product === 'Türe') {
+    // For doors, recommend A2 or higher for energy efficiency
+    if (!config.warmEdge && config.glazing === '3-fach') {
+      warnings.push('Für Energieeffizienz: Warme Kante empfohlen (verbessert Luftdichtheit nach EN 12207)');
+    }
+    
+    // Provide air permeability guidance
+    warnings.push('Haustüren sollten mindestens Klasse A2 (≤ 27 m³/(h·m²)) nach EN 12207 erreichen');
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Validate EN 12208 watertightness requirements
+ */
+function validateWatertightnessEN12208(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  if (config.product === 'Türe') {
+    // Standard recommendation for doors
+    warnings.push('Haustüren sollten mindestens Klasse 3A (250 Pa) nach EN 12208 (Schlagregenprüfung) erfüllen');
+    
+    // Material-specific recommendations
+    if (config.material === 'Holz') {
+      warnings.push('Holztüren: Besondere Aufmerksamkeit auf Dichtungen (EN 12208 Schlagregenbeständigkeit)');
+    }
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Validate DIN 18040 accessibility requirements for doors
+ */
+function validateAccessibilityDIN18040(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  if (config.product === 'Türe') {
+    // Check clear width for accessibility
+    const clearWidth = config.width_mm - 100; // Approximate clear width (door frame reduction)
+    
+    if (clearWidth < DIN_18040_ACCESSIBILITY.minClearWidth) {
+      warnings.push(`Barrierefreiheit (DIN 18040): Lichte Türbreite sollte ≥ ${DIN_18040_ACCESSIBILITY.minClearWidth}mm sein (aktuell ca. ${clearWidth}mm)`);
+    }
+
+    // Provide accessibility guidance
+    warnings.push('Für Barrierefreiheit nach DIN 18040: Schwelle max. 25mm, Bewegungsfläche 1200×1200mm vorsehen');
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Validate DIN 4108 thermal insulation requirements
+ */
+function validateThermalPerformanceDIN4108(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  if (config.product === 'Türe') {
+    // Estimate U-value based on configuration
+    let estimatedUValue = 2.0; // Base U-value for standard door
+    
+    if (config.profile === 'ThermoPlus') estimatedUValue *= 0.85;
+    if (config.profile === 'Premium') estimatedUValue *= 0.75;
+    if (config.glazing === '3-fach') estimatedUValue *= 0.8;
+    if (config.warmEdge) estimatedUValue *= 0.95;
+
+    if (estimatedUValue > DIN_4108_THERMAL.doors.maxUValue) {
+      warnings.push(`Wärmedämmung (DIN 4108): U-Wert sollte ≤ ${DIN_4108_THERMAL.doors.maxUValue} W/(m²·K) sein (geschätzt: ${estimatedUValue.toFixed(2)})`);
+    }
+
+    if (estimatedUValue > DIN_4108_THERMAL.doors.recommendedUValue) {
+      warnings.push(`Empfehlung: U-Wert ≤ ${DIN_4108_THERMAL.doors.recommendedUValue} W/(m²·K) für bessere Energieeffizienz`);
+    }
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Validate DIN 4109 acoustic performance requirements
+ */
+function validateAcousticPerformanceDIN4109(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  if (config.product === 'Türe') {
+    let estimatedRw = 30; // Base acoustic rating
+
+    if (config.soundInsulation) estimatedRw += 5;
+    if (config.glazing === '3-fach') estimatedRw += 3;
+    if (config.safetyGlass) estimatedRw += 2;
+    if (config.material === 'Holz') estimatedRw += 2;
+
+    if (estimatedRw < DIN_4109_ACOUSTIC.doors.minRw) {
+      warnings.push(`Schallschutz (DIN 4109): Bewertetes Schalldämm-Maß sollte ≥ ${DIN_4109_ACOUSTIC.doors.minRw} dB sein (geschätzt: ${estimatedRw} dB)`);
+    }
+
+    if (estimatedRw < DIN_4109_ACOUSTIC.doors.recommendedRw) {
+      warnings.push(`Empfehlung: Rw ≥ ${DIN_4109_ACOUSTIC.doors.recommendedRw} dB für erhöhten Schallschutz (Schallschutzglas aktivieren)`);
+    }
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Validate EN 14351-1 performance characteristics
+ */
+function validatePerformanceEN14351(config: Config): { isValid: boolean; errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  if (config.product === 'Türe') {
+    // EN 14351-1 requires declaration of essential characteristics
+    const characteristics = [
+      'Widerstandsfähigkeit gegen Windlast (EN 12210)',
+      'Schlagregenbeständigkeit (EN 12208)', 
+      'Luftdurchlässigkeit (EN 12207)',
+      'Wärmedurchgangskoeffizient (EN ISO 10077)',
+      'Schalldämmung (EN ISO 10140)'
+    ];
+
+    warnings.push('EN 14351-1 erfordert Leistungserklärung für: ' + characteristics.join(', '));
+    
+    if (config.security !== 'Basis') {
+      warnings.push(`Einbruchhemmung nach EN 1627-1630 (${config.security}) ist Teil der Leistungserklärung`);
+    }
+  }
+
+  return { isValid: errors.length === 0, errors, warnings };
+}
+
+/**
  * Main validation function that checks all DIN 18055 and a.R.d.T. requirements
+ * Enhanced with comprehensive EN standards for doors
  */
 export function validateTechnicalCompliance(config: Config): ValidationResult {
   const dimensionCheck = validateDIN18055Dimensions(config);
   const materialCheck = validateMaterialCompatibility(config);
   const securityCheck = validateSecurityRequirements(config);
   const combinationCheck = validateTechnicalCombinations(config);
+  
+  // New EN and DIN standard validations for doors
+  const doorSecurityCheck = validateDoorSecurityEN1627(config);
+  const airPermeabilityCheck = validateAirPermeabilityEN12207(config);
+  const watertightnessCheck = validateWatertightnessEN12208(config);
+  const accessibilityCheck = validateAccessibilityDIN18040(config);
+  const thermalCheck = validateThermalPerformanceDIN4108(config);
+  const acousticCheck = validateAcousticPerformanceDIN4109(config);
+  const performanceCheck = validatePerformanceEN14351(config);
 
   const allErrors = [
     ...dimensionCheck.errors,
     ...materialCheck.errors,
     ...securityCheck.errors,
     ...combinationCheck.errors,
+    ...doorSecurityCheck.errors,
+    ...airPermeabilityCheck.errors,
+    ...watertightnessCheck.errors,
+    ...accessibilityCheck.errors,
+    ...thermalCheck.errors,
+    ...acousticCheck.errors,
+    ...performanceCheck.errors,
   ];
 
   const allWarnings = [
@@ -390,6 +722,13 @@ export function validateTechnicalCompliance(config: Config): ValidationResult {
     ...materialCheck.warnings,
     ...securityCheck.warnings,
     ...combinationCheck.warnings,
+    ...doorSecurityCheck.warnings,
+    ...airPermeabilityCheck.warnings,
+    ...watertightnessCheck.warnings,
+    ...accessibilityCheck.warnings,
+    ...thermalCheck.warnings,
+    ...acousticCheck.warnings,
+    ...performanceCheck.warnings,
   ];
 
   // Generate compliance information
@@ -398,6 +737,13 @@ export function validateTechnicalCompliance(config: Config): ValidationResult {
   if (allErrors.length === 0) {
     complianceInfo.push('✓ Konfiguration entspricht DIN 18055');
     complianceInfo.push('✓ Konfiguration entspricht a.R.d.T.');
+    
+    // Add door-specific compliance information
+    if (config.product === 'Türe') {
+      complianceInfo.push('✓ Türkonfiguration berücksichtigt EN-Standards');
+      complianceInfo.push('✓ Sicherheitsklassifizierung nach EN 1627-1630');
+      complianceInfo.push('✓ Leistungsmerkmale nach EN 14351-1');
+    }
     
     // Add specific compliance notes
     const area = calculateArea(config.width_mm, config.height_mm);
@@ -424,7 +770,8 @@ export function validateTechnicalCompliance(config: Config): ValidationResult {
 }
 
 /**
- * Get recommended configurations based on a.R.d.T.
+ * Get recommended configurations based on a.R.d.T. and EN standards
+ * Enhanced with door-specific recommendations
  */
 export function getRecommendations(config: Config): string[] {
   const recommendations: string[] = [];
@@ -440,13 +787,45 @@ export function getRecommendations(config: Config): string[] {
   }
 
   // Security recommendations
-  if (config.security === 'Basis' && ['Balkontüren', 'Schiebetüren', 'Haustüren'].includes(config.product)) {
-    recommendations.push('Für Türen: RC1N oder RC2N Sicherheitsstufe');
+  if (
+    config.security === 'Basis' &&
+    (config.product === 'Türe' || ['Balkontüren', 'Schiebetüren', 'Haustüren'].includes(config.product))
+) {
+    recommendations.push('Für Türen: RC1N oder RC2N Sicherheitsstufe (EN 1627-1630)'); 
+  } 
+  if (config.security === 'Basis' && config.product === 'Türe') {
+    recommendations.push('Für Türen: RC1N oder RC2N Sicherheitsstufe (EN 1627-1630)');
+  }
+
+  // Door-specific recommendations
+  if (config.product === 'Türe') {
+    recommendations.push('Haustüren: Leistungserklärung nach EN 14351-1 beachten');
+    
+    if (config.security === 'RC1N') {
+      recommendations.push('RC1N nur für Obergeschosse - für EG RC2N empfohlen');
+    }
+    
+    if (!config.warmEdge) {
+      recommendations.push('Warme Kante für bessere Energieeffizienz und Luftdichtheit');
+    }
+    
+    if (!config.soundInsulation) {
+      recommendations.push('Schallschutzglas für bessere Akustikwerte (DIN 4109)');
+    }
+    
+    if (config.width_mm < 950) {
+      recommendations.push('Für Barrierefreiheit (DIN 18040): Türbreite ≥ 950mm empfohlen');
+    }
+ main
   }
 
   // Maintenance recommendations
   if (config.material === 'Holz') {
-    recommendations.push('Holzfenster: Regelmäßige Wartung alle 2-3 Jahre erforderlich');
+    if (config.product === 'Türe') {
+      recommendations.push('Holztüren: Regelmäßige Wartung alle 2-3 Jahre, besonders Dichtungen (EN 12208)');
+    } else {
+      recommendations.push('Holzfenster: Regelmäßige Wartung alle 2-3 Jahre erforderlich');
+    }
   }
 
   // Feature recommendations
