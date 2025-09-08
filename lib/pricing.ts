@@ -1,4 +1,3 @@
-
 export type Material = 'PVC' | 'Aluminium' | 'Holz';
 export type Glazing = '2-fach' | '3-fach';
 export type Color = 'Weiß' | 'RAL' | 'Holzdekor';
