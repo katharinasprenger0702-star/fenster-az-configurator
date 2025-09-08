@@ -11,12 +11,12 @@ import {
 import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
-  product: z.enum(['Fenster', 'Türe']).default('Fenster'),
+  product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren']).default('Fenster'),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
   material: z.enum(['PVC', 'Aluminium', 'Holz']).default('PVC'),
   profile: z.enum(['Standard', 'ThermoPlus', 'Premium']).default('Standard'),
-  opening: z.enum(['Festverglasung','Dreh-Kipp links','Dreh-Kipp rechts','Doppelflügelig (Stulp)']).default('Dreh-Kipp links'),
+  opening: z.string().default('Dreh-Kipp links'),
   glazing: z.enum(['2-fach', '3-fach']).default('2-fach'),
   color: z.enum(['Weiß', 'RAL', 'Holzdekor']).default('Weiß'),
   handle: z.enum(['Standard', 'Premium']).default('Standard'),
@@ -34,6 +34,7 @@ const schema = z.object({
 });
 
 const steps = [
+  'Produktauswahl',
   'Maße',
   'Ausführung & Sicherheit',
   'Glas & Farbe',
@@ -41,8 +42,40 @@ const steps = [
   'Übersicht',
 ];
 
+function getOpeningTypesForProduct(product: string): string[] {
+  switch (product) {
+    case 'Fenster':
+      return ['Festverglasung', 'Dreh-Kipp links', 'Dreh-Kipp rechts', 'Doppelflügelig (Stulp)', 'Dreh', 'Kipp'];
+    case 'Balkontüren':
+      return ['Dreh', 'Dreh-Kipp', 'Dreh + Dreh-Kipp (Pfosten)', 'Dreh + Dreh-Kipp (Stulp)'];
+    case 'Schiebetüren':
+      return ['Schiebetür F+KS', 'Schiebetür FF+KS', 'Schiebetür KS', 'Schiebetür Stulp KS+KS'];
+    case 'Haustüren':
+      return ['1-flügelig', '2-flügelig'];
+    default:
+      return ['Festverglasung', 'Dreh-Kipp links', 'Dreh-Kipp rechts', 'Doppelflügelig (Stulp)'];
+  }
+}
+
 function pickDatasetAndFilter(form: any) {
-  const DATA = form.product === 'Fenster' ? fensterPrices : balkontuerenPrices;
+  let DATA;
+  switch (form.product) {
+    case 'Fenster':
+      DATA = fensterPrices;
+      break;
+    case 'Balkontüren':
+      DATA = balkontuerenPrices;
+      break;
+    case 'Schiebetüren':
+      DATA = schiebetuerenPrices;
+      break;
+    case 'Haustüren':
+      DATA = haustuerenPrices;
+      break;
+    default:
+      DATA = fensterPrices;
+  }
+  
   const filter: Record<string, string> = {};
   const opening = String(form.opening ?? '').toLowerCase();
 
@@ -50,6 +83,7 @@ function pickDatasetAndFilter(form: any) {
   if (opening.includes('fest')) filter.source_file = 'FEST';
   else if (opening.includes('dreh-kipp')) filter.source_file = 'DK + DR+DK'; // Match "FENSTER DK + DR+DK"
   else if (opening.includes('dreh')) filter.source_file = 'DREH';
+  else if (opening.includes('schiebe')) filter.source_file = 'SCHIEBE';
 
   if (opening.includes('stulp'))
     filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'STULP';
@@ -235,7 +269,7 @@ export default function ConfiguratorPage() {
           )}
         </div>
       )}
-      {/* === STEP 0: Maße === */}
+      {/* === STEP 0: Produktauswahl === */}
       {step === 0 && (
         <div className="grid">
           {/* Visual Preview */}
@@ -270,6 +304,49 @@ export default function ConfiguratorPage() {
               <option value="Türe">Haustür</option>
             </select>
           </div>
+          <div className="row">
+            <div className="label">Produkttyp</div>
+            <select
+              value={form.product}
+              onChange={e => {
+                const newProduct = e.target.value as any;
+                const availableOpenings = getOpeningTypesForProduct(newProduct);
+                setForm(prev => ({ 
+                  ...prev, 
+                  product: newProduct,
+                  opening: availableOpenings[0] || 'Dreh-Kipp links'
+                }));
+              }}
+            >
+              <option value="Fenster">Fenster</option>
+              <option value="Balkontüren">Balkontüren</option>
+              <option value="Schiebetüren">Schiebetüren</option>
+              <option value="Haustüren">Haustüren</option>
+            </select>
+          </div>
+          
+          <div className="row">
+            <div className="label">Öffnungsart</div>
+            <select
+              value={form.opening}
+              onChange={e => setForm(prev => ({ ...prev, opening: e.target.value as any }))}
+            >
+              {getOpeningTypesForProduct(form.product).map(option => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
+            <div></div>
+            <button className="btn" onClick={() => setStep(1)}>Weiter</button>
+          </div>
+        </div>
+      )}
+
+      {/* === STEP 1: Maße === */}
+      {step === 1 && (
+        <div className="grid">
           <div className="row">
             <div className="label">Breite (mm)</div>
             <input
@@ -314,6 +391,7 @@ export default function ConfiguratorPage() {
             </select>
           </div>
           <div className="row">
+main
             <div className="label">Menge</div>
             <input
               type="number"
@@ -323,24 +401,15 @@ export default function ConfiguratorPage() {
               onChange={e => setForm(prev => ({ ...prev, qty: Number(e.target.value) }))}
             />
           </div>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 12 }}>
-            <button 
-              className="btn" 
-              onClick={() => setStep(4)}
-              disabled={validation.errors.length > 0}
-              style={{
-                opacity: validation.errors.length > 0 ? 0.5 : 1,
-                cursor: validation.errors.length > 0 ? 'not-allowed' : 'pointer'
-              }}
-            >
-              {validation.errors.length > 0 ? 'Technische Anforderungen prüfen' : 'Zur Übersicht & Preis'}
-            </button>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
+            <button className="btn" onClick={() => setStep(0)}>Zurück</button>
+            <button className="btn" onClick={() => setStep(2)}>Weiter</button>
           </div>
         </div>
       )}
 
-      {/* === STEP 1: Ausführung & Sicherheit === */}
-      {step === 1 && (
+      {/* === STEP 2: Ausführung & Sicherheit === */}
+      {step === 2 && (
         <div className="grid">
           {/* Material Selection with Visual Options */}
           <div>
@@ -462,14 +531,14 @@ export default function ConfiguratorPage() {
           </div>
           {/* Navigation */}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(0)}>Zurück</button>
-            <button className="btn" onClick={() => setStep(2)}>Weiter</button>
+            <button className="btn" onClick={() => setStep(1)}>Zurück</button>
+            <button className="btn" onClick={() => setStep(3)}>Weiter</button>
           </div>
         </div>
       )}
 
-      {/* === STEP 2: Glas & Farbe === */}
-      {step === 2 && (
+      {/* === STEP 3: Glas & Farbe === */}
+      {step === 3 && (
         <div className="grid">
           {/* Verglasung */}
           <div className="row">
@@ -496,14 +565,14 @@ export default function ConfiguratorPage() {
           </div>
           {/* Navigation */}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(1)}>Zurück</button>
-            <button className="btn" onClick={() => setStep(3)}>Weiter</button>
+            <button className="btn" onClick={() => setStep(2)}>Zurück</button>
+            <button className="btn" onClick={() => setStep(4)}>Weiter</button>
           </div>
         </div>
       )}
 
-      {/* === STEP 3: Montage & Lieferung === */}
-      {step === 3 && (
+      {/* === STEP 4: Montage & Lieferung === */}
+      {step === 4 && (
         <div className="grid">
           {/* Montagepaket */}
           <div className="row">
@@ -554,14 +623,14 @@ export default function ConfiguratorPage() {
           </div>
           {/* Navigation */}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(2)}>Zurück</button>
-            <button className="btn" onClick={() => setStep(4)}>Weiter</button>
+            <button className="btn" onClick={() => setStep(3)}>Zurück</button>
+            <button className="btn" onClick={() => setStep(5)}>Weiter</button>
           </div>
         </div>
       )}
 
-      {/* === STEP 4: Übersicht === */}
-      {step === 4 && (
+      {/* === STEP 5: Übersicht === */}
+      {step === 5 && (
         <div className="grid" style={{ gap: 24 }}>
           {/* Technical Validation Summary */}
           <div className="card">

@@ -58,7 +58,7 @@ export interface SecurityClassification {
  * DIN 18055 dimensional limits for different opening types
  * Based on German standard for windows and doors
  */
-const DIN_18055_LIMITS: Record<OpeningType, DIN18055Limits> = {
+const DIN_18055_LIMITS: Record<string, DIN18055Limits> = {
   'Festverglasung': {
     minWidth: 300,
     maxWidth: 4000,
@@ -89,6 +89,94 @@ const DIN_18055_LIMITS: Record<OpeningType, DIN18055Limits> = {
     maxHeight: 2400,
     maxArea: 4.0, // m²
     maxWeightPerM2: 70, // kg/m²
+  },
+  'Dreh': {
+    minWidth: 600,
+    maxWidth: 1200,
+    minHeight: 1700,
+    maxHeight: 2500,
+    maxArea: 3.0, // m²
+    maxWeightPerM2: 80, // kg/m²
+  },
+  'Kipp': {
+    minWidth: 400,
+    maxWidth: 1600,
+    minHeight: 500,
+    maxHeight: 2400,
+    maxArea: 2.5, // m²
+    maxWeightPerM2: 80, // kg/m²
+  },
+  'Dreh-Kipp': {
+    minWidth: 400,
+    maxWidth: 1200,
+    minHeight: 1700,
+    maxHeight: 2500,
+    maxArea: 3.0, // m²
+    maxWeightPerM2: 80, // kg/m²
+  },
+  'Dreh + Dreh-Kipp (Pfosten)': {
+    minWidth: 1100,
+    maxWidth: 2300,
+    minHeight: 1700,
+    maxHeight: 2500,
+    maxArea: 5.0, // m²
+    maxWeightPerM2: 70, // kg/m²
+  },
+  'Dreh + Dreh-Kipp (Stulp)': {
+    minWidth: 1100,
+    maxWidth: 2300,
+    minHeight: 1700,
+    maxHeight: 2500,
+    maxArea: 5.0, // m²
+    maxWeightPerM2: 70, // kg/m²
+  },
+  'Schiebetür F+KS': {
+    minWidth: 1500,
+    maxWidth: 3000,
+    minHeight: 1700,
+    maxHeight: 2400,
+    maxArea: 6.0, // m²
+    maxWeightPerM2: 60, // kg/m²
+  },
+  'Schiebetür FF+KS': {
+    minWidth: 1500,
+    maxWidth: 3000,
+    minHeight: 1700,
+    maxHeight: 2400,
+    maxArea: 6.0, // m²
+    maxWeightPerM2: 60, // kg/m²
+  },
+  'Schiebetür KS': {
+    minWidth: 900,
+    maxWidth: 1500,
+    minHeight: 1700,
+    maxHeight: 2400,
+    maxArea: 3.5, // m²
+    maxWeightPerM2: 60, // kg/m²
+  },
+  'Schiebetür Stulp KS+KS': {
+    minWidth: 1500,
+    maxWidth: 3000,
+    minHeight: 1700,
+    maxHeight: 2400,
+    maxArea: 6.0, // m²
+    maxWeightPerM2: 60, // kg/m²
+  },
+  '1-flügelig': {
+    minWidth: 800,
+    maxWidth: 1200,
+    minHeight: 1900,
+    maxHeight: 2400,
+    maxArea: 2.8, // m²
+    maxWeightPerM2: 100, // kg/m²
+  },
+  '2-flügelig': {
+    minWidth: 1100,
+    maxWidth: 2400,
+    minHeight: 1900,
+    maxHeight: 2400,
+    maxArea: 5.5, // m²
+    maxWeightPerM2: 90, // kg/m²
   },
 };
 
@@ -304,6 +392,12 @@ function validateDIN18055Dimensions(config: Config): { isValid: boolean; errors:
   const errors: string[] = [];
   const warnings: string[] = [];
 
+  // If limits are not defined for this opening type, use default limits
+  if (!limits) {
+    warnings.push(`Technische Limits für Öffnungsart "${config.opening}" nicht definiert`);
+    return { isValid: true, errors, warnings };
+  }
+
   // Check minimum dimensions
   if (config.width_mm < limits.minWidth) {
     errors.push(`Mindestbreite für ${config.opening}: ${limits.minWidth}mm (DIN 18055)`);
@@ -378,7 +472,7 @@ function validateSecurityRequirements(config: Config): { isValid: boolean; error
   const warnings: string[] = [];
 
   // For ground floor and terrace doors, recommend higher security
-  if (config.product === 'Türe') {
+  if (['Balkontüren', 'Schiebetüren', 'Haustüren'].includes(config.product)) {
     if (config.security === 'Basis') {
       warnings.push('Für Türen wird mindestens RC1N Sicherheitsstufe empfohlen (a.R.d.T.)');
     }
@@ -655,11 +749,15 @@ export function validateTechnicalCompliance(config: Config): ValidationResult {
     const area = calculateArea(config.width_mm, config.height_mm);
     const limits = DIN_18055_LIMITS[config.opening];
     
-    complianceInfo.push(`✓ Flächennutzung: ${area.toFixed(2)}m² / ${limits.maxArea}m² erlaubt`);
-    
-    if (limits.maxWeightPerM2) {
-      const weight = calculateWeightPerM2(config);
-      complianceInfo.push(`✓ Gewicht: ${weight.toFixed(1)}kg/m² / ${limits.maxWeightPerM2}kg/m² erlaubt`);
+    if (limits) {
+      complianceInfo.push(`✓ Flächennutzung: ${area.toFixed(2)}m² / ${limits.maxArea}m² erlaubt`);
+      
+      if (limits.maxWeightPerM2) {
+        const weight = calculateWeightPerM2(config);
+        complianceInfo.push(`✓ Gewicht: ${weight.toFixed(1)}kg/m² / ${limits.maxWeightPerM2}kg/m² erlaubt`);
+      }
+    } else {
+      complianceInfo.push(`✓ Flächennutzung: ${area.toFixed(2)}m²`);
     }
   }
 
@@ -689,6 +787,12 @@ export function getRecommendations(config: Config): string[] {
   }
 
   // Security recommendations
+  if (
+    config.security === 'Basis' &&
+    (config.product === 'Türe' || ['Balkontüren', 'Schiebetüren', 'Haustüren'].includes(config.product))
+) {
+    recommendations.push('Für Türen: RC1N oder RC2N Sicherheitsstufe (EN 1627-1630)'); 
+  } 
   if (config.security === 'Basis' && config.product === 'Türe') {
     recommendations.push('Für Türen: RC1N oder RC2N Sicherheitsstufe (EN 1627-1630)');
   }
@@ -712,6 +816,7 @@ export function getRecommendations(config: Config): string[] {
     if (config.width_mm < 950) {
       recommendations.push('Für Barrierefreiheit (DIN 18040): Türbreite ≥ 950mm empfohlen');
     }
+ main
   }
 
   // Maintenance recommendations
