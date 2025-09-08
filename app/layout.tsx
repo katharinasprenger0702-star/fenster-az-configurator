@@ -21,13 +21,42 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <header className="header">
           <div className="logo">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="3" ry="3" stroke="url(#gradient)" strokeWidth="2"/>
-              <rect x="7" y="7" width="10" height="10" rx="1" ry="1" fill="url(#gradient)"/>
+            <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              {/* Window frame with modern design */}
+              <rect x="4" y="8" width="40" height="32" rx="4" ry="4" stroke="url(#windowGradient)" strokeWidth="2.5" fill="none"/>
+              <rect x="6" y="10" width="36" height="28" rx="2" ry="2" fill="url(#glassGradient)" opacity="0.3"/>
+              
+              {/* Window cross bars */}
+              <line x1="24" y1="10" x2="24" y2="38" stroke="url(#frameGradient)" strokeWidth="2"/>
+              <line x1="6" y1="24" x2="42" y2="24" stroke="url(#frameGradient)" strokeWidth="2"/>
+              
+              {/* Window handle */}
+              <circle cx="36" cy="30" r="2" fill="url(#handleGradient)"/>
+              <rect x="34" y="29" width="4" height="2" rx="1" fill="url(#handleGradient)"/>
+              
+              {/* Company initial "F" */}
+              <text x="24" y="18" textAnchor="middle" fontSize="8" fontWeight="bold" fill="url(#textGradient)">F24</text>
+              
               <defs>
-                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#0a6cf1"/>
-                  <stop offset="100%" stopColor="#0e7ef5"/>
+                <linearGradient id="windowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#1e40af"/>
+                  <stop offset="100%" stopColor="#3b82f6"/>
+                </linearGradient>
+                <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#bfdbfe"/>
+                  <stop offset="100%" stopColor="#93c5fd"/>
+                </linearGradient>
+                <linearGradient id="frameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#374151"/>
+                  <stop offset="100%" stopColor="#6b7280"/>
+                </linearGradient>
+                <linearGradient id="handleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#dc2626"/>
+                  <stop offset="100%" stopColor="#ef4444"/>
+                </linearGradient>
+                <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#1e40af"/>
+                  <stop offset="100%" stopColor="#3b82f6"/>
                 </linearGradient>
               </defs>
             </svg>

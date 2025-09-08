@@ -272,22 +272,93 @@ export default function ConfiguratorPage() {
       {/* === STEP 0: Produktauswahl === */}
       {step === 0 && (
         <div className="grid">
-          {/* Visual Preview */}
+          {/* Enhanced 3D Visual Preview */}
           <div className="window-preview">
-            <h4>Vorschau: {form.product} {form.opening}</h4>
+            <h4>3D Vorschau: {form.product} {form.opening}</h4>
             <div 
               className="preview-window"
               style={{
-                width: Math.max(120, Math.min(200, form.width_mm / 10)),
-                height: Math.max(100, Math.min(160, form.height_mm / 10))
+                width: Math.max(140, Math.min(220, form.width_mm / 8)),
+                height: Math.max(120, Math.min(180, form.height_mm / 8))
               }}
             >
+              {/* Main frame structure */}
               <div className="window-frame vertical"></div>
               <div className="window-frame horizontal"></div>
-              {form.opening.includes('Dreh') && <div className="window-handle"></div>}
+              
+              {/* Different visualizations based on product type */}
+              {form.product === 'Haustüren' && (
+                <>
+                  <div className="door-panel" style={{
+                    position: 'absolute',
+                    left: '10%',
+                    top: '10%',
+                    width: '35%',
+                    height: '80%',
+                    background: 'linear-gradient(145deg, #8b5cf6 0%, #a78bfa 100%)',
+                    borderRadius: '4px',
+                    boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.1)'
+                  }}></div>
+                  <div className="door-handle" style={{
+                    position: 'absolute',
+                    left: '40%',
+                    top: '55%',
+                    width: '12px',
+                    height: '6px',
+                    background: 'linear-gradient(145deg, #374151 0%, #475569 100%)',
+                    borderRadius: '3px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                  }}></div>
+                </>
+              )}
+              
+              {/* Window handle for windows */}
+              {form.opening.includes('Dreh') && form.product === 'Fenster' && (
+                <div className="window-handle"></div>
+              )}
+              
+              {/* Glass panes effect */}
+              <div className="glass-effect" style={{
+                position: 'absolute',
+                top: '8%',
+                left: '8%',
+                right: '8%',
+                bottom: '8%',
+                background: 'linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(59,130,246,0.05) 100%)',
+                borderRadius: '4px',
+                backdropFilter: 'blur(1px)'
+              }}>
+                {/* Reflection effect */}
+                <div style={{
+                  position: 'absolute',
+                  top: '5%',
+                  left: '10%',
+                  width: '30%',
+                  height: '60%',
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 70%)',
+                  borderRadius: '2px',
+                  opacity: 0.6
+                }}></div>
+              </div>
+              
+              {/* Material indicator */}
+              <div className="material-indicator" style={{
+                position: 'absolute',
+                bottom: '-8px',
+                right: '-8px',
+                width: '20px',
+                height: '20px',
+                background: form.material === 'PVC' ? '#3b82f6' : form.material === 'Aluminium' ? '#6b7280' : '#92400e',
+                borderRadius: '50%',
+                border: '2px solid white',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              }}></div>
             </div>
-            <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '8px' }}>
+            <div style={{ fontSize: '14px', color: '#4b5563', marginTop: '12px', fontWeight: 500 }}>
               {form.width_mm} × {form.height_mm} mm | Material: {form.material}
+            </div>
+            <div style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>
+              Interaktive 3D-Vorschau • Fahren Sie mit der Maus über das Fenster
             </div>
           </div>
 
@@ -301,7 +372,7 @@ export default function ConfiguratorPage() {
               }}
             >
               <option value="Fenster">Fenster</option>
-              <option value="Türe">Haustür</option>
+              <option value="Haustüren">Haustür</option>
             </select>
           </div>
           <div className="row">
