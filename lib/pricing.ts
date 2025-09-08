@@ -1,9 +1,8 @@
-
 export type Material = 'PVC' | 'Aluminium' | 'Holz';
 export type Glazing = '2-fach' | '3-fach';
 export type Color = 'Weiß' | 'RAL' | 'Holzdekor';
-export type Product = 'Fenster' | 'Türe';
-export type OpeningType = 'Festverglasung' | 'Dreh-Kipp links' | 'Dreh-Kipp rechts' | 'Doppelflügelig (Stulp)';
+export type Product = 'Fenster' | 'Balkontüren' | 'Schiebetüren' | 'Haustüren';
+export type OpeningType = string;
 export type SecurityLevel = 'Basis' | 'RC1N' | 'RC2N';
 export type Montage = 'Keine' | 'Standard' | 'Premium';
 export type Lieferzone = 'Abholung' | 'Hamburg (Zone 1)' | 'Zone 2';
@@ -117,7 +116,7 @@ const DELIVERY_PER_ORDER: Record<Lieferzone, number> = {
 };
 
 function minArea(product: Product) {
-  return product === 'Türe' ? 1.5 : 0.5;
+  return ['Balkontüren', 'Schiebetüren', 'Haustüren'].includes(product) ? 1.5 : 0.5;
 }
 
 export function mmToM2(w: number, h: number) {

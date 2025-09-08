@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const { lineItems, successUrl, cancelUrl, metadata } = await req.json();
     const sk = process.env.STRIPE_SECRET_KEY;
     if (!sk) {
-      return NextResponse.json({ error: 'STRIPE_SECRET_KEY fehlt (Testbetrieb ohne Zahlung).' }, { status: 500 });
+      return NextResponse.json({ error: 'STRIPE_SECRET_KEY is missing (Test mode without payment).' }, { status: 500 });
     }
     const stripe = new Stripe(sk, { apiVersion: '2022-11-15' });
     const session = await stripe.checkout.sessions.create({

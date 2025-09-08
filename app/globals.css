@@ -16,6 +16,7 @@
   line-height:1.6;
 }
 *{box-sizing:border-box}
+copilot/fix-dd77b6f1-92a1-45ad-a530-f1ffda84c1d2
 body{
   margin:0;
   background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
@@ -279,3 +280,62 @@ h3{
 .benefits strong{
   color:var(--brand);
 }
+body{margin:0;background:#f7f7f8;color:#111}
+a{color:var(--brand);text-decoration:none}
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:white;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:10}
+.logo{display:flex;align-items:center;gap:12px;font-weight:800}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.card{background:white;border:1px solid #e5e7eb;border-radius:12px;padding:24px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.grid{display:grid;gap:var(--gap)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:10px;border:1px solid var(--brand);background:var(--brand);color:white;font-weight:700;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{background:white;color:var(--brand);border:1px solid var(--brand)}
+.btn-outline{background:white;color:var(--brand);border:1px solid var(--brand)}
+.input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #d1d5db;background:white}
+.label{font-size:12px;color:#374151}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+.kicker{color:#6b7280;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.price{font-size:28px;font-weight:800}
+.badge{padding:4px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:700;font-size:12px}
+.footer{text-align:center;padding:24px;color:#6b7280}
+hr{border:none;border-top:1px solid #e5e7eb;margin:16px 0}
+.small{font-size:12px;color:#6b7280}
+.stepper{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.step{padding:6px 10px;border-radius:999px;border:1px solid #e5e7eb;background:white}
+.step.active{background:var(--brand);border-color:var(--brand);color:white}
+.summary{background:#fafafa;border:1px dashed #d1d5db;border-radius:12px;padding:16px}
+table{width:100%;border-collapse:collapse}
+td,th{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:24px}
+.tile{background:#fafafa;border:1px solid #e5e7eb;border-radius:12px;padding:24px;text-align:center;transition:transform 0.2s ease,box-shadow 0.2s ease}
+.tile:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(16,24,40,.12)}
+.tile h3{margin:0 0 12px 0;color:#111}
+.tile p{margin:0 0 16px 0;color:#6b7280;font-size:14px;line-height:1.5}
+.tile-icon{margin:0 auto 16px auto;width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--brand),var(--brand-2));border-radius:50%;color:white}
+.window-preview{background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:24px;text-align:center;margin-bottom:24px}
+.window-preview h4{margin:0 0 16px 0;color:#374151;font-size:16px}
+.preview-window{display:inline-block;border:3px solid #475569;background:rgba(59,130,246,0.1);border-radius:4px;position:relative;margin:0 auto}
+.window-frame{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#475569;width:2px;height:80%}
+.window-frame.horizontal{width:80%;height:2px}
+.window-handle{position:absolute;right:10px;top:60%;width:6px;height:6px;background:#374151;border-radius:50%}
+.material-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.material-option{padding:12px;border:2px solid #e5e7eb;border-radius:8px;text-align:center;cursor:pointer;transition:all 0.2s ease}
+.material-option.selected{border-color:var(--brand);background:rgba(10,108,241,0.05)}
+.material-option:hover{border-color:var(--brand-2);background:rgba(10,108,241,0.02)}
+.material-icon{width:32px;height:32px;margin:0 auto 8px auto;border-radius:4px}
+.material-pvc{background:linear-gradient(135deg,#f8fafc,#e2e8f0)}
+.material-aluminium{background:linear-gradient(135deg,#cbd5e1,#94a3b8)}
+.material-holz{background:linear-gradient(135deg,#a3a3a3,#525252)}
+@media (max-width: 768px) {
+  .tiles{grid-template-columns:1fr;gap:16px}
+  .tile{padding:20px}
+  .tile-icon{width:60px;height:60px}
+  .material-selector{grid-template-columns:1fr;gap:8px}
+  .window-preview{padding:16px}
+  .preview-window{width:100px !important;height:80px !important}
+}
+.benefits{list-style:none;padding:0;margin:0}
+.benefits li{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px}
+.benefits li:last-child{margin-bottom:0}
+.benefit-icon{width:24px;height:24px;flex-shrink:0;margin-top:2px}
+main

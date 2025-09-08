@@ -4,6 +4,16 @@
 
 Der Fenstermann24-Konfigurator implementiert eine umfassende technische Validierung nach DIN 18055 (Deutsche Norm für Fenster und Türen) und den anerkannten Regeln der Technik (a.R.d.T.).
 
+**Erweiterte EN-Standards für Haustüren:**
+- **EN 1627-1630**: Einbruchhemmung - Widerstandsklassen RC1N bis RC6
+- **EN 12207**: Luftdurchlässigkeit - Klassen AE bis A4  
+- **EN 12208**: Schlagregenbeständigkeit - Klassen RE bis 9A
+- **EN 12210**: Widerstandsfähigkeit gegen Windlast
+- **EN 14351-1**: Leistungserklärung für Fenster und Türen
+- **DIN 18040**: Barrierefreies Bauen - Zugänglichkeit
+- **DIN 4108**: Wärmeschutz und Energieeinsparung
+- **DIN 4109**: Schallschutz im Hochbau
+
 ## Implementierte Standards
 
 ### DIN 18055 - Fenster und Türen
@@ -17,6 +27,37 @@ Der Fenstermann24-Konfigurator implementiert eine umfassende technische Validier
 - **Sicherheitsanforderungen**: RC-Klassen für verschiedene Anwendungen
 - **Technische Kompatibilität**: Optimale Kombinationen von Profil, Verglasung und Material
 - **Wartungshinweise**: Besondere Anforderungen für Holzfenster
+
+### EN 1627-1630 - Einbruchhemmung (Neu für Türen)
+- **RC1N**: Grundschutz gegen körperliche Gewalt (Obergeschosse)
+- **RC2N**: Schutz gegen einfache Werkzeuge (Einfamilienhäuser EG)
+- **RC2**: Wie RC2N plus verstärkte Verglasung
+- **RC3**: Schutz gegen Brecheisen und Kuhfuß (Gewerbe)
+- **RC4**: Schutz gegen Sägewerkzeuge (Hochwertige Objekte)
+
+### EN 12207 - Luftdurchlässigkeit (Neu für Türen)
+- **A1**: ≤ 50 m³/(h·m²) - Grundanforderung Wohngebäude
+- **A2**: ≤ 27 m³/(h·m²) - Erhöhte Anforderung (empfohlen)
+- **A3**: ≤ 9 m³/(h·m²) - Passivhaus-Standard
+- **A4**: ≤ 3 m³/(h·m²) - Höchste Energieeffizienz
+
+### EN 12208 - Schlagregenbeständigkeit (Neu für Türen)
+- **3A**: 250 Pa - Standard für Haustüren (empfohlen)
+- **4A**: 300 Pa - Erhöhte Exposition
+- **5A**: 450 Pa - Sehr hohe Exposition
+
+### DIN 18040 - Barrierefreiheit (Neu für Türen)
+- **Lichte Türbreite**: ≥ 850mm erforderlich
+- **Schwellenhöhe**: ≤ 25mm maximum
+- **Bewegungsfläche**: 1200×1200mm vor der Tür
+
+### DIN 4108 - Wärmeschutz (Erweitert für Türen)
+- **U-Wert Türen**: ≤ 1,8 W/(m²·K) Mindestanforderung
+- **Empfohlen**: ≤ 1,3 W/(m²·K) für Energieeffizienz
+
+### DIN 4109 - Schallschutz (Erweitert für Türen)
+- **Rw-Wert**: ≥ 32 dB Mindestanforderung
+- **Empfohlen**: ≥ 37 dB für erhöhten Komfort
 
 ## Validierungsregeln
 
