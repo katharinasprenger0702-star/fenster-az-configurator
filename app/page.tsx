@@ -102,10 +102,42 @@ export default function Home() {
       <section id="vorteile" className="card">
         <h2>Warum Fenstermann24?</h2>
         <ul className="benefits">
-          <li><strong>Transparente Preise:</strong> Sofort sehen, was es kostet.</li>
-          <li><strong>Individuelle Fertigung:</strong> Millimetergenau nach Ihrem Bedarf.</li>
-          <li><strong>Montage vom Profi:</strong> Eigene, geschulte Monteure.</li>
-          <li><strong>Regionale Nähe:</strong> Kurze Wege, schnelle Termine.</li>
+          <li>
+            <svg className="benefit-icon" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="#059669" strokeWidth="2" fill="#d1fae5"/>
+              <path d="M12 6v6l4 2" stroke="#059669" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            <div>
+              <strong>Transparente Preise:</strong> Sofort sehen, was es kostet.
+            </div>
+          </li>
+          <li>
+            <svg className="benefit-icon" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="18" height="18" rx="3" stroke="#0369a1" strokeWidth="2" fill="#dbeafe"/>
+              <path d="M9 12l2 2 4-4" stroke="#0369a1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <div>
+              <strong>Individuelle Fertigung:</strong> Millimetergenau nach Ihrem Bedarf.
+            </div>
+          </li>
+          <li>
+            <svg className="benefit-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M20 6L9 17l-5-5" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="12" cy="12" r="10" stroke="#dc2626" strokeWidth="2" fill="#fee2e2"/>
+            </svg>
+            <div>
+              <strong>Montage vom Profi:</strong> Eigene, geschulte Monteure.
+            </div>
+          </li>
+          <li>
+            <svg className="benefit-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#7c3aed" strokeWidth="2" fill="#ede9fe"/>
+              <circle cx="12" cy="10" r="3" stroke="#7c3aed" strokeWidth="2"/>
+            </svg>
+            <div>
+              <strong>Regionale Nähe:</strong> Kurze Wege, schnelle Termine.
+            </div>
+          </li>
         </ul>
       </section>
 

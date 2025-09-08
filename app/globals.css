@@ -47,3 +47,15 @@ td,th{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left}
 .material-pvc{background:linear-gradient(135deg,#f8fafc,#e2e8f0)}
 .material-aluminium{background:linear-gradient(135deg,#cbd5e1,#94a3b8)}
 .material-holz{background:linear-gradient(135deg,#a3a3a3,#525252)}
+@media (max-width: 768px) {
+  .tiles{grid-template-columns:1fr;gap:16px}
+  .tile{padding:20px}
+  .tile-icon{width:60px;height:60px}
+  .material-selector{grid-template-columns:1fr;gap:8px}
+  .window-preview{padding:16px}
+  .preview-window{width:100px !important;height:80px !important}
+}
+.benefits{list-style:none;padding:0;margin:0}
+.benefits li{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px}
+.benefits li:last-child{margin-bottom:0}
+.benefit-icon{width:24px;height:24px;flex-shrink:0;margin-top:2px}
