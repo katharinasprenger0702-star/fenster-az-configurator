@@ -5,12 +5,16 @@ export default function Home() {
     <div className="grid" style={{ gap: 24 }}>
       {/* HERO */}
       <section className="card" style={{ 
-        padding: 48, 
-        background: 'linear-gradient(135deg, #0a6cf1 0%, #0e7ef5 50%, #3b82f6 100%)',
+        padding: '80px 60px', 
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)',
         color: 'white',
         textAlign: 'center',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        minHeight: '70vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
         <div style={{
           position: 'absolute',
@@ -18,63 +22,103 @@ export default function Home() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%)',
+          background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%)',
           pointerEvents: 'none'
         }} />
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <p className="kicker" style={{ color: 'rgba(255,255,255,0.9)', marginBottom: 12 }}>
+        <div style={{
+          position: 'absolute',
+          top: '10%',
+          left: '10%',
+          width: '80px',
+          height: '80px',
+          background: 'rgba(255,255,255,0.1)',
+          borderRadius: '50%',
+          animation: 'float 6s ease-in-out infinite'
+        }} />
+        <div style={{
+          position: 'absolute',
+          top: '60%',
+          right: '15%',
+          width: '120px',
+          height: '120px',
+          background: 'rgba(255,255,255,0.08)',
+          borderRadius: '50%',
+          animation: 'float 8s ease-in-out infinite reverse'
+        }} />
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px' }}>
+          <p className="kicker" style={{ 
+            color: 'rgba(255,255,255,0.95)', 
+            marginBottom: 20,
+            fontSize: '1.1rem',
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            fontWeight: '600'
+          }}>
             Fenstermann24.de · eine Marke der AZ Fenster und Türen GmbH
           </p>
           <h1 style={{ 
-            marginTop: 6, 
+            marginTop: 8, 
             color: 'white',
             background: 'none',
             WebkitBackgroundClip: 'unset',
             WebkitTextFillColor: 'unset',
             backgroundClip: 'unset',
-            fontSize: '3.5rem',
-            textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            fontSize: '4rem',
+            fontWeight: '900',
+            lineHeight: '1.1',
+            textShadow: '0 4px 8px rgba(0,0,0,0.2)',
+            marginBottom: '24px',
+            letterSpacing: '-0.02em'
           }}>
             Fenster & Türen direkt online konfigurieren
           </h1>
           <p style={{ 
-            maxWidth: 720, 
-            fontSize: '1.25rem',
+            maxWidth: 800, 
+            fontSize: '1.35rem',
             color: 'rgba(255,255,255,0.95)',
-            margin: '0 auto 32px auto',
-            lineHeight: 1.6
+            margin: '0 auto 48px auto',
+            lineHeight: 1.7,
+            fontWeight: '400'
           }}>
             Qualität vom Fachbetrieb: PVC, Aluminium und Holz – individuell nach Maß,
             mit sofortiger Preisberechnung. Lieferung & Montage auf Wunsch.
           </p>
 
-          <div style={{ display: "flex", gap: 16, marginTop: 8, flexWrap: "wrap", justifyContent: "center" }}>
+          <div style={{ display: "flex", gap: 20, marginTop: 16, flexWrap: "wrap", justifyContent: "center" }}>
             <Link className="btn" href="/fenster-konfigurator" style={{
-              background: 'white',
-              color: '#0a6cf1',
-              fontSize: '1.1rem',
-              padding: '16px 32px',
-              boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
+              background: 'rgba(255,255,255,0.95)',
+              color: '#667eea',
+              fontSize: '1.2rem',
+              padding: '20px 40px',
+              fontWeight: '800',
+              borderRadius: '16px',
+              boxShadow: '0 12px 24px rgba(0,0,0,0.2)',
+              backdropFilter: 'blur(10px)',
+              border: 'none'
             }}>
-              Jetzt konfigurieren
+              🚀 Jetzt konfigurieren
             </Link>
             <a className="btn btn-secondary" href="#vorteile" style={{
-              background: 'rgba(255,255,255,0.1)',
+              background: 'rgba(255,255,255,0.15)',
               color: 'white',
-              border: '2px solid rgba(255,255,255,0.3)',
-              backdropFilter: 'blur(10px)'
+              border: '2px solid rgba(255,255,255,0.4)',
+              backdropFilter: 'blur(20px)',
+              fontSize: '1.1rem',
+              padding: '20px 32px',
+              fontWeight: '700'
             }}>
-              Unsere Vorteile
+              ✨ Unsere Vorteile
             </a>
           </div>
 
-          <div style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap", justifyContent: "center" }}>
+          <div style={{ display: "flex", gap: 16, marginTop: 32, flexWrap: "wrap", justifyContent: "center" }}>
             <a className="btn btn-secondary" href="tel:+49-[TELEFONNUMMER]" style={{
               background: 'rgba(255,255,255,0.1)',
               color: 'white',
               border: '2px solid rgba(255,255,255,0.3)',
               backdropFilter: 'blur(10px)',
-              fontSize: '0.95rem'
+              fontSize: '1rem',
+              padding: '14px 24px'
             }}>
               📞 Direkt anrufen
             </a>
@@ -83,7 +127,8 @@ export default function Home() {
               color: 'white',
               border: '2px solid rgba(255,255,255,0.3)',
               backdropFilter: 'blur(10px)',
-              fontSize: '0.95rem'
+              fontSize: '1rem',
+              padding: '14px 24px'
             }}>
               ✉ E-Mail Kontakt
             </a>
@@ -91,11 +136,44 @@ export default function Home() {
 
           <ul className="trust" aria-label="Vertrauen" style={{ 
             justifyContent: 'center',
-            marginTop: 32
+            marginTop: 48,
+            display: 'flex',
+            gap: '32px',
+            flexWrap: 'wrap',
+            listStyle: 'none',
+            padding: 0,
+            margin: '48px 0 0 0'
           }}>
-            <li style={{ color: 'rgba(255,255,255,0.95)' }}>✓ Fachgerechte Montage</li>
-            <li style={{ color: 'rgba(255,255,255,0.95)' }}>✓ Faire Festpreise</li>
-            <li style={{ color: 'rgba(255,255,255,0.95)' }}>✓ Beratung durch Profis</li>
+            <li style={{ 
+              color: 'rgba(255,255,255,0.95)', 
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <span style={{ fontSize: '1.2rem' }}>✓</span> Fachgerechte Montage
+            </li>
+            <li style={{ 
+              color: 'rgba(255,255,255,0.95)', 
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <span style={{ fontSize: '1.2rem' }}>✓</span> Faire Festpreise
+            </li>
+            <li style={{ 
+              color: 'rgba(255,255,255,0.95)', 
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <span style={{ fontSize: '1.2rem' }}>✓</span> Beratung durch Profis
+            </li>
           </ul>
         </div>
       </section>
@@ -248,10 +326,53 @@ export default function Home() {
       </section>
 
       {/* CTA unten */}
-      <section className="card" style={{ textAlign: "center" }}>
-        <h2>Starten Sie jetzt mit Ihrer Konfiguration</h2>
-        <Link className="btn" href="/fenster-konfigurator">Jetzt konfigurieren</Link>
-        <p className="small">Unverbindlich & kostenlos – Angebot mit nur wenigen Klicks.</p>
+      <section className="card" style={{ 
+        textAlign: "center",
+        background: 'linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(139,92,246,0.05) 50%, rgba(236,72,153,0.05) 100%)',
+        border: '2px solid rgba(102,126,234,0.1)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '-50%',
+          left: '-50%',
+          width: '200%',
+          height: '200%',
+          background: 'radial-gradient(circle, rgba(102,126,234,0.03) 0%, transparent 70%)',
+          animation: 'pulse 4s ease-in-out infinite'
+        }} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <h2 style={{ 
+            fontSize: '2.75rem',
+            fontWeight: '900',
+            background: 'var(--hero-gradient)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            marginBottom: '24px'
+          }}>
+            Starten Sie jetzt mit Ihrer Konfiguration
+          </h2>
+          <p style={{
+            fontSize: '1.25rem',
+            color: 'var(--gray-600)',
+            marginBottom: '40px',
+            maxWidth: '600px',
+            margin: '0 auto 40px auto',
+            lineHeight: '1.6'
+          }}>
+            Unverbindlich & kostenlos – Angebot mit nur wenigen Klicks.
+          </p>
+          <Link className="btn" href="/fenster-konfigurator" style={{
+            fontSize: '1.2rem',
+            padding: '20px 48px',
+            background: 'var(--hero-gradient)',
+            boxShadow: '0 16px 32px rgba(102,126,234,0.3)'
+          }}>
+            🎯 Jetzt konfigurieren
+          </Link>
+        </div>
       </section>
     </div>
   );
