@@ -278,6 +278,11 @@ const DIN_4108_THERMAL = {
   doors: {
     maxUValue: 1.8,  // W/(m²·K) for entrance doors
     recommendedUValue: 1.3  // W/(m²·K) recommended for energy efficiency
+  },
+  windows: {
+    maxUValue: 1.3,  // W/(m²·K) for windows according to DIN 4108-2
+    recommendedUValue: 1.0,  // W/(m²·K) recommended for energy efficiency
+    excellentUValue: 0.8  // W/(m²·K) for passive house standard
   }
 };
 
@@ -610,7 +615,7 @@ function validateThermalPerformanceDIN4108(config: Config): { isValid: boolean; 
   const warnings: string[] = [];
 
   if (config.product === 'Haustüren') {
-    // Estimate U-value based on configuration
+    // Estimate U-value based on configuration for doors
     let estimatedUValue = 2.0; // Base U-value for standard door
     
     if (config.profile === 'ThermoPlus') estimatedUValue *= 0.85;
@@ -624,6 +629,35 @@ function validateThermalPerformanceDIN4108(config: Config): { isValid: boolean; 
 
     if (estimatedUValue > DIN_4108_THERMAL.doors.recommendedUValue) {
       warnings.push(`Empfehlung: U-Wert ≤ ${DIN_4108_THERMAL.doors.recommendedUValue} W/(m²·K) für bessere Energieeffizienz`);
+    }
+  } else if (config.product === 'Fenster' || config.product === 'Balkontüren' || config.product === 'Schiebetüren') {
+    // Estimate U-value based on configuration for windows
+    let estimatedUValue = 1.4; // Base U-value for standard window (PVC, 2-fach)
+    
+    // Material impact on frame U-value
+    if (config.material === 'Aluminium') estimatedUValue *= 1.1; // Aluminium has worse thermal properties
+    if (config.material === 'Holz') estimatedUValue *= 0.95; // Wood has better thermal properties
+    
+    // Profile impact
+    if (config.profile === 'ThermoPlus') estimatedUValue *= 0.85;
+    if (config.profile === 'Premium') estimatedUValue *= 0.75;
+    
+    // Glazing impact (most significant factor)
+    if (config.glazing === '3-fach') estimatedUValue *= 0.75; // 3-fach significantly improves U-value
+    
+    // Warm edge impact
+    if (config.warmEdge) estimatedUValue *= 0.92; // Warm edge reduces thermal bridging
+
+    if (estimatedUValue > DIN_4108_THERMAL.windows.maxUValue) {
+      warnings.push(`Wärmedämmung (DIN 4108): U-Wert sollte ≤ ${DIN_4108_THERMAL.windows.maxUValue} W/(m²·K) sein (geschätzt: ${estimatedUValue.toFixed(2)})`);
+    }
+
+    if (estimatedUValue > DIN_4108_THERMAL.windows.recommendedUValue) {
+      warnings.push(`Empfehlung: U-Wert ≤ ${DIN_4108_THERMAL.windows.recommendedUValue} W/(m²·K) für bessere Energieeffizienz`);
+    }
+    
+    if (estimatedUValue <= DIN_4108_THERMAL.windows.excellentUValue) {
+      warnings.push(`Exzellent: U-Wert ≤ ${DIN_4108_THERMAL.windows.excellentUValue} W/(m²·K) entspricht Passivhaus-Standard!`);
     }
   }
 
