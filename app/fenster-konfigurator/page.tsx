@@ -62,12 +62,12 @@ function getOpeningTypesForProduct(product: string): string[] {
 function pickDatasetAndFilter(form: any) {
   let DATA;
   
-  // Note: Currently only IGLO 5 data is available
+  // Note: Currently only IGLO 5 (DRUTEX) data is available
   // Additional manufacturer data would be added here
   if (form.manufacturer !== 'IGLO 5') {
-    // For non-IGLO 5 manufacturers, fallback to IGLO 5 data
+    // For non-IGLO 5 manufacturers, fallback to IGLO 5 (DRUTEX) data
     // This is where additional manufacturer datasets would be loaded
-    console.warn(`Manufacturer ${form.manufacturer} data not available, using IGLO 5 data`);
+    console.warn(`Manufacturer ${form.manufacturer} data not available, using IGLO 5 (DRUTEX) data`);
   }
   
   switch (form.product) {
@@ -422,7 +422,7 @@ export default function ConfiguratorPage() {
               value={form.manufacturer}
               onChange={e => setForm(prev => ({ ...prev, manufacturer: e.target.value as any }))}
             >
-              <option value="IGLO 5">IGLO 5</option>
+              <option value="IGLO 5">IGLO 5 (DRUTEX)</option>
               <option value="Rehau">Rehau (Demo)</option>
               <option value="Schüco">Schüco (Demo)</option>
               <option value="Salamander">Salamander (Demo)</option>
@@ -430,19 +430,23 @@ export default function ConfiguratorPage() {
             </select>
           </div>
           
-          {form.manufacturer !== 'IGLO 5' && (
-            <div style={{ 
-              padding: '12px', 
-              background: '#fef3c7', 
-              border: '1px solid #f59e0b', 
-              borderRadius: '8px',
-              fontSize: '14px',
-              color: '#92400e'
-            }}>
-              <strong>Hinweis:</strong> Aktuell sind nur IGLO 5 Produkte verfügbar. 
-              Weitere Hersteller werden mit IGLO 5 Preisen angezeigt.
-            </div>
-          )}
+          <div style={{ 
+            padding: '12px', 
+            background: '#e0f2fe', 
+            border: '1px solid #0288d1', 
+            borderRadius: '8px',
+            fontSize: '14px',
+            color: '#01579b',
+            marginTop: '8px'
+          }}>
+            <strong>Info:</strong> IGLO 5 Fenster sind DRUTEX Produkte. Die Preise stammen aus der DRUTEX Preisliste.
+            {form.manufacturer !== 'IGLO 5' && (
+              <span style={{ display: 'block', marginTop: '8px' }}>
+                <strong>Hinweis:</strong> Aktuell sind nur IGLO 5 (DRUTEX) Preise verfügbar. 
+                Weitere Hersteller werden mit DRUTEX Preisen angezeigt.
+              </span>
+            )}
+          </div>
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
             <button className="btn" onClick={() => setStep(0)}>Zurück</button>
