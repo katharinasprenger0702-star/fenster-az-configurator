@@ -106,19 +106,28 @@ export default function Home() {
         <div className="tiles">
           <div className="tile">
             <div className="tile-icon">
-              <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
-                {/* Window frame */}
-                <rect x="8" y="12" width="48" height="40" rx="2" stroke="currentColor" strokeWidth="2" fill="rgba(255,255,255,0.2)"/>
-                {/* Window panes */}
-                <rect x="10" y="14" width="22" height="18" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
-                <rect x="34" y="14" width="22" height="18" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
-                <rect x="10" y="34" width="22" height="16" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
-                <rect x="34" y="34" width="22" height="16" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
-                {/* Window handle */}
-                <circle cx="28" cy="38" r="2" fill="currentColor"/>
-                {/* Frame details */}
-                <line x1="32" y1="14" x2="32" y2="50" stroke="currentColor" strokeWidth="2"/>
-                <line x1="10" y1="32" x2="54" y2="32" stroke="currentColor" strokeWidth="2"/>
+              <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+                {/* 3D Window frame with depth */}
+                <rect x="6" y="10" width="52" height="44" rx="3" stroke="currentColor" strokeWidth="2.5" fill="rgba(255,255,255,0.15)"/>
+                <rect x="8" y="12" width="48" height="40" rx="2" fill="rgba(255,255,255,0.25)"/>
+                
+                {/* Glass panes with 3D effect */}
+                <rect x="10" y="14" width="21" height="17" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.6)" strokeWidth="1"/>
+                <rect x="33" y="14" width="21" height="17" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.6)" strokeWidth="1"/>
+                <rect x="10" y="33" width="21" height="17" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.6)" strokeWidth="1"/>
+                <rect x="33" y="33" width="21" height="17" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.6)" strokeWidth="1"/>
+                
+                {/* Window cross bars with shadow */}
+                <line x1="32" y1="14" x2="32" y2="50" stroke="currentColor" strokeWidth="3"/>
+                <line x1="10" y1="31" x2="54" y2="31" stroke="currentColor" strokeWidth="3"/>
+                
+                {/* 3D Window handle */}
+                <circle cx="46" cy="42" r="3" fill="currentColor" opacity="0.9"/>
+                <rect x="40" y="40" width="8" height="4" rx="2" fill="currentColor" opacity="0.8"/>
+                
+                {/* Reflection effects */}
+                <path d="M12 16 L18 16 L15 25 L12 25 Z" fill="rgba(255,255,255,0.6)" opacity="0.7"/>
+                <path d="M35 16 L41 16 L38 25 L35 25 Z" fill="rgba(255,255,255,0.6)" opacity="0.7"/>
               </svg>
             </div>
             <h3>Fenster</h3>
@@ -127,19 +136,32 @@ export default function Home() {
           </div>
           <div className="tile">
             <div className="tile-icon">
-              <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
-                {/* Door frame */}
-                <rect x="16" y="8" width="32" height="48" rx="2" stroke="currentColor" strokeWidth="2" fill="rgba(255,255,255,0.2)"/>
-                {/* Door panels */}
-                <rect x="18" y="12" width="28" height="16" rx="1" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
-                <rect x="18" y="32" width="28" height="20" rx="1" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
-                {/* Door handle */}
-                <circle cx="40" cy="38" r="2" fill="currentColor"/>
-                {/* Door lock */}
-                <rect x="38" y="42" width="4" height="2" rx="1" fill="currentColor"/>
-                {/* Decorative elements */}
-                <line x1="20" y1="16" x2="44" y2="16" stroke="currentColor" strokeWidth="1" opacity="0.6"/>
-                <line x1="20" y1="20" x2="44" y2="20" stroke="currentColor" strokeWidth="1" opacity="0.6"/>
+              <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+                {/* 3D Door frame */}
+                <rect x="8" y="6" width="48" height="52" rx="3" stroke="currentColor" strokeWidth="2.5" fill="rgba(255,255,255,0.15)"/>
+                <rect x="10" y="8" width="44" height="48" rx="2" fill="rgba(255,255,255,0.25)"/>
+                
+                {/* Door panels with 3D depth */}
+                <rect x="12" y="12" width="18" height="40" rx="2" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.6)" strokeWidth="1"/>
+                <rect x="32" y="12" width="18" height="40" rx="2" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.6)" strokeWidth="1"/>
+                
+                {/* Door details */}
+                <rect x="14" y="16" width="14" height="8" rx="1" fill="rgba(255,255,255,0.3)"/>
+                <rect x="34" y="16" width="14" height="8" rx="1" fill="rgba(255,255,255,0.3)"/>
+                <rect x="14" y="28" width="14" height="20" rx="1" fill="rgba(255,255,255,0.3)"/>
+                <rect x="34" y="28" width="14" height="20" rx="1" fill="rgba(255,255,255,0.3)"/>
+                
+                {/* Door handles */}
+                <circle cx="26" cy="34" r="2.5" fill="currentColor"/>
+                <circle cx="36" cy="34" r="2.5" fill="currentColor"/>
+                
+                {/* Glass panels in doors */}
+                <rect x="16" y="18" width="10" height="6" fill="rgba(255,255,255,0.6)" opacity="0.8"/>
+                <rect x="36" y="18" width="10" height="6" fill="rgba(255,255,255,0.6)" opacity="0.8"/>
+                
+                {/* 3D shadow effect */}
+                <path d="M54 10 L58 14 L58 58 L54 54 Z" fill="currentColor" opacity="0.2"/>
+                <path d="M10 54 L54 54 L58 58 L14 58 Z" fill="currentColor" opacity="0.2"/>
               </svg>
             </div>
             <h3>Haustüren</h3>
@@ -148,21 +170,31 @@ export default function Home() {
           </div>
           <div className="tile">
             <div className="tile-icon">
-              <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
-                {/* Service tools */}
-                <rect x="12" y="20" width="24" height="24" rx="2" stroke="currentColor" strokeWidth="2" fill="rgba(255,255,255,0.2)"/>
-                {/* Wrench */}
-                <path d="M40 16 L52 28 L48 32 L44 28 L40 32 L36 28 L40 24 L36 20 Z" fill="currentColor"/>
-                {/* Screwdriver */}
-                <line x1="45" y1="40" x2="52" y2="47" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                <circle cx="45" cy="40" r="2" fill="currentColor"/>
-                {/* Measurement ruler */}
-                <line x1="16" y1="48" x2="32" y2="48" stroke="currentColor" strokeWidth="2"/>
-                <line x1="16" y1="46" x2="16" y2="50" stroke="currentColor" strokeWidth="1"/>
-                <line x1="20" y1="47" x2="20" y2="49" stroke="currentColor" strokeWidth="1"/>
-                <line x1="24" y1="46" x2="24" y2="50" stroke="currentColor" strokeWidth="1"/>
-                <line x1="28" y1="47" x2="28" y2="49" stroke="currentColor" strokeWidth="1"/>
-                <line x1="32" y1="46" x2="32" y2="50" stroke="currentColor" strokeWidth="1"/>
+              <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+                {/* Service tools in 3D */}
+                <rect x="8" y="20" width="48" height="24" rx="2" stroke="currentColor" strokeWidth="2" fill="rgba(255,255,255,0.2)"/>
+                
+                {/* Measuring tool */}
+                <rect x="12" y="8" width="4" height="48" rx="2" fill="currentColor" opacity="0.9"/>
+                <rect x="20" y="8" width="4" height="48" rx="2" fill="currentColor" opacity="0.9"/>
+                <rect x="48" y="8" width="4" height="48" rx="2" fill="currentColor" opacity="0.9"/>
+                
+                {/* Measurement marks */}
+                <line x1="16" y1="12" x2="20" y2="12" stroke="currentColor" strokeWidth="2"/>
+                <line x1="16" y1="20" x2="24" y2="20" stroke="currentColor" strokeWidth="2"/>
+                <line x1="16" y1="28" x2="20" y2="28" stroke="currentColor" strokeWidth="2"/>
+                <line x1="16" y1="36" x2="24" y2="36" stroke="currentColor" strokeWidth="2"/>
+                <line x1="16" y1="44" x2="20" y2="44" stroke="currentColor" strokeWidth="2"/>
+                <line x1="16" y1="52" x2="24" y2="52" stroke="currentColor" strokeWidth="2"/>
+                
+                {/* Service badge */}
+                <circle cx="40" cy="32" r="12" fill="rgba(255,255,255,0.3)" stroke="currentColor" strokeWidth="2"/>
+                <path d="M34 32 L38 36 L46 28" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                
+                {/* 3D depth lines */}
+                <line x1="56" y1="20" x2="60" y2="16" stroke="currentColor" strokeWidth="1" opacity="0.5"/>
+                <line x1="56" y1="44" x2="60" y2="40" stroke="currentColor" strokeWidth="1" opacity="0.5"/>
+                <line x1="8" y1="44" x2="4" y2="40" stroke="currentColor" strokeWidth="1" opacity="0.5"/>
               </svg>
             </div>
             <h3>Service</h3>
