@@ -520,7 +520,7 @@ function validateDoorSecurityEN1627(config: Config): { isValid: boolean; errors:
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  if (config.product !== 'Türe') {
+  if (config.product !== 'Haustüren') {
     return { isValid: true, errors, warnings };
   }
 
@@ -547,7 +547,7 @@ function validateAirPermeabilityEN12207(config: Config): { isValid: boolean; err
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  if (config.product === 'Türe') {
+  if (config.product === 'Haustüren') {
     // For doors, recommend A2 or higher for energy efficiency
     if (!config.warmEdge && config.glazing === '3-fach') {
       warnings.push('Für Energieeffizienz: Warme Kante empfohlen (verbessert Luftdichtheit nach EN 12207)');
@@ -567,7 +567,7 @@ function validateWatertightnessEN12208(config: Config): { isValid: boolean; erro
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  if (config.product === 'Türe') {
+  if (config.product === 'Haustüren') {
     // Standard recommendation for doors
     warnings.push('Haustüren sollten mindestens Klasse 3A (250 Pa) nach EN 12208 (Schlagregenprüfung) erfüllen');
     
@@ -587,7 +587,7 @@ function validateAccessibilityDIN18040(config: Config): { isValid: boolean; erro
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  if (config.product === 'Türe') {
+  if (config.product === 'Haustüren') {
     // Check clear width for accessibility
     const clearWidth = config.width_mm - 100; // Approximate clear width (door frame reduction)
     
@@ -609,7 +609,7 @@ function validateThermalPerformanceDIN4108(config: Config): { isValid: boolean; 
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  if (config.product === 'Türe') {
+  if (config.product === 'Haustüren') {
     // Estimate U-value based on configuration
     let estimatedUValue = 2.0; // Base U-value for standard door
     
@@ -637,7 +637,7 @@ function validateAcousticPerformanceDIN4109(config: Config): { isValid: boolean;
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  if (config.product === 'Türe') {
+  if (config.product === 'Haustüren') {
     let estimatedRw = 30; // Base acoustic rating
 
     if (config.soundInsulation) estimatedRw += 5;
@@ -664,7 +664,7 @@ function validatePerformanceEN14351(config: Config): { isValid: boolean; errors:
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  if (config.product === 'Türe') {
+  if (config.product === 'Haustüren') {
     // EN 14351-1 requires declaration of essential characteristics
     const characteristics = [
       'Widerstandsfähigkeit gegen Windlast (EN 12210)',
@@ -739,7 +739,7 @@ export function validateTechnicalCompliance(config: Config): ValidationResult {
     complianceInfo.push('✓ Konfiguration entspricht a.R.d.T.');
     
     // Add door-specific compliance information
-    if (config.product === 'Türe') {
+    if (config.product === 'Haustüren') {
       complianceInfo.push('✓ Türkonfiguration berücksichtigt EN-Standards');
       complianceInfo.push('✓ Sicherheitsklassifizierung nach EN 1627-1630');
       complianceInfo.push('✓ Leistungsmerkmale nach EN 14351-1');
@@ -789,16 +789,16 @@ export function getRecommendations(config: Config): string[] {
   // Security recommendations
   if (
     config.security === 'Basis' &&
-    (config.product === 'Türe' || ['Balkontüren', 'Schiebetüren', 'Haustüren'].includes(config.product))
+    (config.product === 'Haustüren' || ['Balkontüren', 'Schiebetüren', 'Haustüren'].includes(config.product))
 ) {
     recommendations.push('Für Türen: RC1N oder RC2N Sicherheitsstufe (EN 1627-1630)'); 
   } 
-  if (config.security === 'Basis' && config.product === 'Türe') {
+  if (config.security === 'Basis' && config.product === 'Haustüren') {
     recommendations.push('Für Türen: RC1N oder RC2N Sicherheitsstufe (EN 1627-1630)');
   }
 
   // Door-specific recommendations
-  if (config.product === 'Türe') {
+  if (config.product === 'Haustüren') {
     recommendations.push('Haustüren: Leistungserklärung nach EN 14351-1 beachten');
     
     if (config.security === 'RC1N') {
@@ -816,12 +816,11 @@ export function getRecommendations(config: Config): string[] {
     if (config.width_mm < 950) {
       recommendations.push('Für Barrierefreiheit (DIN 18040): Türbreite ≥ 950mm empfohlen');
     }
- main
   }
 
   // Maintenance recommendations
   if (config.material === 'Holz') {
-    if (config.product === 'Türe') {
+    if (config.product === 'Haustüren') {
       recommendations.push('Holztüren: Regelmäßige Wartung alle 2-3 Jahre, besonders Dichtungen (EN 12208)');
     } else {
       recommendations.push('Holzfenster: Regelmäßige Wartung alle 2-3 Jahre erforderlich');

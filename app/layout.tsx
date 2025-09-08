@@ -5,7 +5,14 @@ import type { ReactNode } from 'react';
 
 export const metadata = {
   title: 'Fenstermann24 – Online‑Konfigurator',
-  description: 'Fenstermann24.de – eine Marke der AZ Fenster und Türen GmbH'
+  description: 'Fenstermann24.de – eine Marke der AZ Fenster und Türen GmbH. Fenster & Türen direkt online konfigurieren mit sofortiger Preisberechnung.',
+  keywords: 'Fenster, Türen, Haustüren, PVC, Aluminium, Holz, Konfigurator, Preiskalkulator, AZ Fenster',
+  robots: 'index, follow'
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -14,8 +21,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <header className="header">
           <div className="logo">
-            
-copilot/fix-dd77b6f1-92a1-45ad-a530-f1ffda84c1d2
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <rect x="3" y="3" width="18" height="18" rx="3" ry="3" stroke="url(#gradient)" strokeWidth="2"/>
               <rect x="7" y="7" width="10" height="10" rx="1" ry="1" fill="url(#gradient)"/>
@@ -25,7 +30,6 @@ copilot/fix-dd77b6f1-92a1-45ad-a530-f1ffda84c1d2
                   <stop offset="100%" stopColor="#0e7ef5"/>
                 </linearGradient>
               </defs>
- main
             </svg>
             <span>Fenstermann24 | Online‑Konfigurator</span>
           </div>
