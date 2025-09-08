@@ -3,6 +3,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { z } from 'zod';
 import getStripe from '@/lib/stripeClient';
 import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
+import { validateTechnicalCompliance, getRecommendations, type ValidationResult } from '@/lib/technical-validation';
 // Preis-Daten jetzt über index.ts (saubere zentrale Sammelstelle)
 import {
   fensterPrices, balkontuerenPrices, schiebetuerenPrices, haustuerenPrices, sonstigesPrices
@@ -71,6 +72,8 @@ export default function ConfiguratorPage() {
   const parsed = schema.safeParse(form);
   const valid = parsed.success;
   const breakdown = useMemo(() => calculatePrice(form), [form]);
+  const validation = useMemo(() => validateTechnicalCompliance(form), [form]);
+  const recommendations = useMemo(() => getRecommendations(form), [form]);
   const [price, setPrice] = useState<{
     base_pln: number;
     eur_buy_net: number;
@@ -181,6 +184,57 @@ export default function ConfiguratorPage() {
           ))}
         </div>
       </div>
+
+      {/* Technical Validation Display */}
+      {(validation.errors.length > 0 || validation.warnings.length > 0 || validation.complianceInfo.length > 0) && (
+        <div className="card">
+          <h3>Technische Prüfung (DIN 18055 / a.R.d.T.)</h3>
+          
+          {validation.errors.length > 0 && (
+            <div style={{ marginBottom: '12px' }}>
+              <h4 style={{ color: '#d32f2f', marginBottom: '8px' }}>⚠️ Technische Anforderungen nicht erfüllt:</h4>
+              <ul style={{ margin: 0, paddingLeft: '20px', color: '#d32f2f' }}>
+                {validation.errors.map((error, i) => (
+                  <li key={i}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {validation.warnings.length > 0 && (
+            <div style={{ marginBottom: '12px' }}>
+              <h4 style={{ color: '#f57c00', marginBottom: '8px' }}>⚡ Hinweise zur Optimierung:</h4>
+              <ul style={{ margin: 0, paddingLeft: '20px', color: '#f57c00' }}>
+                {validation.warnings.map((warning, i) => (
+                  <li key={i}>{warning}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {validation.complianceInfo.length > 0 && validation.errors.length === 0 && (
+            <div style={{ marginBottom: '12px' }}>
+              <h4 style={{ color: '#2e7d32', marginBottom: '8px' }}>✅ Technische Konformität:</h4>
+              <ul style={{ margin: 0, paddingLeft: '20px', color: '#2e7d32' }}>
+                {validation.complianceInfo.map((info, i) => (
+                  <li key={i}>{info}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {recommendations.length > 0 && (
+            <div>
+              <h4 style={{ color: '#1976d2', marginBottom: '8px' }}>💡 Empfehlungen:</h4>
+              <ul style={{ margin: 0, paddingLeft: '20px', color: '#1976d2' }}>
+                {recommendations.map((rec, i) => (
+                  <li key={i}>{rec}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
       {/* === STEP 0: Maße === */}
       {step === 0 && (
         <div className="grid">
@@ -192,6 +246,10 @@ export default function ConfiguratorPage() {
               min={400}
               max={3000}
               onChange={e => setForm(prev => ({ ...prev, width_mm: Number(e.target.value) }))}
+              style={{
+                borderColor: validation.errors.some(e => e.includes('Breite') || e.includes('Fläche')) ? '#d32f2f' : 
+                            validation.warnings.some(w => w.includes('Breite') || w.includes('Fläche')) ? '#f57c00' : '#d1d5db'
+              }}
             />
           </div>
           <div className="row">
@@ -202,6 +260,10 @@ export default function ConfiguratorPage() {
               min={400}
               max={3000}
               onChange={e => setForm(prev => ({ ...prev, height_mm: Number(e.target.value) }))}
+              style={{
+                borderColor: validation.errors.some(e => e.includes('Höhe') || e.includes('Fläche')) ? '#d32f2f' : 
+                            validation.warnings.some(w => w.includes('Höhe') || w.includes('Fläche')) ? '#f57c00' : '#d1d5db'
+              }}
             />
           </div>
           <div className="row">
@@ -209,6 +271,9 @@ export default function ConfiguratorPage() {
             <select
               value={form.opening}
               onChange={e => setForm(prev => ({ ...prev, opening: e.target.value as any }))}
+              style={{
+                borderColor: validation.errors.some(e => e.includes('Öffnung') || e.includes(form.opening)) ? '#d32f2f' : '#d1d5db'
+              }}
             >
               <option>Dreh-Kipp links</option>
               <option>Dreh-Kipp rechts</option>
@@ -229,7 +294,17 @@ export default function ConfiguratorPage() {
             />
           </div>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(4)}>Zur Übersicht & Preis</button>
+            <button 
+              className="btn" 
+              onClick={() => setStep(4)}
+              disabled={validation.errors.length > 0}
+              style={{
+                opacity: validation.errors.length > 0 ? 0.5 : 1,
+                cursor: validation.errors.length > 0 ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {validation.errors.length > 0 ? 'Technische Anforderungen prüfen' : 'Zur Übersicht & Preis'}
+            </button>
           </div>
         </div>
       )}
@@ -452,9 +527,64 @@ export default function ConfiguratorPage() {
       {/* === STEP 4: Übersicht === */}
       {step === 4 && (
         <div className="grid" style={{ gap: 24 }}>
+          {/* Technical Validation Summary */}
+          <div className="card">
+            <h3>Technische Konformitätsprüfung</h3>
+            
+            {validation.errors.length > 0 ? (
+              <div style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#ffebee', border: '1px solid #e57373' }}>
+                <h4 style={{ color: '#d32f2f', margin: '0 0 12px 0' }}>❌ Konfiguration nicht zulässig</h4>
+                <p style={{ margin: '0 0 12px 0', color: '#d32f2f' }}>
+                  Die aktuelle Konfiguration entspricht nicht den technischen Anforderungen nach DIN 18055 und a.R.d.T.
+                </p>
+                <ul style={{ margin: 0, paddingLeft: '20px', color: '#d32f2f' }}>
+                  {validation.errors.map((error, i) => (
+                    <li key={i}>{error}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#e8f5e8', border: '1px solid #81c784' }}>
+                <h4 style={{ color: '#2e7d32', margin: '0 0 12px 0' }}>✅ Technische Anforderungen erfüllt</h4>
+                <p style={{ margin: '0 0 12px 0', color: '#2e7d32' }}>
+                  Die Konfiguration entspricht DIN 18055 und den anerkannten Regeln der Technik (a.R.d.T.).
+                </p>
+                {validation.complianceInfo.length > 0 && (
+                  <ul style={{ margin: 0, paddingLeft: '20px', color: '#2e7d32' }}>
+                    {validation.complianceInfo.map((info, i) => (
+                      <li key={i}>{info}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+
+            {validation.warnings.length > 0 && (
+              <div style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#fff8e1', border: '1px solid #ffb74d', marginTop: '12px' }}>
+                <h4 style={{ color: '#f57c00', margin: '0 0 8px 0' }}>⚠️ Optimierungshinweise</h4>
+                <ul style={{ margin: 0, paddingLeft: '20px', color: '#f57c00' }}>
+                  {validation.warnings.map((warning, i) => (
+                    <li key={i}>{warning}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {recommendations.length > 0 && (
+              <div style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#e3f2fd', border: '1px solid #64b5f6', marginTop: '12px' }}>
+                <h4 style={{ color: '#1976d2', margin: '0 0 8px 0' }}>💡 Empfehlungen</h4>
+                <ul style={{ margin: 0, paddingLeft: '20px', color: '#1976d2' }}>
+                  {recommendations.map((rec, i) => (
+                    <li key={i}>{rec}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
           {price ? (
             <>
-              <h3>Übersicht</h3>
+              <h3>Preisübersicht</h3>
               <table>
                 <tbody>
                   <tr><th>Produkt</th><td>{form.product}</td></tr>
