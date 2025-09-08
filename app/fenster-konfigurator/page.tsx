@@ -287,7 +287,7 @@ export default function ConfiguratorPage() {
               <div className="window-frame horizontal"></div>
               
               {/* Different visualizations based on product type */}
-              {form.product === 'Türe' && (
+              {form.product === 'Haustüren' && (
                 <>
                   <div className="door-panel" style={{
                     position: 'absolute',
@@ -372,7 +372,7 @@ export default function ConfiguratorPage() {
               }}
             >
               <option value="Fenster">Fenster</option>
-              <option value="Türe">Haustür</option>
+              <option value="Haustüren">Haustür</option>
             </select>
           </div>
           <div className="row">
