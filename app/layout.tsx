@@ -2,6 +2,7 @@
 import './globals.css';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import Chatbot from './components/Chatbot';
 
 export const metadata = {
   title: 'Fenstermann24 – Online‑Konfigurator',
@@ -72,6 +73,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <footer className="footer">
           © {new Date().getFullYear()} Fenstermann24.de — eine Marke der AZ Fenster und Türen GmbH · <a href="/impressum">Impressum</a>
         </footer>
+        <Chatbot />
       </body>
     </html>
   );
