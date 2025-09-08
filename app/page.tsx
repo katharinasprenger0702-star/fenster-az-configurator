@@ -31,16 +31,66 @@ export default function Home() {
         <h2>Produkte</h2>
         <div className="tiles">
           <div className="tile">
+            <div className="tile-icon">
+              <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+                {/* Window frame */}
+                <rect x="8" y="12" width="48" height="40" rx="2" stroke="currentColor" strokeWidth="2" fill="rgba(255,255,255,0.2)"/>
+                {/* Window panes */}
+                <rect x="10" y="14" width="22" height="18" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
+                <rect x="34" y="14" width="22" height="18" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
+                <rect x="10" y="34" width="22" height="16" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
+                <rect x="34" y="34" width="22" height="16" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
+                {/* Window handle */}
+                <circle cx="28" cy="38" r="2" fill="currentColor"/>
+                {/* Frame details */}
+                <line x1="32" y1="14" x2="32" y2="50" stroke="currentColor" strokeWidth="2"/>
+                <line x1="10" y1="32" x2="54" y2="32" stroke="currentColor" strokeWidth="2"/>
+              </svg>
+            </div>
             <h3>Fenster</h3>
             <p>Wärmedämmung, Schallschutz und Sicherheit – individuell nach Maß.</p>
             <Link className="btn btn-outline" href="/fenster-konfigurator">Fenster konfigurieren</Link>
           </div>
           <div className="tile">
+            <div className="tile-icon">
+              <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+                {/* Door frame */}
+                <rect x="16" y="8" width="32" height="48" rx="2" stroke="currentColor" strokeWidth="2" fill="rgba(255,255,255,0.2)"/>
+                {/* Door panels */}
+                <rect x="18" y="12" width="28" height="16" rx="1" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
+                <rect x="18" y="32" width="28" height="20" rx="1" fill="rgba(255,255,255,0.4)" stroke="currentColor" strokeWidth="1"/>
+                {/* Door handle */}
+                <circle cx="40" cy="38" r="2" fill="currentColor"/>
+                {/* Door lock */}
+                <rect x="38" y="42" width="4" height="2" rx="1" fill="currentColor"/>
+                {/* Decorative elements */}
+                <line x1="20" y1="16" x2="44" y2="16" stroke="currentColor" strokeWidth="1" opacity="0.6"/>
+                <line x1="20" y1="20" x2="44" y2="20" stroke="currentColor" strokeWidth="1" opacity="0.6"/>
+              </svg>
+            </div>
             <h3>Haustüren</h3>
             <p>Starkes Design, hohe Sicherheit und Top-Energieeffizienz.</p>
             <Link className="btn btn-outline" href="/fenster-konfigurator">Türen konfigurieren</Link>
           </div>
           <div className="tile">
+            <div className="tile-icon">
+              <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+                {/* Service tools */}
+                <rect x="12" y="20" width="24" height="24" rx="2" stroke="currentColor" strokeWidth="2" fill="rgba(255,255,255,0.2)"/>
+                {/* Wrench */}
+                <path d="M40 16 L52 28 L48 32 L44 28 L40 32 L36 28 L40 24 L36 20 Z" fill="currentColor"/>
+                {/* Screwdriver */}
+                <line x1="45" y1="40" x2="52" y2="47" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                <circle cx="45" cy="40" r="2" fill="currentColor"/>
+                {/* Measurement ruler */}
+                <line x1="16" y1="48" x2="32" y2="48" stroke="currentColor" strokeWidth="2"/>
+                <line x1="16" y1="46" x2="16" y2="50" stroke="currentColor" strokeWidth="1"/>
+                <line x1="20" y1="47" x2="20" y2="49" stroke="currentColor" strokeWidth="1"/>
+                <line x1="24" y1="46" x2="24" y2="50" stroke="currentColor" strokeWidth="1"/>
+                <line x1="28" y1="47" x2="28" y2="49" stroke="currentColor" strokeWidth="1"/>
+                <line x1="32" y1="46" x2="32" y2="50" stroke="currentColor" strokeWidth="1"/>
+              </svg>
+            </div>
             <h3>Service</h3>
             <p>Aufmaß, Lieferung, Montage & Altfenster-Entsorgung – aus einer Hand.</p>
             <Link className="btn btn-outline" href="/impressum">Kontakt & Impressum</Link>

@@ -238,6 +238,25 @@ export default function ConfiguratorPage() {
       {/* === STEP 0: Maße === */}
       {step === 0 && (
         <div className="grid">
+          {/* Visual Preview */}
+          <div className="window-preview">
+            <h4>Vorschau: {form.product} {form.opening}</h4>
+            <div 
+              className="preview-window"
+              style={{
+                width: Math.max(120, Math.min(200, form.width_mm / 10)),
+                height: Math.max(100, Math.min(160, form.height_mm / 10))
+              }}
+            >
+              <div className="window-frame vertical"></div>
+              <div className="window-frame horizontal"></div>
+              {form.opening.includes('Dreh') && <div className="window-handle"></div>}
+            </div>
+            <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '8px' }}>
+              {form.width_mm} × {form.height_mm} mm | Material: {form.material}
+            </div>
+          </div>
+
           <div className="row">
             <div className="label">Breite (mm)</div>
             <input
@@ -312,17 +331,23 @@ export default function ConfiguratorPage() {
       {/* === STEP 1: Ausführung & Sicherheit === */}
       {step === 1 && (
         <div className="grid">
-          {/* Material */}
-          <div className="row">
+          {/* Material Selection with Visual Options */}
+          <div>
             <div className="label">Material</div>
-            <select
-              value={form.material}
-              onChange={e => setForm(p => ({ ...p, material: e.target.value as any }))}
-            >
-              <option value="PVC">PVC</option>
-              <option value="Aluminium">Aluminium</option>
-              <option value="Holz">Holz</option>
-            </select>
+            <div className="material-selector">
+              {['PVC', 'Aluminium', 'Holz'].map(material => (
+                <div
+                  key={material}
+                  className={`material-option ${form.material === material ? 'selected' : ''}`}
+                  onClick={() => setForm(p => ({ ...p, material: material as any }))}
+                >
+                  <div className={`material-icon material-${material.toLowerCase()}`}></div>
+                  <div style={{ fontSize: '14px', fontWeight: form.material === material ? '600' : '400' }}>
+                    {material}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
           {/* Profil */}
           <div className="row">
