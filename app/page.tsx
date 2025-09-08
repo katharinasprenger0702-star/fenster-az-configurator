@@ -6,7 +6,7 @@ export default function Home() {
       {/* HERO */}
       <section className="card" style={{ 
         padding: '80px 60px', 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)',
+        background: 'linear-gradient(135deg, #0ea5e9 0%, #0891b2 25%, #0d9488 50%, #059669 75%, #047857 100%)',
         color: 'white',
         textAlign: 'center',
         position: 'relative',
@@ -87,7 +87,7 @@ export default function Home() {
           <div style={{ display: "flex", gap: 20, marginTop: 16, flexWrap: "wrap", justifyContent: "center" }}>
             <Link className="btn" href="/fenster-konfigurator" style={{
               background: 'rgba(255,255,255,0.95)',
-              color: '#667eea',
+              color: '#0ea5e9',
               fontSize: '1.2rem',
               padding: '20px 40px',
               fontWeight: '800',
@@ -328,8 +328,8 @@ export default function Home() {
       {/* CTA unten */}
       <section className="card" style={{ 
         textAlign: "center",
-        background: 'linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(139,92,246,0.05) 50%, rgba(236,72,153,0.05) 100%)',
-        border: '2px solid rgba(102,126,234,0.1)',
+        background: 'linear-gradient(135deg, rgba(14,165,233,0.05) 0%, rgba(13,148,136,0.05) 50%, rgba(5,150,105,0.05) 100%)',
+        border: '2px solid rgba(14,165,233,0.1)',
         position: 'relative',
         overflow: 'hidden'
       }}>
@@ -339,7 +339,7 @@ export default function Home() {
           left: '-50%',
           width: '200%',
           height: '200%',
-          background: 'radial-gradient(circle, rgba(102,126,234,0.03) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(14,165,233,0.03) 0%, transparent 70%)',
           animation: 'pulse 4s ease-in-out infinite'
         }} />
         <div style={{ position: 'relative', zIndex: 1 }}>
@@ -368,7 +368,7 @@ export default function Home() {
             fontSize: '1.2rem',
             padding: '20px 48px',
             background: 'var(--hero-gradient)',
-            boxShadow: '0 16px 32px rgba(102,126,234,0.3)'
+            boxShadow: '0 16px 32px rgba(14,165,233,0.3)'
           }}>
             🎯 Jetzt konfigurieren
           </Link>
