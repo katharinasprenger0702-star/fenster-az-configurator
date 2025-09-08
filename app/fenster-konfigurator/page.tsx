@@ -219,54 +219,18 @@ export default function ConfiguratorPage() {
         </div>
       </div>
 
-      {/* Technical Validation Display */}
-      {(validation.errors.length > 0 || validation.warnings.length > 0 || validation.complianceInfo.length > 0) && (
-        <div className="card">
-          <h3>Technische Prüfung (DIN 18055 / a.R.d.T.)</h3>
-          
-          {validation.errors.length > 0 && (
-            <div style={{ marginBottom: '12px' }}>
-              <h4 style={{ color: '#d32f2f', marginBottom: '8px' }}>⚠️ Technische Anforderungen nicht erfüllt:</h4>
-              <ul style={{ margin: 0, paddingLeft: '20px', color: '#d32f2f' }}>
-                {validation.errors.map((error, i) => (
-                  <li key={i}>{error}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {validation.warnings.length > 0 && (
-            <div style={{ marginBottom: '12px' }}>
-              <h4 style={{ color: '#f57c00', marginBottom: '8px' }}>⚡ Hinweise zur Optimierung:</h4>
-              <ul style={{ margin: 0, paddingLeft: '20px', color: '#f57c00' }}>
-                {validation.warnings.map((warning, i) => (
-                  <li key={i}>{warning}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {validation.complianceInfo.length > 0 && validation.errors.length === 0 && (
-            <div style={{ marginBottom: '12px' }}>
-              <h4 style={{ color: '#2e7d32', marginBottom: '8px' }}>✅ Technische Konformität:</h4>
-              <ul style={{ margin: 0, paddingLeft: '20px', color: '#2e7d32' }}>
-                {validation.complianceInfo.map((info, i) => (
-                  <li key={i}>{info}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {recommendations.length > 0 && (
-            <div>
-              <h4 style={{ color: '#1976d2', marginBottom: '8px' }}>💡 Empfehlungen:</h4>
-              <ul style={{ margin: 0, paddingLeft: '20px', color: '#1976d2' }}>
-                {recommendations.map((rec, i) => (
-                  <li key={i}>{rec}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+      {/* Technical Validation - Background Display (only critical errors shown prominently) */}
+      {validation.errors.length > 0 && (
+        <div style={{ 
+          padding: '8px 16px', 
+          backgroundColor: '#fef2f2', 
+          border: '1px solid #fecaca', 
+          borderRadius: '6px',
+          fontSize: '14px',
+          color: '#dc2626'
+        }}>
+          <span style={{ fontWeight: '500' }}>⚠️ Technische Anforderungen nicht erfüllt</span>
+          <span style={{ marginLeft: '8px', opacity: 0.8 }}>(Details in der Übersicht)</span>
         </div>
       )}
       {/* === STEP 0: Produktauswahl === */}
