@@ -1,37 +1,8 @@
 import Link from "next/link";
-import WebsiteAnalyzer from "./components/WebsiteAnalyzer";
 
 export default function Home() {
   return (
     <div style={{ background: '#ffffff' }}>
-      {/* WEBSITE STATUS SECTION */}
-      <section style={{ 
-        padding: '80px 60px',
-        background: 'white',
-        maxWidth: '1200px',
-        margin: '0 auto'
-      }}>
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <h2 style={{ 
-            fontSize: '2rem',
-            fontWeight: '800',
-            color: '#111827',
-            marginBottom: '16px'
-          }}>
-            Website-Status
-          </h2>
-          <p style={{ 
-            fontSize: '1rem',
-            color: '#6b7280',
-            maxWidth: '600px',
-            margin: '0 auto'
-          }}>
-            Aktueller Status der Website www.fenstermann24.de
-          </p>
-        </div>
-        <WebsiteAnalyzer />
-      </section>
-
       {/* CLEAN HERO SECTION */}
       <section style={{ 
         padding: '120px 60px 80px 60px', 

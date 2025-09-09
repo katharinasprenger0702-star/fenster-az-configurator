@@ -3,6 +3,7 @@ import './globals.css';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import Chatbot from './components/Chatbot';
+import WebsiteAnalyzer from './components/WebsiteAnalyzer';
 
 export const metadata = {
   title: 'Fenstermann24 – Online‑Konfigurator',
@@ -69,6 +70,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <Link href="/impressum" style={{ fontWeight: 600 }}>Impressum</Link>
           </nav>
         </header>
+        
+        {/* WEBSITE STATUS - Appears on all pages */}
+        <div style={{ 
+          maxWidth: '1200px', 
+          margin: '0 auto',
+          padding: '0 60px'
+        }}>
+          <WebsiteAnalyzer />
+        </div>
+        
         <main className="container">{children}</main>
         <footer className="footer">
           © {new Date().getFullYear()} Fenstermann24.de — eine Marke der AZ Fenster und Türen GmbH · <a href="/impressum">Impressum</a>
