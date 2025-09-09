@@ -151,8 +151,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CUSTOMER TESTIMONIALS */}
-      <section id="referenzen" style={{ 
+      {/* HOW IT WORKS PROCESS */}
+      <section style={{ 
         padding: '80px 60px',
         background: 'white'
       }}>
@@ -164,7 +164,7 @@ export default function Home() {
               color: '#111827',
               marginBottom: '16px'
             }}>
-              Was unsere Kunden sagen
+              So einfach geht's
             </h2>
             <p style={{ 
               fontSize: '1.1rem',
@@ -172,169 +172,154 @@ export default function Home() {
               maxWidth: '600px',
               margin: '0 auto'
             }}>
-              Über 1000 zufriedene Kunden vertrauen auf unsere Qualität und Service.
+              Von der ersten Konfiguration bis zur professionellen Montage – 
+              in nur wenigen Schritten zu Ihren neuen Fenstern und Türen.
             </p>
           </div>
 
           <div style={{ 
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '32px'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '48px'
           }}>
-            {/* Testimonial 1 */}
-            <div style={{
-              background: 'white',
-              padding: '32px',
-              borderRadius: '12px',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-              border: '1px solid #e5e7eb'
-            }}>
-              <div style={{ marginBottom: '20px' }}>
-                <div style={{ 
-                  color: '#fbbf24', 
-                  fontSize: '1.5rem',
-                  marginBottom: '12px'
-                }}>
-                  ★★★★★
-                </div>
-                <p style={{ 
-                  color: '#374151',
-                  fontStyle: 'italic',
-                  lineHeight: '1.6',
-                  marginBottom: '16px'
-                }}>
-                  "Sehr professionelle Beratung und perfekte Montage. 
-                  Die neuen Fenster sehen fantastisch aus und dämmen deutlich besser."
-                </p>
-              </div>
+            {/* Step 1 */}
+            <div style={{ textAlign: 'center', position: 'relative' }}>
               <div style={{
-                borderTop: '1px solid #e5e7eb',
-                paddingTop: '16px',
+                width: '80px',
+                height: '80px',
+                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px'
+                justifyContent: 'center',
+                margin: '0 auto 24px auto',
+                color: 'white',
+                fontSize: '2rem',
+                fontWeight: '800',
+                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
               }}>
-                <div style={{
-                  width: '48px',
-                  height: '48px',
-                  background: '#e5e7eb',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.5rem'
-                }}>
-                  👤
-                </div>
-                <div>
-                  <div style={{ fontWeight: '600', color: '#111827' }}>Familie Schmidt</div>
-                  <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>München</div>
-                </div>
+                1
               </div>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Selbst ausmessen
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Mit unserer Anleitung messen Sie einfach und präzise selbst aus. 
+                Schritt-für-Schritt Hilfe inklusive.
+              </p>
             </div>
 
-            {/* Testimonial 2 */}
-            <div style={{
-              background: 'white',
-              padding: '32px',
-              borderRadius: '12px',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-              border: '1px solid #e5e7eb'
-            }}>
-              <div style={{ marginBottom: '20px' }}>
-                <div style={{ 
-                  color: '#fbbf24', 
-                  fontSize: '1.5rem',
-                  marginBottom: '12px'
-                }}>
-                  ★★★★★
-                </div>
-                <p style={{ 
-                  color: '#374151',
-                  fontStyle: 'italic',
-                  lineHeight: '1.6',
-                  marginBottom: '16px'
-                }}>
-                  "Top Service! Von der Online-Konfiguration bis zur Montage 
-                  war alles perfekt organisiert. Sehr empfehlenswert!"
-                </p>
-              </div>
+            {/* Step 2 */}
+            <div style={{ textAlign: 'center', position: 'relative' }}>
               <div style={{
-                borderTop: '1px solid #e5e7eb',
-                paddingTop: '16px',
+                width: '80px',
+                height: '80px',
+                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px'
+                justifyContent: 'center',
+                margin: '0 auto 24px auto',
+                color: 'white',
+                fontSize: '2rem',
+                fontWeight: '800',
+                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
               }}>
-                <div style={{
-                  width: '48px',
-                  height: '48px',
-                  background: '#e5e7eb',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.5rem'
-                }}>
-                  👤
-                </div>
-                <div>
-                  <div style={{ fontWeight: '600', color: '#111827' }}>Hr. Müller</div>
-                  <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>Hamburg</div>
-                </div>
+                2
               </div>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Online Konfigurieren
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Wählen Sie Material, Größe, Farbe und alle Extras. 
+                Sofortige Preisberechnung inklusive.
+              </p>
             </div>
 
-            {/* Testimonial 3 */}
-            <div style={{
-              background: 'white',
-              padding: '32px',
-              borderRadius: '12px',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-              border: '1px solid #e5e7eb'
-            }}>
-              <div style={{ marginBottom: '20px' }}>
-                <div style={{ 
-                  color: '#fbbf24', 
-                  fontSize: '1.5rem',
-                  marginBottom: '12px'
-                }}>
-                  ★★★★★
-                </div>
-                <p style={{ 
-                  color: '#374151',
-                  fontStyle: 'italic',
-                  lineHeight: '1.6',
-                  marginBottom: '16px'
-                }}>
-                  "Faire Preise, transparente Kommunikation und handwerklich 
-                  einwandfreie Arbeit. Gerne wieder!"
-                </p>
-              </div>
+            {/* Step 3 */}
+            <div style={{ textAlign: 'center', position: 'relative' }}>
               <div style={{
-                borderTop: '1px solid #e5e7eb',
-                paddingTop: '16px',
+                width: '80px',
+                height: '80px',
+                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px'
+                justifyContent: 'center',
+                margin: '0 auto 24px auto',
+                color: 'white',
+                fontSize: '2rem',
+                fontWeight: '800',
+                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
               }}>
-                <div style={{
-                  width: '48px',
-                  height: '48px',
-                  background: '#e5e7eb',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.5rem'
-                }}>
-                  👤
-                </div>
-                <div>
-                  <div style={{ fontWeight: '600', color: '#111827' }}>Fr. Weber</div>
-                  <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>Frankfurt</div>
-                </div>
+                3
               </div>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Individuelle Fertigung
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Millimetergenaue Produktion in unserer eigenen Manufaktur. 
+                Höchste Qualität garantiert.
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div style={{ textAlign: 'center', position: 'relative' }}>
+              <div style={{
+                width: '80px',
+                height: '80px',
+                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 24px auto',
+                color: 'white',
+                fontSize: '2rem',
+                fontWeight: '800',
+                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
+              }}>
+                4
+              </div>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Profi-Montage
+              </h3>
+              <p style={{
+                color: '#6b7280',
+                lineHeight: '1.6'
+              }}>
+                Fachgerechte Installation durch unsere qualifizierten Montagepartner. 
+                Inklusive Entsorgung der alten Fenster.
+              </p>
             </div>
           </div>
         </div>
@@ -720,7 +705,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HOW IT WORKS PROCESS */}
+      {/* CUSTOMER TESTIMONIALS */}
       <section style={{ 
         padding: '80px 60px',
         background: '#f9fafb',
@@ -734,7 +719,7 @@ export default function Home() {
               color: '#111827',
               marginBottom: '16px'
             }}>
-              So einfach geht's
+              Was unsere Kunden sagen
             </h2>
             <p style={{ 
               fontSize: '1.1rem',
@@ -742,154 +727,169 @@ export default function Home() {
               maxWidth: '600px',
               margin: '0 auto'
             }}>
-              Von der ersten Konfiguration bis zur professionellen Montage – 
-              in nur wenigen Schritten zu Ihren neuen Fenstern und Türen.
+              Über 1000 zufriedene Kunden vertrauen auf unsere Qualität und Service.
             </p>
           </div>
 
           <div style={{ 
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '48px'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '32px'
           }}>
-            {/* Step 1 */}
-            <div style={{ textAlign: 'center', position: 'relative' }}>
+            {/* Testimonial 1 */}
+            <div style={{
+              background: 'white',
+              padding: '32px',
+              borderRadius: '12px',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ 
+                  color: '#fbbf24', 
+                  fontSize: '1.5rem',
+                  marginBottom: '12px'
+                }}>
+                  ★★★★★
+                </div>
+                <p style={{ 
+                  color: '#374151',
+                  fontStyle: 'italic',
+                  lineHeight: '1.6',
+                  marginBottom: '16px'
+                }}>
+                  "Sehr professionelle Beratung und perfekte Montage. 
+                  Die neuen Fenster sehen fantastisch aus und dämmen deutlich besser."
+                </p>
+              </div>
               <div style={{
-                width: '80px',
-                height: '80px',
-                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
-                borderRadius: '50%',
+                borderTop: '1px solid #e5e7eb',
+                paddingTop: '16px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 24px auto',
-                color: 'white',
-                fontSize: '2rem',
-                fontWeight: '800',
-                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
+                gap: '12px'
               }}>
-                1
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  background: '#e5e7eb',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.5rem'
+                }}>
+                  👤
+                </div>
+                <div>
+                  <div style={{ fontWeight: '600', color: '#111827' }}>Familie Schmidt</div>
+                  <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>München</div>
+                </div>
               </div>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: '700',
-                color: '#111827',
-                marginBottom: '12px'
-              }}>
-                Selbst ausmessen
-              </h3>
-              <p style={{
-                color: '#6b7280',
-                lineHeight: '1.6'
-              }}>
-                Mit unserer Anleitung messen Sie einfach und präzise selbst aus. 
-                Schritt-für-Schritt Hilfe inklusive.
-              </p>
             </div>
 
-            {/* Step 2 */}
-            <div style={{ textAlign: 'center', position: 'relative' }}>
+            {/* Testimonial 2 */}
+            <div style={{
+              background: 'white',
+              padding: '32px',
+              borderRadius: '12px',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ 
+                  color: '#fbbf24', 
+                  fontSize: '1.5rem',
+                  marginBottom: '12px'
+                }}>
+                  ★★★★★
+                </div>
+                <p style={{ 
+                  color: '#374151',
+                  fontStyle: 'italic',
+                  lineHeight: '1.6',
+                  marginBottom: '16px'
+                }}>
+                  "Top Service! Von der Online-Konfiguration bis zur Montage 
+                  war alles perfekt organisiert. Sehr empfehlenswert!"
+                </p>
+              </div>
               <div style={{
-                width: '80px',
-                height: '80px',
-                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
-                borderRadius: '50%',
+                borderTop: '1px solid #e5e7eb',
+                paddingTop: '16px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 24px auto',
-                color: 'white',
-                fontSize: '2rem',
-                fontWeight: '800',
-                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
+                gap: '12px'
               }}>
-                2
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  background: '#e5e7eb',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.5rem'
+                }}>
+                  👤
+                </div>
+                <div>
+                  <div style={{ fontWeight: '600', color: '#111827' }}>Hr. Müller</div>
+                  <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>Hamburg</div>
+                </div>
               </div>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: '700',
-                color: '#111827',
-                marginBottom: '12px'
-              }}>
-                Online Konfigurieren
-              </h3>
-              <p style={{
-                color: '#6b7280',
-                lineHeight: '1.6'
-              }}>
-                Wählen Sie Material, Größe, Farbe und alle Extras. 
-                Sofortige Preisberechnung inklusive.
-              </p>
             </div>
 
-            {/* Step 3 */}
-            <div style={{ textAlign: 'center', position: 'relative' }}>
+            {/* Testimonial 3 */}
+            <div style={{
+              background: 'white',
+              padding: '32px',
+              borderRadius: '12px',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ 
+                  color: '#fbbf24', 
+                  fontSize: '1.5rem',
+                  marginBottom: '12px'
+                }}>
+                  ★★★★★
+                </div>
+                <p style={{ 
+                  color: '#374151',
+                  fontStyle: 'italic',
+                  lineHeight: '1.6',
+                  marginBottom: '16px'
+                }}>
+                  "Faire Preise, transparente Kommunikation und handwerklich 
+                  einwandfreie Arbeit. Gerne wieder!"
+                </p>
+              </div>
               <div style={{
-                width: '80px',
-                height: '80px',
-                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
-                borderRadius: '50%',
+                borderTop: '1px solid #e5e7eb',
+                paddingTop: '16px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 24px auto',
-                color: 'white',
-                fontSize: '2rem',
-                fontWeight: '800',
-                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
+                gap: '12px'
               }}>
-                3
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  background: '#e5e7eb',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.5rem'
+                }}>
+                  👤
+                </div>
+                <div>
+                  <div style={{ fontWeight: '600', color: '#111827' }}>Fr. Weber</div>
+                  <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>Frankfurt</div>
+                </div>
               </div>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: '700',
-                color: '#111827',
-                marginBottom: '12px'
-              }}>
-                Individuelle Fertigung
-              </h3>
-              <p style={{
-                color: '#6b7280',
-                lineHeight: '1.6'
-              }}>
-                Millimetergenaue Produktion in unserer eigenen Manufaktur. 
-                Höchste Qualität garantiert.
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div style={{ textAlign: 'center', position: 'relative' }}>
-              <div style={{
-                width: '80px',
-                height: '80px',
-                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 24px auto',
-                color: 'white',
-                fontSize: '2rem',
-                fontWeight: '800',
-                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
-              }}>
-                4
-              </div>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: '700',
-                color: '#111827',
-                marginBottom: '12px'
-              }}>
-                Profi-Montage
-              </h3>
-              <p style={{
-                color: '#6b7280',
-                lineHeight: '1.6'
-              }}>
-                Fachgerechte Installation durch unsere qualifizierten Montagepartner. 
-                Inklusive Entsorgung der alten Fenster.
-              </p>
             </div>
           </div>
         </div>
@@ -1052,7 +1052,7 @@ export default function Home() {
               margin: '0 auto'
             }}>
               Wir sind deutschlandweit für Sie da – mit eigenem Montage-Service 
-              und kostenfreier Lieferung ab 10 Fenstern.
+              und kostenfreier Lieferung ab 5 Fenstern.
             </p>
           </div>
 
