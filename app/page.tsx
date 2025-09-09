@@ -134,7 +134,7 @@ export default function Home() {
             </div>
             <div>
               <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🛡️</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>5 Jahre Garantie</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Herstellergarantie</div>
               <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Vollumfänglicher Schutz</div>
             </div>
             <div>
@@ -145,7 +145,7 @@ export default function Home() {
             <div>
               <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🔧</div>
               <div style={{ fontWeight: '600', marginBottom: '4px' }}>Profi-Montage</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Eigene, geschulte Fachkräfte</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Qualifizierte Montagepartner</div>
             </div>
           </div>
         </div>
@@ -241,14 +241,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Aufmaß & Beratung
+                Selbst ausmessen
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Unsere Experten nehmen vor Ort präzise Maße und beraten Sie 
-                zu allen Details.
+                Mit unserer Anleitung messen Sie einfach und präzise selbst aus. 
+                Schritt-für-Schritt Hilfe inklusive.
               </p>
             </div>
 
@@ -317,7 +317,7 @@ export default function Home() {
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Fachgerechte Installation durch unsere erfahrenen Monteure. 
+                Fachgerechte Installation durch unsere qualifizierten Montagepartner. 
                 Inklusive Entsorgung der alten Fenster.
               </p>
             </div>
@@ -1104,8 +1104,8 @@ export default function Home() {
                   color: '#6b7280',
                   lineHeight: '1.6'
                 }}>
-                  Durch unser eigenes Fachpersonal in ganz Deutschland. 
-                  Terminvereinbarung nach Absprache.
+                  Für unseren Montageservice greifen wir auf unser flächendeckendes Netzwerk 
+                  an qualifizierten Montagepartnern zurück. Wir arbeiten mit Monteuren in ganz Deutschland zusammen.
                 </p>
               </div>
 
@@ -1116,13 +1116,14 @@ export default function Home() {
                   color: '#111827',
                   marginBottom: '8px'
                 }}>
-                  Aufmaß-Service:
+                  Messanleitung:
                 </h4>
                 <p style={{
                   color: '#6b7280',
                   lineHeight: '1.6'
                 }}>
-                  Kostenloses Aufmaß vor Ort durch unsere erfahrenen Experten.
+                  Detaillierte Anleitung zum Messen für den Kunden. 
+                  Einfach und präzise selbst ausmessen.
                 </p>
               </div>
 
@@ -1133,7 +1134,7 @@ export default function Home() {
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ color: '#10b981', fontSize: '1.2rem' }}>✓</span>
-                  <span style={{ fontWeight: '600', color: '#374151' }}>Eigene Monteure</span>
+                  <span style={{ fontWeight: '600', color: '#374151' }}>Qualifizierte Partner</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ color: '#10b981', fontSize: '1.2rem' }}>✓</span>
@@ -1316,7 +1317,7 @@ export default function Home() {
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Eigene, geschulte Monteure. Fachgerechte Installation 
+                Qualifizierte Montagepartner in ganz Deutschland. Fachgerechte Installation 
                 mit Garantie und professioneller Entsorgung.
               </p>
             </div>
@@ -1435,9 +1436,9 @@ export default function Home() {
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Wir gewähren 5 Jahre Vollgarantie auf alle Fenster und Türen sowie 
-                2 Jahre auf die Montage. Die Herstellergarantie auf Profile beträgt 
-                bis zu 10 Jahre.
+                Die Garantie auf unsere Fenster und Türen wird direkt vom Hersteller gewährt. 
+                Die Herstellergarantie auf Profile beträgt bis zu 10 Jahre, 
+                auf die Montage gewähren wir 2 Jahre.
               </p>
             </div>
 
