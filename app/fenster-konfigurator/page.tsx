@@ -12,7 +12,7 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren']).default('Fenster'),
-  manufacturer: z.enum(['IGLO 5', 'Rehau', 'Schüco', 'Salamander', 'VEKA']).default('IGLO 5'),
+  manufacturer: z.enum(['IGLO 5', 'Rehau', 'Schüco', 'Salamander', 'VEKA', 'Aluplast', 'Gealan', 'Kömmerling', 'Trocal', 'Brügmann', 'Deceuninck']).default('IGLO 5'),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
   material: z.enum(['PVC', 'Aluminium', 'Holz']).default('PVC'),
@@ -62,12 +62,12 @@ function getOpeningTypesForProduct(product: string): string[] {
 function pickDatasetAndFilter(form: any) {
   let DATA;
   
-  // Note: Currently only IGLO 5 (DRUTEX) data is available
-  // Additional manufacturer data would be added here
+  // Note: Currently only IGLO 5 (DRUTEX) pricing data is available
+  // Additional manufacturer-specific pricing will be integrated gradually
   if (form.manufacturer !== 'IGLO 5') {
-    // For non-IGLO 5 manufacturers, fallback to IGLO 5 (DRUTEX) data
-    // This is where additional manufacturer datasets would be loaded
-    console.warn(`Manufacturer ${form.manufacturer} data not available, using IGLO 5 (DRUTEX) data`);
+    // For other manufacturers, fallback to IGLO 5 (DRUTEX) pricing data
+    // This will be replaced with manufacturer-specific data as it becomes available
+    console.warn(`Using DRUTEX pricing for ${form.manufacturer} - manufacturer-specific pricing to be added`);
   }
   
   switch (form.product) {
@@ -423,10 +423,16 @@ export default function ConfiguratorPage() {
               onChange={e => setForm(prev => ({ ...prev, manufacturer: e.target.value as any }))}
             >
               <option value="IGLO 5">IGLO 5 (DRUTEX)</option>
-              <option value="Rehau">Rehau (Demo)</option>
-              <option value="Schüco">Schüco (Demo)</option>
-              <option value="Salamander">Salamander (Demo)</option>
-              <option value="VEKA">VEKA (Demo)</option>
+              <option value="Rehau">Rehau</option>
+              <option value="Schüco">Schüco</option>
+              <option value="Salamander">Salamander</option>
+              <option value="VEKA">VEKA</option>
+              <option value="Aluplast">Aluplast</option>
+              <option value="Gealan">Gealan</option>
+              <option value="Kömmerling">Kömmerling</option>
+              <option value="Trocal">Trocal</option>
+              <option value="Brügmann">Brügmann</option>
+              <option value="Deceuninck">Deceuninck</option>
             </select>
           </div>
           
@@ -442,8 +448,8 @@ export default function ConfiguratorPage() {
             <strong>Info:</strong> IGLO 5 Fenster sind DRUTEX Produkte. Die Preise stammen aus der DRUTEX Preisliste.
             {form.manufacturer !== 'IGLO 5' && (
               <span style={{ display: 'block', marginTop: '8px' }}>
-                <strong>Hinweis:</strong> Aktuell sind nur IGLO 5 (DRUTEX) Preise verfügbar. 
-                Weitere Hersteller werden mit DRUTEX Preisen angezeigt.
+                <strong>Hinweis:</strong> Für {form.manufacturer} werden derzeit DRUTEX Preise angezeigt. 
+                Herstellerspezifische Preislisten werden sukzessive integriert.
               </span>
             )}
           </div>
