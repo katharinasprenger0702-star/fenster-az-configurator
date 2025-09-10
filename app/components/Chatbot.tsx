@@ -106,6 +106,7 @@ function validateMeasurementsAndProvideGuidance(measurements: MeasurementMatch[]
   // Create a basic config for validation
   const config: Config = {
     product: productType as any,
+    manufacturer: 'DRUTEX',
     width_mm: measurement.width,
     height_mm: measurement.height,
     material: 'PVC',

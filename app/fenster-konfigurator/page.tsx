@@ -11,7 +11,9 @@ import {
 import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
-  product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren']).default('Fenster'),
+  product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
+  manufacturer: z.enum(['DRUTEX', 'Eko-Okna', 'Gabit', 'Inotherm', 'HOOPE', 'Schüco']).default('DRUTEX'),
+  system: z.enum(['IGLO 5', 'Standard', 'Premium']).default('IGLO 5').optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
   material: z.enum(['PVC', 'Aluminium', 'Holz']).default('PVC'),
@@ -28,6 +30,8 @@ const schema = z.object({
   trickleVent: z.boolean().default(false),
   insectScreen: z.boolean().default(false),
   rollerShutter: z.boolean().default(false),
+  childLock: z.boolean().default(false),
+  montage: z.enum(['Keine', 'Standard', 'Premium']).default('Keine'),
   oldWindowDisposal: z.boolean().default(false),
   delivery: z.enum(['Abholung','Hamburg (Zone 1)','Zone 2']).default('Abholung'),
   qty: z.coerce.number().int().min(1).max(50).default(1),
@@ -35,6 +39,7 @@ const schema = z.object({
 
 const steps = [
   'Produktauswahl',
+  'Hersteller',
   'Maße',
   'Ausführung & Sicherheit',
   'Glas & Farbe',
@@ -45,20 +50,26 @@ const steps = [
 function getOpeningTypesForProduct(product: string): string[] {
   switch (product) {
     case 'Fenster':
-      return ['Festverglasung', 'Dreh-Kipp links', 'Dreh-Kipp rechts', 'Doppelflügelig (Stulp)', 'Dreh', 'Kipp'];
+      return ['Fest', 'Dreh-Kipp links', 'Dreh-Kipp rechts', 'Dreh links', 'Dreh rechts', 'Kipp'];
     case 'Balkontüren':
-      return ['Dreh', 'Dreh-Kipp', 'Dreh + Dreh-Kipp (Pfosten)', 'Dreh + Dreh-Kipp (Stulp)'];
+      return ['Dreh-Kipp links', 'Dreh-Kipp rechts', 'Dreh links', 'Dreh rechts'];
     case 'Schiebetüren':
-      return ['Schiebetür F+KS', 'Schiebetür FF+KS', 'Schiebetür KS', 'Schiebetür Stulp KS+KS'];
+      return ['Schiebetür links', 'Schiebetür rechts'];
     case 'Haustüren':
-      return ['1-flügelig', '2-flügelig'];
+      return ['Dreh links', 'Dreh rechts'];
+    case 'Rollladen':
+      return ['Aufputz', 'Unterputz', 'Vorbaurollladen', 'Aufsatzrollladen'];
+    case 'Garagentore':
+      return ['Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'];
     default:
-      return ['Festverglasung', 'Dreh-Kipp links', 'Dreh-Kipp rechts', 'Doppelflügelig (Stulp)'];
+      return ['Dreh-Kipp links'];
   }
 }
 
 function pickDatasetAndFilter(form: any) {
-  let DATA;
+  let DATA: any;
+
+  // Choose dataset based on product type
   switch (form.product) {
     case 'Fenster':
       DATA = fensterPrices;
@@ -70,6 +81,14 @@ function pickDatasetAndFilter(form: any) {
       DATA = schiebetuerenPrices;
       break;
     case 'Haustüren':
+      DATA = haustuerenPrices;
+      break;
+    case 'Rollladen':
+      // For now, use a subset of fenster pricing for rollladen
+      DATA = fensterPrices;
+      break;
+    case 'Garagentore':
+      // For now, use haustuer pricing as basis for garage doors
       DATA = haustuerenPrices;
       break;
     default:
@@ -85,9 +104,7 @@ function pickDatasetAndFilter(form: any) {
   else if (opening.includes('dreh')) filter.source_file = 'DREH';
   else if (opening.includes('schiebe')) filter.source_file = 'SCHIEBE';
 
-  if (opening.includes('stulp'))
-    filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'STULP';
-  if (opening.includes('pfosten'))
+  if (form.profile === 'ThermoPlus' || form.profile === 'Premium')
     filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'PFOSTEN';
   
   return { DATA, filter };
@@ -95,14 +112,14 @@ function pickDatasetAndFilter(form: any) {
 
 export default function ConfiguratorPage() {
   const [form, setForm] = useState<Config>({
-    product: 'Fenster', width_mm: 1200, height_mm: 1200,
+    product: 'Fenster', manufacturer: 'DRUTEX', system: 'IGLO 5', width_mm: 1200, height_mm: 1200,
     material: 'PVC', profile: 'Standard', opening: 'Dreh-Kipp links',
     glazing: '2-fach', color: 'Weiß', handle: 'Standard', security: 'Basis',
     warmEdge: false, soundInsulation: false, safetyGlass: false, sunProtection: false,
     trickleVent: false, insectScreen: false, rollerShutter: false, childLock: false,
-    montage: 'Keine', oldWindowDisposal: false, delivery: 'Abholung', qty: 1
+    montage: 'Keine', oldWindowDisposal: false,
+    delivery: 'Abholung', qty: 1
   });
-
   const parsed = schema.safeParse(form);
   const valid = parsed.success;
   const breakdown = useMemo(() => calculatePrice(form), [form]);
@@ -114,8 +131,15 @@ export default function ConfiguratorPage() {
     eur_sell_net: number;
     eur_sell_gross: number;
   }>({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
+  const [step, setStep] = useState(0);
 
   useEffect(() => {
+    // Only calculate prices for DRUTEX Fenster combinations
+    if (form.product !== 'Fenster' || form.manufacturer !== 'DRUTEX') {
+      setPrice({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
+      return;
+    }
+
     const { DATA, filter } = pickDatasetAndFilter(form);
     (async () => {
       try {
@@ -128,8 +152,10 @@ export default function ConfiguratorPage() {
             opening: form.opening,
             qty: form.qty,
             product: form.product,
-            filter,
-            DATA,
+            manufacturer: form.manufacturer,
+            material: form.material,
+            profile: form.profile,
+            glazing: form.glazing
           }),
         });
         const data = await res.json();
@@ -180,26 +206,28 @@ export default function ConfiguratorPage() {
       metadata: { config: JSON.stringify(form), label: name }
     };
 
-    const res = await fetch('/api/price', {
+    const checkoutRes = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        width_mm: form.width_mm,
-        height_mm: form.height_mm,
-        opening: form.opening,
-      }),
+      body: JSON.stringify(payload),
     });
-    const data = await res.json();
 
-    // Netto-EUR-Preis aus der API
-    const eurNet = data?.price?.eur_net ?? 0;
+    const checkoutData = await checkoutRes.json();
+    
+    if (checkoutData.sessionId) {
+      const result = await stripe?.redirectToCheckout({
+        sessionId: checkoutData.sessionId,
+      });
+      
+      if (result?.error) {
+        console.error('Stripe checkout error:', result.error);
+      }
+    }
   }
 
   function setK<K extends keyof Config>(key: K, value: Config[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
-
-  const [step, setStep] = useState(0);
 
   return (
     <div className="grid" style={{ gap: 24 }}>
@@ -217,489 +245,391 @@ export default function ConfiguratorPage() {
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Technical Validation - Background Display (only critical errors shown prominently) */}
-      {validation.errors.length > 0 && (
-        <div style={{ 
-          padding: '8px 16px', 
-          backgroundColor: '#fef2f2', 
-          border: '1px solid #fecaca', 
-          borderRadius: '6px',
-          fontSize: '14px',
-          color: '#dc2626'
-        }}>
-          <span style={{ fontWeight: '500' }}>⚠️ Technische Anforderungen nicht erfüllt</span>
-          <span style={{ marginLeft: '8px', opacity: 0.8 }}>(Details in der Übersicht)</span>
-        </div>
-      )}
-      {/* === STEP 0: Produktauswahl === */}
-      {step === 0 && (
-        <div className="grid">
-          {/* Enhanced 3D Visual Preview */}
-          <div className="window-preview">
-            <h4>3D Vorschau: {form.product} {form.opening}</h4>
-            <div 
-              className="preview-window"
-              style={{
-                width: Math.max(140, Math.min(220, form.width_mm / 8)),
-                height: Math.max(120, Math.min(180, form.height_mm / 8))
-              }}
-            >
-              {/* Main frame structure */}
-              <div className="window-frame vertical"></div>
-              <div className="window-frame horizontal"></div>
-              
-              {/* Different visualizations based on product type */}
-              {form.product === 'Haustüren' && (
-                <>
-                  <div className="door-panel" style={{
-                    position: 'absolute',
-                    left: '10%',
-                    top: '10%',
-                    width: '35%',
-                    height: '80%',
-                    background: 'linear-gradient(145deg, #8b5cf6 0%, #a78bfa 100%)',
-                    borderRadius: '4px',
-                    boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.1)'
-                  }}></div>
-                  <div className="door-handle" style={{
-                    position: 'absolute',
-                    left: '40%',
-                    top: '55%',
-                    width: '12px',
-                    height: '6px',
-                    background: 'linear-gradient(145deg, #374151 0%, #475569 100%)',
-                    borderRadius: '3px',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
-                  }}></div>
-                </>
-              )}
-              
-              {/* Window handle for windows */}
-              {form.opening.includes('Dreh') && form.product === 'Fenster' && (
-                <div className="window-handle"></div>
-              )}
-              
-              {/* Glass panes effect */}
-              <div className="glass-effect" style={{
-                position: 'absolute',
-                top: '8%',
-                left: '8%',
-                right: '8%',
-                bottom: '8%',
-                background: 'linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(59,130,246,0.05) 100%)',
-                borderRadius: '4px',
-                backdropFilter: 'blur(1px)'
-              }}>
-                {/* Reflection effect */}
-                <div style={{
-                  position: 'absolute',
-                  top: '5%',
-                  left: '10%',
-                  width: '30%',
-                  height: '60%',
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 70%)',
-                  borderRadius: '2px',
-                  opacity: 0.6
-                }}></div>
-              </div>
-              
-              {/* Material indicator */}
-              <div className="material-indicator" style={{
-                position: 'absolute',
-                bottom: '-8px',
-                right: '-8px',
-                width: '20px',
-                height: '20px',
-                background: form.material === 'PVC' ? '#3b82f6' : form.material === 'Aluminium' ? '#6b7280' : '#92400e',
-                borderRadius: '50%',
-                border: '2px solid white',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-              }}></div>
-            </div>
-            <div style={{ fontSize: '14px', color: '#4b5563', marginTop: '12px', fontWeight: 500 }}>
-              {form.width_mm} × {form.height_mm} mm | Material: {form.material}
-            </div>
-            <div style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>
-              Interaktive 3D-Vorschau • Fahren Sie mit der Maus über das Fenster
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="label">Produkttyp</div>
-            <select
-              value={form.product}
-              onChange={e => {
-                const newProduct = e.target.value as any;
-                const availableOpenings = getOpeningTypesForProduct(newProduct);
-                setForm(prev => ({ 
-                  ...prev, 
-                  product: newProduct,
-                  opening: availableOpenings[0] || 'Dreh-Kipp links'
-                }));
-              }}
-            >
-              <option value="Fenster">Fenster</option>
-              <option value="Balkontüren">Balkontüren</option>
-              <option value="Schiebetüren">Schiebetüren</option>
-              <option value="Haustüren">Haustüren</option>
-            </select>
-          </div>
-          
-          <div className="row">
-            <div className="label">Öffnungsart</div>
-            <select
-              value={form.opening}
-              onChange={e => setForm(prev => ({ ...prev, opening: e.target.value as any }))}
-            >
-              {getOpeningTypesForProduct(form.product).map(option => (
-                <option key={option} value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
-
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <div></div>
-            <button className="btn" onClick={() => setStep(1)}>Weiter</button>
-          </div>
-        </div>
-      )}
-
-      {/* === STEP 1: Maße === */}
-      {step === 1 && (
-        <div className="grid">
-          <div className="row">
-            <div className="label">Breite (mm)</div>
-            <input
-              type="number"
-              value={form.width_mm}
-              min={400}
-              max={3000}
-              onChange={e => setForm(prev => ({ ...prev, width_mm: Number(e.target.value) }))}
-              style={{
-                borderColor: validation.errors.some(e => e.includes('Breite') || e.includes('Fläche')) ? '#d32f2f' : 
-                            validation.warnings.some(w => w.includes('Breite') || w.includes('Fläche')) ? '#f57c00' : '#d1d5db'
-              }}
-            />
-          </div>
-          <div className="row">
-            <div className="label">Höhe (mm)</div>
-            <input
-              type="number"
-              value={form.height_mm}
-              min={400}
-              max={3000}
-              onChange={e => setForm(prev => ({ ...prev, height_mm: Number(e.target.value) }))}
-              style={{
-                borderColor: validation.errors.some(e => e.includes('Höhe') || e.includes('Fläche')) ? '#d32f2f' : 
-                            validation.warnings.some(w => w.includes('Höhe') || w.includes('Fläche')) ? '#f57c00' : '#d1d5db'
-              }}
-            />
-          </div>
-          <div className="row">
-            <div className="label">Öffnungsart</div>
-            <select
-              value={form.opening}
-              onChange={e => setForm(prev => ({ ...prev, opening: e.target.value as any }))}
-              style={{
-                borderColor: validation.errors.some(e => e.includes('Öffnung') || e.includes(form.opening)) ? '#d32f2f' : '#d1d5db'
-              }}
-            >
-              <option>Dreh-Kipp links</option>
-              <option>Dreh-Kipp rechts</option>
-              <option>Doppelflügelig (Stulp)</option>
-              <option>Festverglasung</option>
-            </select>
-          </div>
-          <div className="row">
-main
-            <div className="label">Menge</div>
-            <input
-              type="number"
-              value={form.qty}
-              min={1}
-              max={50}
-              onChange={e => setForm(prev => ({ ...prev, qty: Number(e.target.value) }))}
-            />
-          </div>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(0)}>Zurück</button>
-            <button className="btn" onClick={() => setStep(2)}>Weiter</button>
-          </div>
-        </div>
-      )}
-
-      {/* === STEP 2: Ausführung & Sicherheit === */}
-      {step === 2 && (
-        <div className="grid">
-          {/* Material Selection with Visual Options */}
+        {/* === STEP 0: Produktauswahl === */}
+        {step === 0 && (
           <div>
-            <div className="label">Material</div>
-            <div className="material-selector">
-              {['PVC', 'Aluminium', 'Holz'].map(material => (
+            <h2>Produkt auswählen</h2>
+            <div className="grid" style={{ gap: 16 }}>
+              {['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore'].map(product => (
                 <div
-                  key={material}
-                  className={`material-option ${form.material === material ? 'selected' : ''}`}
-                  onClick={() => setForm(p => ({ ...p, material: material as any }))}
+                  key={product}
+                  className={['product-option', form.product === product && 'selected'].filter(Boolean).join(' ')}
+                  onClick={() => {
+                    setK('product', product as any);
+                    // Update opening type when product changes
+                    const openingTypes = getOpeningTypesForProduct(product);
+                    if (!openingTypes.includes(form.opening)) {
+                      setK('opening', openingTypes[0]);
+                    }
+                  }}
+                  style={{
+                    padding: '16px',
+                    border: form.product === product ? '2px solid #007bff' : '1px solid #ddd',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    textAlign: 'center'
+                  }}
                 >
-                  <div className={`material-icon material-${material.toLowerCase()}`}></div>
-                  <div style={{ fontSize: '14px', fontWeight: form.material === material ? '600' : '400' }}>
-                    {material}
+                  <div style={{ fontSize: '24px', marginBottom: '8px' }}>
+                    {product === 'Fenster' && '🪟'}
+                    {product === 'Balkontüren' && '🚪'}
+                    {product === 'Schiebetüren' && '🚪'}
+                    {product === 'Haustüren' && '🚪'}
+                    {product === 'Rollladen' && '🪟'}
+                    {product === 'Garagentore' && '🚪'}
                   </div>
+                  <div style={{ fontWeight: 'bold' }}>{product}</div>
                 </div>
               ))}
             </div>
           </div>
-          {/* Profil */}
-          <div className="row">
-            <div className="label">Profil</div>
-            <select
-              value={form.profile}
-              onChange={e => setForm(p => ({ ...p, profile: e.target.value as any }))}
-            >
-              <option value="Standard">Standard</option>
-              <option value="ThermoPlus">ThermoPlus</option>
-              <option value="Premium">Premium</option>
-            </select>
-          </div>
-          {/* Sicherheit */}
-          <div className="row">
-            <div className="label">Sicherheitsstufe</div>
-            <select
-              value={form.security}
-              onChange={e => setForm(p => ({ ...p, security: e.target.value as any }))}
-            >
-              <option value="Basis">Basis</option>
-              <option value="RC1N">RC1N</option>
-              <option value="RC2N">RC2N</option>
-            </select>
-          </div>
-          {/* Griff */}
-          <div className="row">
-            <div className="label">Griff</div>
-            <select
-              value={form.handle}
-              onChange={e => setForm(p => ({ ...p, handle: e.target.value as any }))}
-            >
-              <option value="Standard">Standard</option>
-              <option value="Premium">Premium</option>
-            </select>
-          </div>
-          {/* Zusatzoptionen (Checkboxen) */}
-          <div className="row">
-            <div className="label">Warme Kante</div>
-            <input
-              type="checkbox"
-              checked={form.warmEdge}
-              onChange={e => setForm(p => ({ ...p, warmEdge: e.target.checked }))}
-            />
-          </div>
-          <div className="row">
-            <div className="label">Schallschutz</div>
-            <input
-              type="checkbox"
-              checked={form.soundInsulation}
-              onChange={e => setForm(p => ({ ...p, soundInsulation: e.target.checked }))}
-            />
-          </div>
-          <div className="row">
-            <div className="label">Sicherheitsglas</div>
-            <input
-              type="checkbox"
-              checked={form.safetyGlass}
-              onChange={e => setForm(p => ({ ...p, safetyGlass: e.target.checked }))}
-            />
-          </div>
-          <div className="row">
-            <div className="label">Sonnenschutz</div>
-            <input
-              type="checkbox"
-              checked={form.sunProtection}
-              onChange={e => setForm(p => ({ ...p, sunProtection: e.target.checked }))}
-            />
-          </div>
-          <div className="row">
-            <div className="label">Lüftungsschlitz (Trickle Vent)</div>
-            <input
-              type="checkbox"
-              checked={form.trickleVent}
-              onChange={e => setForm(p => ({ ...p, trickleVent: e.target.checked }))}
-            />
-          </div>
-          <div className="row">
-            <div className="label">Insektenschutz</div>
-            <input
-              type="checkbox"
-              checked={form.insectScreen}
-              onChange={e => setForm(p => ({ ...p, insectScreen: e.target.checked }))}
-            />
-          </div>
-          <div className="row">
-            <div className="label">Rollladen</div>
-            <input
-              type="checkbox"
-              checked={form.rollerShutter}
-              onChange={e => setForm(p => ({ ...p, rollerShutter: e.target.checked }))}
-            />
-          </div>
-          <div className="row">
-            <div className="label">Kindersicherung</div>
-            <input
-              type="checkbox"
-              checked={form.childLock}
-              onChange={e => setForm(p => ({ ...p, childLock: e.target.checked }))}
-            />
-          </div>
-          {/* Navigation */}
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(1)}>Zurück</button>
-            <button className="btn" onClick={() => setStep(3)}>Weiter</button>
-          </div>
-        </div>
-      )}
+        )}
 
-      {/* === STEP 3: Glas & Farbe === */}
-      {step === 3 && (
-        <div className="grid">
-          {/* Verglasung */}
-          <div className="row">
-            <div className="label">Verglasung</div>
-            <select
-              value={form.glazing}
-              onChange={e => setForm(p => ({ ...p, glazing: e.target.value as any }))}
-            >
-              <option value="2-fach">2-fach</option>
-              <option value="3-fach">3-fach</option>
-            </select>
-          </div>
-          {/* Farbe */}
-          <div className="row">
-            <div className="label">Farbe</div>
-            <select
-              value={form.color}
-              onChange={e => setForm(p => ({ ...p, color: e.target.value as any }))}
-            >
-              <option value="Weiß">Weiß</option>
-              <option value="RAL">RAL</option>
-              <option value="Holzdekor">Holzdekor</option>
-            </select>
-          </div>
-          {/* Navigation */}
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(2)}>Zurück</button>
-            <button className="btn" onClick={() => setStep(4)}>Weiter</button>
-          </div>
-        </div>
-      )}
+        {/* === STEP 1: Herstellerauswahl === */}
+        {step === 1 && (
+          <div>
+            <h2>Hersteller auswählen</h2>
+            <div className="grid" style={{ gap: 16 }}>
+              {['DRUTEX', 'Eko-Okna', 'Gabit', 'Inotherm', 'HOOPE', 'Schüco'].map(manufacturer => (
+                <div
+                  key={manufacturer}
+                  className={['manufacturer-option', form.manufacturer === manufacturer && 'selected'].filter(Boolean).join(' ')}
+                  onClick={() => setK('manufacturer', manufacturer as any)}
+                  style={{
+                    padding: '16px',
+                    border: form.manufacturer === manufacturer ? '2px solid #007bff' : '1px solid #ddd',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    textAlign: 'center'
+                  }}
+                >
+                  <div style={{ fontWeight: 'bold' }}>{manufacturer}</div>
+                  {manufacturer !== 'DRUTEX' && (
+                    <div style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
+                      Preise sind nur für DRUTEX Fenster verfügbar. Für andere Hersteller kontaktieren Sie uns für ein individuelles Angebot.
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
 
-      {/* === STEP 4: Montage & Lieferung === */}
-      {step === 4 && (
-        <div className="grid">
-          {/* Montagepaket */}
-          <div className="row">
-            <div className="label">Montagepaket</div>
-            <select
-              value={form.montage}
-              onChange={e => setForm(p => ({ ...p, montage: e.target.value as any }))}
-            >
-              <option value="Keine">Keine</option>
-              <option value="Standard">Standard</option>
-              <option value="Premium">Premium</option>
-            </select>
-          </div>
-          {/* Lieferung */}
-          <div className="row">
-            <div className="label">Lieferung</div>
-            <select
-              value={form.delivery}
-              onChange={e => setForm(p => ({ ...p, delivery: e.target.value as any }))}
-            >
-              <option value="Abholung">Abholung</option>
-              <option value="Hamburg (Zone 1)">Hamburg (Zone 1)</option>
-              <option value="Zone 2">Zone 2</option>
-            </select>
-          </div>
-          {/* Altfenster-Entsorgung */}
-          <div className="row">
-            <div className="label">Altfenster-Entsorgung</div>
-            <label style={{ alignSelf: 'center' }}>
-              <input
-                type="checkbox"
-                checked={form.oldWindowDisposal}
-                onChange={e => setForm(p => ({ ...p, oldWindowDisposal: e.target.checked }))}
-              />{' '}
-              Altfenster entsorgen (+25 € wenn Montage gewählt)
-            </label>
-          </div>
-          {/* Menge */}
-          <div className="row">
-            <div className="label">Menge</div>
-            <input
-              type="number"
-              min={1}
-              max={50}
-              value={form.qty}
-              onChange={e => setForm(p => ({ ...p, qty: Number(e.target.value || 1) }))}
-            />
-          </div>
-          {/* Navigation */}
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
-            <button className="btn" onClick={() => setStep(3)}>Zurück</button>
-            <button className="btn" onClick={() => setStep(5)}>Weiter</button>
-          </div>
-        </div>
-      )}
-
-      {/* === STEP 5: Übersicht === */}
-      {step === 5 && (
-        <div className="grid" style={{ gap: 24 }}>
-          {/* Technical Validation Summary */}
-          <div className="card">
-            <h3>Technische Konformitätsprüfung</h3>
-            
-            {validation.errors.length > 0 ? (
-              <div style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#ffebee', border: '1px solid #e57373' }}>
-                <h4 style={{ color: '#d32f2f', margin: '0 0 12px 0' }}>❌ Konfiguration nicht zulässig</h4>
-                <p style={{ margin: '0 0 12px 0', color: '#d32f2f' }}>
-                  Die aktuelle Konfiguration entspricht nicht den technischen Anforderungen nach DIN 18055 und a.R.d.T.
-                </p>
-                <ul style={{ margin: 0, paddingLeft: '20px', color: '#d32f2f' }}>
-                  {validation.errors.map((error, i) => (
-                    <li key={i}>{error}</li>
-                  ))}
-                </ul>
+            {/* System Selection */}
+            <div style={{ marginTop: '24px' }}>
+              <h3>System auswählen</h3>
+              <div className="grid" style={{ gap: 16 }}>
+                {['IGLO 5', 'Standard', 'Premium'].map(system => (
+                  <div
+                    key={system}
+                    className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
+                    onClick={() => setK('system', system as any)}
+                    style={{
+                      padding: '16px',
+                      border: form.system === system ? '2px solid #007bff' : '1px solid #ddd',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      textAlign: 'center'
+                    }}
+                  >
+                    <div style={{ fontWeight: 'bold' }}>{system}</div>
+                  </div>
+                ))}
               </div>
-            ) : (
-              <div style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#e8f5e8', border: '1px solid #81c784' }}>
-                <h4 style={{ color: '#2e7d32', margin: '0 0 12px 0' }}>✅ Technische Anforderungen erfüllt</h4>
-                <p style={{ margin: '0 0 12px 0', color: '#2e7d32' }}>
-                  Die Konfiguration entspricht DIN 18055 und den anerkannten Regeln der Technik (a.R.d.T.).
-                </p>
-                {validation.complianceInfo.length > 0 && (
-                  <ul style={{ margin: 0, paddingLeft: '20px', color: '#2e7d32' }}>
-                    {validation.complianceInfo.map((info, i) => (
-                      <li key={i}>{info}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            )}
+            </div>
+          </div>
+        )}
 
-            {validation.warnings.length > 0 && (
-              <div style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#fff8e1', border: '1px solid #ffb74d', marginTop: '12px' }}>
-                <h4 style={{ color: '#f57c00', margin: '0 0 8px 0' }}>⚠️ Optimierungshinweise</h4>
-                <ul style={{ margin: 0, paddingLeft: '20px', color: '#f57c00' }}>
-                  {validation.warnings.map((warning, i) => (
-                    <li key={i}>{warning}</li>
+        {/* === STEP 2: Maße === */}
+        {step === 2 && (
+          <div>
+            <h2>Abmessungen eingeben</h2>
+            <div className="grid" style={{ gap: 16 }}>
+              <div>
+                <label htmlFor="width">Breite (mm)</label>
+                <input
+                  id="width"
+                  type="number"
+                  value={form.width_mm}
+                  onChange={(e) => setK('width_mm', Number(e.target.value))}
+                  min="400"
+                  max="3000"
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                />
+              </div>
+              <div>
+                <label htmlFor="height">Höhe (mm)</label>
+                <input
+                  id="height"
+                  type="number"
+                  value={form.height_mm}
+                  onChange={(e) => setK('height_mm', Number(e.target.value))}
+                  min="400"
+                  max="3000"
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                />
+              </div>
+              <div>
+                <label htmlFor="opening">Öffnungsart</label>
+                <select
+                  id="opening"
+                  value={form.opening}
+                  onChange={(e) => setK('opening', e.target.value)}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                >
+                  {getOpeningTypesForProduct(form.product).map(opening => (
+                    <option key={opening} value={opening}>{opening}</option>
                   ))}
-                </ul>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="qty">Anzahl</label>
+                <input
+                  id="qty"
+                  type="number"
+                  value={form.qty}
+                  onChange={(e) => setK('qty', Number(e.target.value))}
+                  min="1"
+                  max="50"
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* === STEP 3: Ausführung & Sicherheit === */}
+        {step === 3 && (
+          <div>
+            <h2>Ausführung & Sicherheit</h2>
+            <div className="grid" style={{ gap: 16 }}>
+              <div>
+                <label htmlFor="material">Material</label>
+                <select
+                  id="material"
+                  value={form.material}
+                  onChange={(e) => setK('material', e.target.value as any)}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                >
+                  <option value="PVC">PVC</option>
+                  <option value="Aluminium">Aluminium</option>
+                  <option value="Holz">Holz</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="profile">Profil</label>
+                <select
+                  id="profile"
+                  value={form.profile}
+                  onChange={(e) => setK('profile', e.target.value as any)}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                >
+                  <option value="Standard">Standard</option>
+                  <option value="ThermoPlus">ThermoPlus</option>
+                  <option value="Premium">Premium</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="handle">Griff</label>
+                <select
+                  id="handle"
+                  value={form.handle}
+                  onChange={(e) => setK('handle', e.target.value as any)}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                >
+                  <option value="Standard">Standard</option>
+                  <option value="Premium">Premium</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="security">Sicherheit</label>
+                <select
+                  id="security"
+                  value={form.security}
+                  onChange={(e) => setK('security', e.target.value as any)}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                >
+                  <option value="Basis">Basis</option>
+                  <option value="RC1N">RC1N</option>
+                  <option value="RC2N">RC2N</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* === STEP 4: Glas & Farbe === */}
+        {step === 4 && (
+          <div>
+            <h2>Glas & Farbe</h2>
+            <div className="grid" style={{ gap: 16 }}>
+              <div>
+                <label htmlFor="glazing">Verglasung</label>
+                <select
+                  id="glazing"
+                  value={form.glazing}
+                  onChange={(e) => setK('glazing', e.target.value as any)}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                >
+                  <option value="2-fach">2-fach</option>
+                  <option value="3-fach">3-fach</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="color">Farbe</label>
+                <select
+                  id="color"
+                  value={form.color}
+                  onChange={(e) => setK('color', e.target.value as any)}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                >
+                  <option value="Weiß">Weiß</option>
+                  <option value="RAL">RAL</option>
+                  <option value="Holzdekor">Holzdekor</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '24px' }}>
+              <h3>Glasoptionen</h3>
+              <div className="grid" style={{ gap: 8 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.warmEdge}
+                    onChange={(e) => setK('warmEdge', e.target.checked)}
+                  />
+                  Warme Kante
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.soundInsulation}
+                    onChange={(e) => setK('soundInsulation', e.target.checked)}
+                  />
+                  Schallschutz
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.safetyGlass}
+                    onChange={(e) => setK('safetyGlass', e.target.checked)}
+                  />
+                  Sicherheitsglas
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.sunProtection}
+                    onChange={(e) => setK('sunProtection', e.target.checked)}
+                  />
+                  Sonnenschutz
+                </label>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* === STEP 5: Montage & Lieferung === */}
+        {step === 5 && (
+          <div>
+            <h2>Montage & Lieferung</h2>
+            <div className="grid" style={{ gap: 16 }}>
+              <div>
+                <label htmlFor="delivery">Lieferung</label>
+                <select
+                  id="delivery"
+                  value={form.delivery}
+                  onChange={(e) => setK('delivery', e.target.value as any)}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                >
+                  <option value="Abholung">Abholung</option>
+                  <option value="Hamburg (Zone 1)">Hamburg (Zone 1)</option>
+                  <option value="Zone 2">Zone 2</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '24px' }}>
+              <h3>Zusatzleistungen</h3>
+              <div className="grid" style={{ gap: 8 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.trickleVent}
+                    onChange={(e) => setK('trickleVent', e.target.checked)}
+                  />
+                  Lüftungsschlitze
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.insectScreen}
+                    onChange={(e) => setK('insectScreen', e.target.checked)}
+                  />
+                  Insektenschutz
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.rollerShutter}
+                    onChange={(e) => setK('rollerShutter', e.target.checked)}
+                  />
+                  Rolladen
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.oldWindowDisposal}
+                    onChange={(e) => setK('oldWindowDisposal', e.target.checked)}
+                  />
+                  Entsorgung der alten Fenster
+                </label>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* === STEP 6: Übersicht === */}
+        {step === 6 && (
+          <div>
+            <h2>Übersicht</h2>
+            <div style={{ marginBottom: '24px' }}>
+              <h3>Ihre Konfiguration</h3>
+              <div className="config-summary" style={{ padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                <div><strong>Produkt:</strong> {form.product}</div>
+                <div><strong>Hersteller:</strong> {form.manufacturer}</div>
+                {form.system && <div><strong>System:</strong> {form.system}</div>}
+                <div><strong>Abmessungen:</strong> {form.width_mm} × {form.height_mm} mm</div>
+                <div><strong>Material:</strong> {form.material}</div>
+                <div><strong>Profil:</strong> {form.profile}</div>
+                <div><strong>Öffnungsart:</strong> {form.opening}</div>
+                <div><strong>Verglasung:</strong> {form.glazing}</div>
+                <div><strong>Farbe:</strong> {form.color}</div>
+                <div><strong>Griff:</strong> {form.handle}</div>
+                <div><strong>Sicherheit:</strong> {form.security}</div>
+                <div><strong>Anzahl:</strong> {form.qty}</div>
+                <div><strong>Lieferung:</strong> {form.delivery}</div>
+              </div>
+            </div>
+
+            {/* Technical Validation - Background Display (only critical errors shown prominently) */}
+            {validation.errors.length > 0 && (
+              <div style={{
+                padding: '8px 16px',
+                backgroundColor: '#f6f2f2',
+                border: '1px solid #fecaca',
+                borderRadius: '6px',
+                fontSize: '14px',
+                color: '#dc2626'
+              }}>
+                <span style={{ fontWeight: '500' }}>⚠️ Technische Anforderungen nicht erfüllt</span>
+                <span style={{ marginLeft: '8px', opacity: 0.8 }}>(Details in der Übersicht)</span>
               </div>
             )}
 
             {recommendations.length > 0 && (
-              <div style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#e3f2fd', border: '1px solid #64b5f6', marginTop: '12px' }}>
-                <h4 style={{ color: '#1976d2', margin: '0 0 8px 0' }}>💡 Empfehlungen</h4>
+              <div>
+                <h4 style={{ color: '#1976d2', marginBottom: '8px' }}>💡 Empfehlungen:</h4>
                 <ul style={{ margin: 0, paddingLeft: '20px', color: '#1976d2' }}>
                   {recommendations.map((rec, i) => (
                     <li key={i}>{rec}</li>
@@ -707,27 +637,156 @@ main
                 </ul>
               </div>
             )}
-          </div>
 
-          {price ? (
-            <>
-              <h3>Preisübersicht</h3>
-              <table>
-                <tbody>
-                  <tr><th>Produkt</th><td>{form.product}</td></tr>
-                  <tr><th>Öffnung</th><td>{form.opening}</td></tr>
-                  <tr><th>Maße (B × H)</th><td>{form.width_mm} × {form.height_mm} mm</td></tr>
-                  <tr><th>Menge</th><td>{form.qty}</td></tr>
-                  <tr><th>Basispreis / Stück</th><td>{price.eur_sell_net.toFixed(2)} €</td></tr>
-                  <tr><th>Netto gesamt</th><td>{(price.eur_sell_net * (form.qty ?? 1)).toFixed(2)} €</td></tr>
-                  <tr><th>MwSt (19%)</th><td>{(price.eur_sell_net * (form.qty ?? 1) * 0.19).toFixed(2)} €</td></tr>
-                  <tr><th>Gesamt (inkl. MwSt.)</th><td className="price">{(price.eur_sell_gross * (form.qty ?? 1)).toFixed(2)} €</td></tr>
-                </tbody>
-              </table>
-            </>
-          ) : (
-            <p>Preis wird berechnet …</p>
-          )}
+            {valid && (
+              <button
+                onClick={checkout}
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  marginTop: '16px'
+                }}
+              >
+                Jetzt bestellen
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Navigation */}
+        <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
+          <button
+            onClick={() => setStep(Math.max(0, step - 1))}
+            disabled={step === 0}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: step === 0 ? '#ccc' : '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: step === 0 ? 'not-allowed' : 'pointer'
+            }}
+          >
+            Zurück
+          </button>
+          <button
+            onClick={() => setStep(Math.min(steps.length - 1, step + 1))}
+            disabled={step === steps.length - 1}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: step === steps.length - 1 ? '#ccc' : '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: step === steps.length - 1 ? 'not-allowed' : 'pointer'
+            }}
+          >
+            Weiter
+          </button>
+        </div>
+      </div>
+
+      {/* Enhanced 3D Visual Preview */}
+      <div className="window-preview">
+        <h3>3D Vorschau: {form.product} {form.opening}</h3>
+        <div
+          className="preview-window"
+          style={{
+            width: Math.max(140, Math.min(220, form.width_mm / 8)),
+            height: Math.max(120, Math.min(180, form.height_mm / 8))
+          }}
+        >
+          <div style={{ fontSize: '12px', textAlign: 'center', marginTop: '8px' }}>
+            {form.width_mm} × {form.height_mm} mm | Material: {form.material}
+          </div>
+          <div style={{ fontSize: '10px', textAlign: 'center', marginTop: '4px', color: '#666' }}>
+            Interaktive 3D-Vorschau • Fahren Sie mit der Maus über das Fenster
+          </div>
+        </div>
+      </div>
+
+      {/* Enhanced Real-time Price Display */}
+      {form.product === 'Fenster' && form.manufacturer === 'DRUTEX' && price.eur_sell_gross > 0 ? (
+        <div style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          backgroundColor: 'linear-gradient(135deg, #28a745, #20c997)',
+          color: 'white',
+          padding: '16px 20px',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+          border: '1px solid rgba(255,255,255,0.2)',
+          minWidth: '200px',
+          zIndex: 1000
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <span style={{ fontSize: '18px' }}>💰</span>
+            <span style={{ fontWeight: '600', fontSize: '16px' }}>Preisberechnung</span>
+          </div>
+          <div style={{ fontSize: '14px', marginBottom: '4px' }}>
+            {form.manufacturer} ({form.system}) • {form.product}
+          </div>
+          <div style={{ fontSize: '12px', opacity: 0.9, marginBottom: '8px' }}>
+            {form.width_mm} × {form.height_mm} mm • {form.qty}x Stück
+          </div>
+          <div style={{ fontSize: '12px', opacity: 0.9, marginBottom: '8px' }}>
+            {form.opening}
+          </div>
+          <div style={{ fontSize: '20px', fontWeight: 'bold' }}>
+            {(price.eur_sell_gross * form.qty).toLocaleString('de-DE', {
+              style: 'currency',
+              currency: 'EUR'
+            })}
+          </div>
+          <div style={{ fontSize: '11px', opacity: 0.8, marginTop: '4px' }}>
+            inkl. MwSt. • Nettopreis: {(price.eur_sell_net * form.qty).toLocaleString('de-DE', {
+              style: 'currency',
+              currency: 'EUR'
+            })}
+          </div>
+        </div>
+      ) : (
+        <div style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          backgroundColor: '#6c757d',
+          color: 'white',
+          padding: '16px 20px',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          minWidth: '200px',
+          zIndex: 1000
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <span style={{ fontSize: '18px' }}>⚠️</span>
+            <span style={{ fontWeight: '600', fontSize: '16px' }}>Preisberechnung</span>
+          </div>
+          <div style={{ fontSize: '14px', marginBottom: '4px' }}>
+            {form.manufacturer} ({form.system}) • {form.product}
+          </div>
+          <div style={{ fontSize: '12px', opacity: 0.9, marginBottom: '8px' }}>
+            {form.width_mm} × {form.height_mm} mm • {form.qty}x Stück
+          </div>
+          <div style={{ fontSize: '12px', opacity: 0.9, marginBottom: '8px' }}>
+            {form.opening}
+          </div>
+          <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
+            Preis nicht verfügbar
+          </div>
+          <div style={{ fontSize: '11px', opacity: 0.8, marginTop: '4px' }}>
+            Preise sind nur für DRUTEX Fenster verfügbar
+          </div>
+          <div style={{ fontSize: '11px', opacity: 0.8, marginTop: '2px' }}>
+            <strong>Hinweis:</strong> Aktuelle Preise sind nur für DRUTEX Fenster verfügbar. Für andere Produkte und Hersteller kontaktieren Sie uns bitte für ein individuelles Angebot.
+          </div>
         </div>
       )}
     </div>
