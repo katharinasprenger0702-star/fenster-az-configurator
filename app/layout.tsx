@@ -67,7 +67,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <nav style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
             <Link href="/" style={{marginRight:8, fontWeight: 600}}>Start</Link>
             <Link href="/fenster-konfigurator" style={{marginRight:8, fontWeight: 600}}>Konfigurator</Link>
-            <Link href="#referenzen" style={{marginRight:8, fontWeight: 600}}>Referenzen</Link>
+            <Link href="/referenzen" style={{marginRight:8, fontWeight: 600}}>Referenzen</Link>
             <Link href="/impressum" style={{ fontWeight: 600 }}>Impressum</Link>
           </nav>
         </header>

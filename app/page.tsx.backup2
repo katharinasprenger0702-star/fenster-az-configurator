@@ -1302,6 +1302,196 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* CUSTOMER TESTIMONIALS */}
+      <section id="referenzen" style={{ 
+        padding: '80px 60px',
+        background: 'white'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <h2 style={{ 
+              fontSize: '2.5rem',
+              fontWeight: '800',
+              color: '#111827',
+              marginBottom: '16px'
+            }}>
+              Was unsere Kunden sagen
+            </h2>
+            <p style={{ 
+              fontSize: '1.1rem',
+              color: '#6b7280',
+              maxWidth: '600px',
+              margin: '0 auto'
+            }}>
+              Über 1000 zufriedene Kunden vertrauen auf unsere Qualität und Service.
+            </p>
+          </div>
+
+          <div style={{ 
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '32px'
+          }}>
+            {/* Testimonial 1 */}
+            <div style={{
+              background: 'white',
+              padding: '32px',
+              borderRadius: '12px',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ 
+                  color: '#fbbf24', 
+                  fontSize: '1.5rem',
+                  marginBottom: '12px'
+                }}>
+                  ★★★★★
+                </div>
+                <p style={{ 
+                  color: '#374151',
+                  fontStyle: 'italic',
+                  lineHeight: '1.6',
+                  marginBottom: '16px'
+                }}>
+                  "Sehr professionelle Beratung und perfekte Montage. 
+                  Die neuen Fenster sehen fantastisch aus und dämmen deutlich besser."
+                </p>
+              </div>
+              <div style={{
+                borderTop: '1px solid #e5e7eb',
+                paddingTop: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+              }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  background: '#e5e7eb',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.5rem'
+                }}>
+                  👤
+                </div>
+                <div>
+                  <div style={{ fontWeight: '600', color: '#111827' }}>Familie Schmidt</div>
+                  <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>München</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div style={{
+              background: 'white',
+              padding: '32px',
+              borderRadius: '12px',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ 
+                  color: '#fbbf24', 
+                  fontSize: '1.5rem',
+                  marginBottom: '12px'
+                }}>
+                  ★★★★★
+                </div>
+                <p style={{ 
+                  color: '#374151',
+                  fontStyle: 'italic',
+                  lineHeight: '1.6',
+                  marginBottom: '16px'
+                }}>
+                  "Top Service! Von der Online-Konfiguration bis zur Montage 
+                  war alles perfekt organisiert. Sehr empfehlenswert!"
+                </p>
+              </div>
+              <div style={{
+                borderTop: '1px solid #e5e7eb',
+                paddingTop: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+              }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  background: '#e5e7eb',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.5rem'
+                }}>
+                  👤
+                </div>
+                <div>
+                  <div style={{ fontWeight: '600', color: '#111827' }}>Hr. Müller</div>
+                  <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>Hamburg</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div style={{
+              background: 'white',
+              padding: '32px',
+              borderRadius: '12px',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ 
+                  color: '#fbbf24', 
+                  fontSize: '1.5rem',
+                  marginBottom: '12px'
+                }}>
+                  ★★★★★
+                </div>
+                <p style={{ 
+                  color: '#374151',
+                  fontStyle: 'italic',
+                  lineHeight: '1.6',
+                  marginBottom: '16px'
+                }}>
+                  "Faire Preise, transparente Kommunikation und handwerklich 
+                  einwandfreie Arbeit. Gerne wieder!"
+                </p>
+              </div>
+              <div style={{
+                borderTop: '1px solid #e5e7eb',
+                paddingTop: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+              }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  background: '#e5e7eb',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.5rem'
+                }}>
+                  👤
+                </div>
+                <div>
+                  <div style={{ fontWeight: '600', color: '#111827' }}>Fr. Weber</div>
+                  <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>Frankfurt</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FINAL CTA */}
       <section style={{ 
         padding: '80px 60px',
