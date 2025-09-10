@@ -440,6 +440,116 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Rolladen */}
+          <div style={{
+            background: 'white',
+            border: '1px solid #e5e7eb',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          }}>
+            {/* Photo placeholder */}
+            <div style={{
+              height: '250px',
+              background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div style={{ textAlign: 'center', color: '#9ca3af' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🎛️</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Premium Rolladen</div>
+              </div>
+            </div>
+            <div style={{ padding: '24px' }}>
+              <h3 style={{ 
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Rolladen
+              </h3>
+              <p style={{ 
+                color: '#6b7280',
+                marginBottom: '20px',
+                lineHeight: '1.6'
+              }}>
+                Moderne Rolladen für optimalen Sonnenschutz, Sicherheit 
+                und Energieeffizienz - manuell oder elektrisch.
+              </p>
+              <Link href="/fenster-konfigurator" style={{
+                background: '#2563eb',
+                color: 'white',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                fontWeight: '600',
+                textDecoration: 'none',
+                display: 'inline-block',
+                transition: 'all 0.2s ease'
+              }}>
+                Rolladen konfigurieren
+              </Link>
+            </div>
+          </div>
+
+          {/* Garagentor */}
+          <div style={{
+            background: 'white',
+            border: '1px solid #e5e7eb',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          }}>
+            {/* Photo placeholder */}
+            <div style={{
+              height: '250px',
+              background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div style={{ textAlign: 'center', color: '#9ca3af' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🏠</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Hochwertige Garagentore</div>
+              </div>
+            </div>
+            <div style={{ padding: '24px' }}>
+              <h3 style={{ 
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                color: '#111827',
+                marginBottom: '12px'
+              }}>
+                Garagentor
+              </h3>
+              <p style={{ 
+                color: '#6b7280',
+                marginBottom: '20px',
+                lineHeight: '1.6'
+              }}>
+                Sichere und langlebige Garagentore in verschiedenen Ausführungen - 
+                Sektionaltor, Schwingtor oder Rolltor.
+              </p>
+              <Link href="/fenster-konfigurator" style={{
+                background: '#2563eb',
+                color: 'white',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                fontWeight: '600',
+                textDecoration: 'none',
+                display: 'inline-block',
+                transition: 'all 0.2s ease'
+              }}>
+                Garagentor konfigurieren
+              </Link>
+            </div>
+          </div>
+
           {/* Service */}
           <div style={{
             background: 'white',
