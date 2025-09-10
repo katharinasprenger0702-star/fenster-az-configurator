@@ -307,7 +307,7 @@ export default function ConfiguratorPage() {
                   <div style={{ fontWeight: 'bold' }}>{manufacturer}</div>
                   {manufacturer !== 'DRUTEX' && (
                     <div style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
-                      Preise sind nur für DRUTEX Fenster verfügbar. Für andere Hersteller kontaktieren Sie uns für ein individuelles Angebot.
+                      Aktuelle Preise sind nur für DRUTEX Fenster verfügbar. Für andere Produkte und Hersteller kontaktieren Sie uns bitte für ein individuelles Angebot.
                     </div>
                   )}
                 </div>
@@ -782,7 +782,7 @@ export default function ConfiguratorPage() {
             Preis nicht verfügbar
           </div>
           <div style={{ fontSize: '11px', opacity: 0.8, marginTop: '4px' }}>
-            Preise sind nur für DRUTEX Fenster verfügbar
+            Aktuelle Preise sind nur für DRUTEX Fenster verfügbar
           </div>
           <div style={{ fontSize: '11px', opacity: 0.8, marginTop: '2px' }}>
             <strong>Hinweis:</strong> Aktuelle Preise sind nur für DRUTEX Fenster verfügbar. Für andere Produkte und Hersteller kontaktieren Sie uns bitte für ein individuelles Angebot.
