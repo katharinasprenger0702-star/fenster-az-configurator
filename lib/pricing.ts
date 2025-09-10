@@ -10,7 +10,6 @@ export type Lieferzone = 'Abholung' | 'Hamburg (Zone 1)' | 'Zone 2';
 
 export interface Config {
   product: Product;
-  manufacturer: Manufacturer;
   system?: 'IGLO 5' | 'Standard' | 'Premium';
   width_mm: number;
   height_mm: number;

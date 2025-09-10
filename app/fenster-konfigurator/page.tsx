@@ -12,7 +12,6 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
-  manufacturer: z.enum(['DRUTEX', 'Eko-Okna', 'Gabit', 'Inotherm', 'HOOPE', 'Schüco']).default('DRUTEX'),
   system: z.enum(['IGLO 5', 'Standard', 'Premium']).default('IGLO 5').optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -39,7 +38,6 @@ const schema = z.object({
 
 const steps = [
   'Produktauswahl',
-  'Hersteller',
   'Maße',
   'Ausführung & Sicherheit',
   'Glas & Farbe',
@@ -112,7 +110,7 @@ function pickDatasetAndFilter(form: any) {
 
 export default function ConfiguratorPage() {
   const [form, setForm] = useState<Config>({
-    product: 'Fenster', manufacturer: 'DRUTEX', system: 'IGLO 5', width_mm: 1200, height_mm: 1200,
+    product: 'Fenster', system: 'IGLO 5', width_mm: 1200, height_mm: 1200,
     material: 'PVC', profile: 'Standard', opening: 'Dreh-Kipp links',
     glazing: '2-fach', color: 'Weiß', handle: 'Standard', security: 'Basis',
     warmEdge: false, soundInsulation: false, safetyGlass: false, sunProtection: false,
@@ -134,12 +132,7 @@ export default function ConfiguratorPage() {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    // Only calculate prices for DRUTEX Fenster combinations
-    if (form.product !== 'Fenster' || form.manufacturer !== 'DRUTEX') {
-      setPrice({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
-      return;
-    }
-
+    // Calculate prices for all supported products
     const { DATA, filter } = pickDatasetAndFilter(form);
     (async () => {
       try {
@@ -152,7 +145,6 @@ export default function ConfiguratorPage() {
             opening: form.opening,
             qty: form.qty,
             product: form.product,
-            manufacturer: form.manufacturer,
             material: form.material,
             profile: form.profile,
             glazing: form.glazing
@@ -283,36 +275,6 @@ export default function ConfiguratorPage() {
                 </div>
               ))}
             </div>
-          </div>
-        )}
-
-        {/* === STEP 1: Herstellerauswahl === */}
-        {step === 1 && (
-          <div>
-            <h2>Hersteller auswählen</h2>
-            <div className="grid" style={{ gap: 16 }}>
-              {['DRUTEX', 'Eko-Okna', 'Gabit', 'Inotherm', 'HOOPE', 'Schüco'].map(manufacturer => (
-                <div
-                  key={manufacturer}
-                  className={['manufacturer-option', form.manufacturer === manufacturer && 'selected'].filter(Boolean).join(' ')}
-                  onClick={() => setK('manufacturer', manufacturer as any)}
-                  style={{
-                    padding: '16px',
-                    border: form.manufacturer === manufacturer ? '2px solid #007bff' : '1px solid #ddd',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    textAlign: 'center'
-                  }}
-                >
-                  <div style={{ fontWeight: 'bold' }}>{manufacturer}</div>
-                  {manufacturer !== 'DRUTEX' && (
-                    <div style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
-                      Preise sind nur für DRUTEX Fenster verfügbar. Für andere Hersteller kontaktieren Sie uns für ein individuelles Angebot.
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
 
             {/* System Selection */}
             <div style={{ marginTop: '24px' }}>
@@ -339,8 +301,8 @@ export default function ConfiguratorPage() {
           </div>
         )}
 
-        {/* === STEP 2: Maße === */}
-        {step === 2 && (
+        {/* === STEP 1: Maße === */}
+        {step === 1 && (
           <div>
             <h2>Abmessungen eingeben</h2>
             <div className="grid" style={{ gap: 16 }}>
@@ -397,8 +359,8 @@ export default function ConfiguratorPage() {
           </div>
         )}
 
-        {/* === STEP 3: Ausführung & Sicherheit === */}
-        {step === 3 && (
+        {/* === STEP 2: Ausführung & Sicherheit === */}
+        {step === 2 && (
           <div>
             <h2>Ausführung & Sicherheit</h2>
             <div className="grid" style={{ gap: 16 }}>
@@ -457,8 +419,8 @@ export default function ConfiguratorPage() {
           </div>
         )}
 
-        {/* === STEP 4: Glas & Farbe === */}
-        {step === 4 && (
+        {/* === STEP 3: Glas & Farbe === */}
+        {step === 3 && (
           <div>
             <h2>Glas & Farbe</h2>
             <div className="grid" style={{ gap: 16 }}>
@@ -529,8 +491,8 @@ export default function ConfiguratorPage() {
           </div>
         )}
 
-        {/* === STEP 5: Montage & Lieferung === */}
-        {step === 5 && (
+        {/* === STEP 4: Montage & Lieferung === */}
+        {step === 4 && (
           <div>
             <h2>Montage & Lieferung</h2>
             <div className="grid" style={{ gap: 16 }}>
@@ -589,15 +551,14 @@ export default function ConfiguratorPage() {
           </div>
         )}
 
-        {/* === STEP 6: Übersicht === */}
-        {step === 6 && (
+        {/* === STEP 5: Übersicht === */}
+        {step === 5 && (
           <div>
             <h2>Übersicht</h2>
             <div style={{ marginBottom: '24px' }}>
               <h3>Ihre Konfiguration</h3>
               <div className="config-summary" style={{ padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
                 <div><strong>Produkt:</strong> {form.product}</div>
-                <div><strong>Hersteller:</strong> {form.manufacturer}</div>
                 {form.system && <div><strong>System:</strong> {form.system}</div>}
                 <div><strong>Abmessungen:</strong> {form.width_mm} × {form.height_mm} mm</div>
                 <div><strong>Material:</strong> {form.material}</div>
@@ -711,7 +672,7 @@ export default function ConfiguratorPage() {
       </div>
 
       {/* Enhanced Real-time Price Display */}
-      {form.product === 'Fenster' && form.manufacturer === 'DRUTEX' && price.eur_sell_gross > 0 ? (
+      {price.eur_sell_gross > 0 ? (
         <div style={{
           position: 'fixed',
           bottom: '20px',
@@ -730,7 +691,7 @@ export default function ConfiguratorPage() {
             <span style={{ fontWeight: '600', fontSize: '16px' }}>Preisberechnung</span>
           </div>
           <div style={{ fontSize: '14px', marginBottom: '4px' }}>
-            {form.manufacturer} ({form.system}) • {form.product}
+            {form.system} • {form.product}
           </div>
           <div style={{ fontSize: '12px', opacity: 0.9, marginBottom: '8px' }}>
             {form.width_mm} × {form.height_mm} mm • {form.qty}x Stück
@@ -770,7 +731,7 @@ export default function ConfiguratorPage() {
             <span style={{ fontWeight: '600', fontSize: '16px' }}>Preisberechnung</span>
           </div>
           <div style={{ fontSize: '14px', marginBottom: '4px' }}>
-            {form.manufacturer} ({form.system}) • {form.product}
+            {form.system} • {form.product}
           </div>
           <div style={{ fontSize: '12px', opacity: 0.9, marginBottom: '8px' }}>
             {form.width_mm} × {form.height_mm} mm • {form.qty}x Stück
@@ -782,10 +743,7 @@ export default function ConfiguratorPage() {
             Preis nicht verfügbar
           </div>
           <div style={{ fontSize: '11px', opacity: 0.8, marginTop: '4px' }}>
-            Preise sind nur für DRUTEX Fenster verfügbar
-          </div>
-          <div style={{ fontSize: '11px', opacity: 0.8, marginTop: '2px' }}>
-            <strong>Hinweis:</strong> Aktuelle Preise sind nur für DRUTEX Fenster verfügbar. Für andere Produkte und Hersteller kontaktieren Sie uns bitte für ein individuelles Angebot.
+            Kontaktieren Sie uns für ein individuelles Angebot
           </div>
         </div>
       )}
