@@ -65,9 +65,9 @@ export default function Impressum() {
                 <strong style={{ color: '#111827' }}>Fenstermann24.de</strong> – eine Marke der
               </p>
               <p style={{ 
-                fontSize: '1.25rem',
-                fontWeight: '700',
-                color: '#2563eb',
+                fontSize: '1rem',
+                fontWeight: '600',
+                color: '#6b7280',
                 marginBottom: '20px'
               }}>
                 AZ Fenster und Türen GmbH

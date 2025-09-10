@@ -30,7 +30,7 @@ export default function Home() {
             fontWeight: '800',
             lineHeight: '1.1',
             marginBottom: '24px',
-            color: '#111827',
+            color: '#000000',
             letterSpacing: '-0.03em'
           }}>
             Fenster & Türen nach Maß
