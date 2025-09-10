@@ -652,24 +652,7 @@ export default function ConfiguratorPage() {
         </div>
       </div>
 
-      {/* Enhanced 3D Visual Preview */}
-      <div className="window-preview">
-        <h3>3D Vorschau: {form.product} {form.opening}</h3>
-        <div
-          className="preview-window"
-          style={{
-            width: Math.max(140, Math.min(220, form.width_mm / 8)),
-            height: Math.max(120, Math.min(180, form.height_mm / 8))
-          }}
-        >
-          <div style={{ fontSize: '12px', textAlign: 'center', marginTop: '8px' }}>
-            {form.width_mm} × {form.height_mm} mm | Material: {form.material}
-          </div>
-          <div style={{ fontSize: '10px', textAlign: 'center', marginTop: '4px', color: '#666' }}>
-            Interaktive 3D-Vorschau • Fahren Sie mit der Maus über das Fenster
-          </div>
-        </div>
-      </div>
+
 
       {/* Enhanced Real-time Price Display */}
       {price.eur_sell_gross > 0 ? (
