@@ -140,6 +140,12 @@ export default function ConfiguratorPage() {
   }>({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
 
   useEffect(() => {
+    // Only calculate prices for DRUTEX Fenster combinations
+    if (form.product !== 'Fenster' || form.manufacturer !== 'DRUTEX') {
+      setPrice({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
+      return;
+    }
+
     const { DATA, filter } = pickDatasetAndFilter(form);
     (async () => {
       try {
@@ -244,37 +250,90 @@ export default function ConfiguratorPage() {
       </div>
 
       {/* Real-time Price Display */}
-      {step > 0 && price && (
+      {step > 0 && (
         <div className="card" style={{ 
           position: 'sticky', 
           top: '20px', 
           zIndex: 1000,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: form.product === 'Fenster' && form.manufacturer === 'DRUTEX' 
+            ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+            : 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
           color: 'white',
-          borderRadius: '12px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+          borderRadius: '16px',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          overflow: 'hidden'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <h3 style={{ margin: '0 0 8px 0', color: 'white' }}>💰 Aktueller Preis</h3>
-              <div style={{ fontSize: '14px', opacity: 0.9 }}>
-                {form.manufacturer} {form.system ? `(${form.system})` : ''} • {form.product} • {form.qty}x
+          <div style={{ 
+            background: 'rgba(255,255,255,0.1)', 
+            padding: '12px 20px',
+            borderBottom: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px',
+              fontSize: '16px', 
+              fontWeight: '600' 
+            }}>
+              <span style={{ fontSize: '20px' }}>
+                {form.product === 'Fenster' && form.manufacturer === 'DRUTEX' ? '💰' : '⚠️'}
+              </span>
+              Preisberechnung
+            </div>
+          </div>
+          
+          <div style={{ padding: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '14px', opacity: 0.9, marginBottom: '8px' }}>
+                  {form.manufacturer} {form.system ? `(${form.system})` : ''} • {form.product}
+                </div>
+                <div style={{ fontSize: '12px', opacity: 0.8, marginBottom: '4px' }}>
+                  {form.width_mm} × {form.height_mm} mm • {form.qty}x Stück
+                </div>
+                <div style={{ fontSize: '12px', opacity: 0.8 }}>
+                  {form.opening}
+                </div>
               </div>
-              <div style={{ fontSize: '12px', opacity: 0.8 }}>
-                {form.width_mm} × {form.height_mm} mm
+              
+              <div style={{ textAlign: 'right', minWidth: '120px' }}>
+                {form.product === 'Fenster' && form.manufacturer === 'DRUTEX' && price ? (
+                  <>
+                    <div style={{ fontSize: '28px', fontWeight: 'bold', lineHeight: '1' }}>
+                      {(price.eur_sell_gross * (form.qty ?? 1)).toFixed(2)} €
+                    </div>
+                    <div style={{ fontSize: '11px', opacity: 0.8, marginTop: '2px' }}>
+                      inkl. 19% MwSt.
+                    </div>
+                    <div style={{ fontSize: '12px', opacity: 0.9, marginTop: '4px' }}>
+                      {(price.eur_sell_net * (form.qty ?? 1)).toFixed(2)} € netto
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ fontSize: '14px', textAlign: 'center', opacity: 0.9 }}>
+                    <div style={{ marginBottom: '8px' }}>Preis nicht verfügbar</div>
+                    <div style={{ fontSize: '12px', opacity: 0.8, lineHeight: '1.3' }}>
+                      Preise sind nur für DRUTEX Fenster verfügbar
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 4px 0' }}>
-                {(price.eur_sell_gross * (form.qty ?? 1)).toFixed(2)} €
+            
+            {form.product !== 'Fenster' || form.manufacturer !== 'DRUTEX' ? (
+              <div style={{ 
+                marginTop: '16px',
+                padding: '12px',
+                background: 'rgba(255,255,255,0.1)',
+                borderRadius: '8px',
+                fontSize: '13px',
+                lineHeight: '1.4'
+              }}>
+                <strong>Hinweis:</strong> Aktuelle Preise sind nur für DRUTEX Fenster verfügbar. 
+                Für andere Produkte und Hersteller kontaktieren Sie uns bitte für ein individuelles Angebot.
               </div>
-              <div style={{ fontSize: '12px', opacity: 0.8 }}>
-                inkl. MwSt.
-              </div>
-              <div style={{ fontSize: '12px', opacity: 0.8 }}>
-                ({(price.eur_sell_net * (form.qty ?? 1)).toFixed(2)} € netto)
-              </div>
-            </div>
+            ) : null}
           </div>
         </div>
       )}
@@ -494,23 +553,7 @@ export default function ConfiguratorPage() {
             </select>
           </div>
           
-          <div style={{ 
-            padding: '12px', 
-            background: '#e0f2fe', 
-            border: '1px solid #0288d1', 
-            borderRadius: '8px',
-            fontSize: '14px',
-            color: '#01579b',
-            marginTop: '8px'
-          }}>
-            <strong>Info:</strong> Die Preise stammen aus der DRUTEX Preisliste.
-            {form.manufacturer !== 'DRUTEX' && (
-              <span style={{ display: 'block', marginTop: '8px' }}>
-                <strong>Hinweis:</strong> Für {form.manufacturer} werden derzeit DRUTEX Preise angezeigt. 
-                Herstellerspezifische Preislisten werden sukzessive integriert.
-              </span>
-            )}
-          </div>
+
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', marginTop: 12 }}>
             <button className="btn" onClick={() => setStep(0)}>Zurück</button>
@@ -862,7 +905,7 @@ main
             )}
           </div>
 
-          {price ? (
+          {form.product === 'Fenster' && form.manufacturer === 'DRUTEX' && price && price.eur_sell_net > 0 ? (
             <>
               <h3>Preisübersicht</h3>
               <table>
@@ -880,7 +923,34 @@ main
               </table>
             </>
           ) : (
-            <p>Preis wird berechnet …</p>
+            <div style={{ 
+              padding: '20px', 
+              textAlign: 'center',
+              background: '#f8fafc',
+              borderRadius: '12px',
+              border: '1px solid #e2e8f0'
+            }}>
+              <h3>Preisanfrage erforderlich</h3>
+              <p style={{ color: '#64748b', margin: '16px 0' }}>
+                Für die gewählte Kombination ({form.manufacturer} {form.product}) sind keine automatischen Preise verfügbar.
+              </p>
+              <div style={{ 
+                padding: '16px',
+                background: '#eff6ff',
+                borderRadius: '8px',
+                border: '1px solid #bfdbfe',
+                marginBottom: '16px'
+              }}>
+                <strong style={{ color: '#1d4ed8' }}>Ihre Konfiguration:</strong>
+                <div style={{ fontSize: '14px', color: '#475569', marginTop: '8px' }}>
+                  {form.manufacturer} • {form.product} • {form.opening}<br/>
+                  {form.width_mm} × {form.height_mm} mm • {form.qty} Stück
+                </div>
+              </div>
+              <p style={{ fontSize: '14px', color: '#475569' }}>
+                Kontaktieren Sie uns für ein individuelles Angebot zu dieser Konfiguration.
+              </p>
+            </div>
           )}
         </div>
       )}
