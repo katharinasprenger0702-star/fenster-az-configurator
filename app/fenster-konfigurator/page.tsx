@@ -249,6 +249,7 @@ export default function ConfiguratorPage() {
         </div>
       </div>
 
+copilot/compare-configurator-website-structures
       {/* Real-time Price Display */}
       {step > 0 && (
         <div className="card" style={{ 
@@ -386,6 +387,19 @@ export default function ConfiguratorPage() {
               </ul>
             </div>
           )}
+      {/* Technical Validation - Background Display (only critical errors shown prominently) */}
+      {validation.errors.length > 0 && (
+        <div style={{ 
+          padding: '8px 16px', 
+          backgroundColor: '#fef2f2', 
+          border: '1px solid #fecaca', 
+          borderRadius: '6px',
+          fontSize: '14px',
+          color: '#dc2626'
+        }}>
+          <span style={{ fontWeight: '500' }}>⚠️ Technische Anforderungen nicht erfüllt</span>
+          <span style={{ marginLeft: '8px', opacity: 0.8 }}>(Details in der Übersicht)</span>
+
         </div>
       )}
       {/* === STEP 0: Produktauswahl === */}
