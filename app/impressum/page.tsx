@@ -23,14 +23,7 @@ export default function Impressum() {
           }}>
             Impressum
           </h1>
-          <p style={{ 
-            fontSize: '1.1rem',
-            color: '#6b7280',
-            maxWidth: '600px',
-            margin: '0 auto'
-          }}>
-            Rechtliche Angaben zur AZ Fenster und Türen GmbH
-          </p>
+
         </div>
       </section>
 
