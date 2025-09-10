@@ -609,7 +609,6 @@ export default function ConfiguratorPage() {
             </select>
           </div>
           <div className="row">
-main
             <div className="label">Menge</div>
             <input
               type="number"
