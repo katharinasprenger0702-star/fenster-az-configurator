@@ -62,12 +62,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 </linearGradient>
               </defs>
             </svg>
-            <span>Fenstermann24 | Online‑Konfigurator</span>
+            <span style={{ color: '#2563eb' }}>Fenstermann24 | Online‑Konfigurator</span>
           </div>
           <nav style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
             <Link href="/" style={{marginRight:8, fontWeight: 600}}>Start</Link>
             <Link href="/fenster-konfigurator" style={{marginRight:8, fontWeight: 600}}>Konfigurator</Link>
-            <Link href="#referenzen" style={{marginRight:8, fontWeight: 600}}>Referenzen</Link>
+            <Link href="/referenzen" style={{marginRight:8, fontWeight: 600}}>Referenzen</Link>
+            <Link href="/faq" style={{marginRight:8, fontWeight: 600}}>FAQ</Link>
             <Link href="/impressum" style={{ fontWeight: 600 }}>Impressum</Link>
           </nav>
         </header>
