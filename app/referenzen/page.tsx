@@ -5,27 +5,157 @@ export default function Referenzen() {
       <section style={{ 
         padding: '80px 60px 60px 60px', 
         background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
-        textAlign: 'center',
         borderBottom: '1px solid #e5e7eb'
       }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <h1 style={{ 
-            fontSize: '3rem',
-            fontWeight: '800',
-            lineHeight: '1.1',
-            marginBottom: '16px',
-            color: '#111827',
-            letterSpacing: '-0.02em'
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          {/* Company Experience Section */}
+          <div style={{ 
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '64px',
+            alignItems: 'center',
+            marginBottom: '80px'
           }}>
-            Was unsere Kunden sagen
-          </h1>
-          <p style={{ 
-            fontSize: '1.25rem',
-            color: '#6b7280',
-            lineHeight: '1.7'
-          }}>
-            Über 1000 zufriedene Kunden vertrauen auf unsere Qualität und Service.
-          </p>
+            <div>
+              <h1 style={{ 
+                fontSize: '2.5rem',
+                fontWeight: '800',
+                color: '#111827',
+                marginBottom: '24px'
+              }}>
+                25+ Jahre Erfahrung, 1000+ zufriedene Kunden
+              </h1>
+              <p style={{ 
+                fontSize: '1.1rem',
+                color: '#6b7280',
+                lineHeight: '1.7',
+                marginBottom: '32px'
+              }}>
+                Als zertifizierter Meisterbetrieb stehen wir für höchste Qualität und 
+                Zuverlässigkeit. Von der ersten Beratung bis zur finalen Montage – 
+                wir begleiten Sie professionell durch Ihr Projekt.
+              </p>
+              
+              <div style={{ 
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '24px',
+                marginBottom: '32px'
+              }}>
+                <div style={{ 
+                  textAlign: 'center',
+                  padding: '24px',
+                  background: '#f9fafb',
+                  borderRadius: '12px',
+                  border: '1px solid #e5e7eb'
+                }}>
+                  <div style={{ 
+                    fontSize: '2rem',
+                    fontWeight: '800',
+                    color: '#2563eb',
+                    marginBottom: '8px'
+                  }}>
+                    1000+
+                  </div>
+                  <div style={{ 
+                    color: '#6b7280',
+                    fontWeight: '600'
+                  }}>
+                    Projekte
+                  </div>
+                </div>
+                <div style={{ 
+                  textAlign: 'center',
+                  padding: '24px',
+                  background: '#f9fafb',
+                  borderRadius: '12px',
+                  border: '1px solid #e5e7eb'
+                }}>
+                  <div style={{ 
+                    fontSize: '2rem',
+                    fontWeight: '800',
+                    color: '#2563eb',
+                    marginBottom: '8px'
+                  }}>
+                    25+
+                  </div>
+                  <div style={{ 
+                    color: '#6b7280',
+                    fontWeight: '600'
+                  }}>
+                    Jahre
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ 
+                display: 'flex',
+                gap: '32px',
+                flexWrap: 'wrap'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontSize: '1.2rem' }}>✓</span>
+                  <span style={{ fontWeight: '600', color: '#374151' }}>TÜV zertifiziert</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontSize: '1.2rem' }}>✓</span>
+                  <span style={{ fontWeight: '600', color: '#374151' }}>Meisterbetrieb</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontSize: '1.2rem' }}>✓</span>
+                  <span style={{ fontWeight: '600', color: '#374151' }}>RAL Gütezeichen</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Company photo placeholder */}
+            <div style={{
+              height: '400px',
+              background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
+              borderRadius: '12px',
+              position: 'relative',
+              overflow: 'hidden',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                textAlign: 'center',
+                color: '#6b7280'
+              }}>
+                <div style={{ fontSize: '3rem', marginBottom: '16px' }}>👥</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: '600' }}>
+                  Unser erfahrenes Team
+                </div>
+                <div style={{ fontSize: '0.9rem', opacity: 0.7 }}>
+                  Meister und Fachkräfte bei der Arbeit
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Testimonials Header */}
+          <div style={{ textAlign: 'center' }}>
+            <h2 style={{ 
+              fontSize: '3rem',
+              fontWeight: '800',
+              lineHeight: '1.1',
+              marginBottom: '16px',
+              color: '#111827',
+              letterSpacing: '-0.02em'
+            }}>
+              Was unsere Kunden sagen
+            </h2>
+            <p style={{ 
+              fontSize: '1.25rem',
+              color: '#6b7280',
+              lineHeight: '1.7'
+            }}>
+              Über 1000 zufriedene Kunden vertrauen auf unsere Qualität und Service.
+            </p>
+          </div>
         </div>
       </section>
 
