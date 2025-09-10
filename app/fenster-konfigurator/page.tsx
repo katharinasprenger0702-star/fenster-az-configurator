@@ -30,6 +30,8 @@ const schema = z.object({
   trickleVent: z.boolean().default(false),
   insectScreen: z.boolean().default(false),
   rollerShutter: z.boolean().default(false),
+  childLock: z.boolean().default(false),
+  montage: z.enum(['Keine', 'Standard', 'Premium']).default('Keine'),
   oldWindowDisposal: z.boolean().default(false),
   delivery: z.enum(['Abholung','Hamburg (Zone 1)','Zone 2']).default('Abholung'),
   qty: z.coerce.number().int().min(1).max(50).default(1),
@@ -114,7 +116,8 @@ export default function ConfiguratorPage() {
     material: 'PVC', profile: 'Standard', opening: 'Dreh-Kipp links',
     glazing: '2-fach', color: 'Weiß', handle: 'Standard', security: 'Basis',
     warmEdge: false, soundInsulation: false, safetyGlass: false, sunProtection: false,
-    trickleVent: false, insectScreen: false, rollerShutter: false, oldWindowDisposal: false,
+    trickleVent: false, insectScreen: false, rollerShutter: false, childLock: false,
+    montage: 'Keine', oldWindowDisposal: false,
     delivery: 'Abholung', qty: 1
   });
   const parsed = schema.safeParse(form);
