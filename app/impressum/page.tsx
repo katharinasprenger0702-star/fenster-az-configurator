@@ -61,8 +61,11 @@ export default function Impressum() {
               lineHeight: '1.8',
               color: '#374151'
             }}>
-              <p style={{ marginBottom: '16px' }}>
-                <strong style={{ color: '#111827' }}>Fenstermann24.de</strong> – eine Marke der
+              <p style={{ 
+                marginBottom: '16px',
+                color: '#6b7280'
+              }}>
+                <strong style={{ color: '#111827' }}>Fenstermann24.de</strong> <span style={{ color: '#6b7280' }}>– eine Marke der</span>
               </p>
               <p style={{ 
                 fontSize: '1rem',

@@ -30,10 +30,9 @@ export default function Home() {
             fontWeight: '800',
             lineHeight: '1.1',
             marginBottom: '24px',
-            color: '#000000',
             letterSpacing: '-0.03em'
           }}>
-            Fenster & Türen nach Maß
+            <span style={{ color: '#000000' }}>Fenster & Türen nach Maß</span>
             <br />
             <span style={{ color: '#2563eb' }}>direkt online konfigurieren</span>
           </h1>
