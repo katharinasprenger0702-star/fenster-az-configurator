@@ -11,8 +11,9 @@ import {
 import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
-  product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren']).default('Fenster'),
-  manufacturer: z.enum(['IGLO 5', 'Rehau', 'Schüco', 'Salamander', 'VEKA', 'Aluplast', 'Gealan', 'Kömmerling', 'Trocal', 'Brügmann', 'Deceuninck']).default('IGLO 5'),
+  product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
+  manufacturer: z.enum(['DRUTEX', 'Eko-Okna', 'Gabit', 'Inotherm', 'HOOPE', 'Schüco']).default('DRUTEX'),
+  system: z.enum(['IGLO 5', 'Standard', 'Premium']).default('IGLO 5').optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
   material: z.enum(['PVC', 'Aluminium', 'Holz']).default('PVC'),
@@ -54,6 +55,10 @@ function getOpeningTypesForProduct(product: string): string[] {
       return ['Schiebetür F+KS', 'Schiebetür FF+KS', 'Schiebetür KS', 'Schiebetür Stulp KS+KS'];
     case 'Haustüren':
       return ['1-flügelig', '2-flügelig'];
+    case 'Rollladen':
+      return ['Aufputz', 'Unterputz', 'Vorbaurollladen', 'Aufsatzrollladen'];
+    case 'Garagentore':
+      return ['Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'];
     default:
       return ['Festverglasung', 'Dreh-Kipp links', 'Dreh-Kipp rechts', 'Doppelflügelig (Stulp)'];
   }
@@ -62,10 +67,10 @@ function getOpeningTypesForProduct(product: string): string[] {
 function pickDatasetAndFilter(form: any) {
   let DATA;
   
-  // Note: Currently only IGLO 5 (DRUTEX) pricing data is available
+  // Note: Currently only DRUTEX pricing data is available
   // Additional manufacturer-specific pricing will be integrated gradually
-  if (form.manufacturer !== 'IGLO 5') {
-    // For other manufacturers, fallback to IGLO 5 (DRUTEX) pricing data
+  if (form.manufacturer !== 'DRUTEX') {
+    // For other manufacturers, fallback to DRUTEX pricing data
     // This will be replaced with manufacturer-specific data as it becomes available
     console.warn(`Using DRUTEX pricing for ${form.manufacturer} - manufacturer-specific pricing to be added`);
   }
@@ -81,6 +86,14 @@ function pickDatasetAndFilter(form: any) {
       DATA = schiebetuerenPrices;
       break;
     case 'Haustüren':
+      DATA = haustuerenPrices;
+      break;
+    case 'Rollladen':
+      // For now, use a subset of fenster pricing for rollladen
+      DATA = fensterPrices;
+      break;
+    case 'Garagentore':
+      // For now, use haustuer pricing as basis for garage doors
       DATA = haustuerenPrices;
       break;
     default:
@@ -106,7 +119,7 @@ function pickDatasetAndFilter(form: any) {
 
 export default function ConfiguratorPage() {
   const [form, setForm] = useState<Config>({
-    product: 'Fenster', manufacturer: 'IGLO 5', width_mm: 1200, height_mm: 1200,
+    product: 'Fenster', manufacturer: 'DRUTEX', system: 'IGLO 5', width_mm: 1200, height_mm: 1200,
     material: 'PVC', profile: 'Standard', opening: 'Dreh-Kipp links',
     glazing: '2-fach', color: 'Weiß', handle: 'Standard', security: 'Basis',
     warmEdge: false, soundInsulation: false, safetyGlass: false, sunProtection: false,
@@ -229,6 +242,42 @@ export default function ConfiguratorPage() {
           ))}
         </div>
       </div>
+
+      {/* Real-time Price Display */}
+      {step > 0 && price && (
+        <div className="card" style={{ 
+          position: 'sticky', 
+          top: '20px', 
+          zIndex: 1000,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h3 style={{ margin: '0 0 8px 0', color: 'white' }}>💰 Aktueller Preis</h3>
+              <div style={{ fontSize: '14px', opacity: 0.9 }}>
+                {form.manufacturer} {form.system ? `(${form.system})` : ''} • {form.product} • {form.qty}x
+              </div>
+              <div style={{ fontSize: '12px', opacity: 0.8 }}>
+                {form.width_mm} × {form.height_mm} mm
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 4px 0' }}>
+                {(price.eur_sell_gross * (form.qty ?? 1)).toFixed(2)} €
+              </div>
+              <div style={{ fontSize: '12px', opacity: 0.8 }}>
+                inkl. MwSt.
+              </div>
+              <div style={{ fontSize: '12px', opacity: 0.8 }}>
+                ({(price.eur_sell_net * (form.qty ?? 1)).toFixed(2)} € netto)
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Technical Validation Display */}
       {(validation.errors.length > 0 || validation.warnings.length > 0 || validation.complianceInfo.length > 0) && (
@@ -391,6 +440,8 @@ export default function ConfiguratorPage() {
               <option value="Balkontüren">Balkontüren</option>
               <option value="Schiebetüren">Schiebetüren</option>
               <option value="Haustüren">Haustüren</option>
+              <option value="Rollladen">Rollladen</option>
+              <option value="Garagentore">Garagentore</option>
             </select>
           </div>
           
@@ -422,17 +473,24 @@ export default function ConfiguratorPage() {
               value={form.manufacturer}
               onChange={e => setForm(prev => ({ ...prev, manufacturer: e.target.value as any }))}
             >
-              <option value="IGLO 5">IGLO 5 (DRUTEX)</option>
-              <option value="Rehau">Rehau</option>
+              <option value="DRUTEX">DRUTEX</option>
+              <option value="Eko-Okna">Eko-Okna</option>
+              <option value="Gabit">Gabit</option>
+              <option value="Inotherm">Inotherm</option>
+              <option value="HOOPE">HOOPE</option>
               <option value="Schüco">Schüco</option>
-              <option value="Salamander">Salamander</option>
-              <option value="VEKA">VEKA</option>
-              <option value="Aluplast">Aluplast</option>
-              <option value="Gealan">Gealan</option>
-              <option value="Kömmerling">Kömmerling</option>
-              <option value="Trocal">Trocal</option>
-              <option value="Brügmann">Brügmann</option>
-              <option value="Deceuninck">Deceuninck</option>
+            </select>
+          </div>
+          
+          <div className="row">
+            <div className="label">System auswählen</div>
+            <select
+              value={form.system || 'IGLO 5'}
+              onChange={e => setForm(prev => ({ ...prev, system: e.target.value as any }))}
+            >
+              <option value="IGLO 5">IGLO 5</option>
+              <option value="Standard">Standard</option>
+              <option value="Premium">Premium</option>
             </select>
           </div>
           
@@ -445,8 +503,8 @@ export default function ConfiguratorPage() {
             color: '#01579b',
             marginTop: '8px'
           }}>
-            <strong>Info:</strong> IGLO 5 Fenster sind DRUTEX Produkte. Die Preise stammen aus der DRUTEX Preisliste.
-            {form.manufacturer !== 'IGLO 5' && (
+            <strong>Info:</strong> Die Preise stammen aus der DRUTEX Preisliste.
+            {form.manufacturer !== 'DRUTEX' && (
               <span style={{ display: 'block', marginTop: '8px' }}>
                 <strong>Hinweis:</strong> Für {form.manufacturer} werden derzeit DRUTEX Preise angezeigt. 
                 Herstellerspezifische Preislisten werden sukzessive integriert.
