@@ -5,9 +5,9 @@ import type { ReactNode } from 'react';
 import Chatbot from './components/Chatbot';
 
 export const metadata = {
-  title: 'Fenstermann24 – Online‑Konfigurator',
-  description: 'Fenstermann24.de – eine Marke der AZ Fenster und Türen GmbH. Fenster & Türen direkt online konfigurieren mit sofortiger Preisberechnung.',
-  keywords: 'Fenster, Türen, Haustüren, PVC, Aluminium, Holz, Konfigurator, Preiskalkulator, AZ Fenster',
+  title: 'Fenstermann24 – Professioneller Fensterversand deutschlandweit',
+  description: 'Fenstermann24.de – Zertifizierter Meisterbetrieb für Premium Fenster & Türen. Deutschlandweiter Versand, kostenfreie Lieferung ab 10 Fenstern, Online-Konfigurator mit sofortiger Preisberechnung.',
+  keywords: 'Fensterversand, Fenster online kaufen, Türen Versand, Premium Fenster, Meisterbetrieb, deutschlandweite Lieferung, Konfigurator, AZ Fenster',
   robots: 'index, follow'
 };
 

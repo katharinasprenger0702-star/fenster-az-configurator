@@ -81,8 +81,8 @@ export default function Impressum() {
                 borderRadius: '8px',
                 border: '1px solid #e5e7eb'
               }}>
-                Musterstraße 123<br />
-                12345 Hamburg<br />
+                Industriestraße 47<br />
+                22880 Wedel<br />
                 Deutschland
               </div>
             </div>
@@ -114,7 +114,7 @@ export default function Impressum() {
               color: '#374151'
             }}>
               <div style={{ marginBottom: '12px' }}>
-                <strong>📞 Telefon:</strong> <a href="tel:+49-40-123456789" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>+49 (0) 40 123 456 789</a>
+                <strong>📞 Telefon:</strong> <a href="tel:+49-4103-180090" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>+49 (0) 4103 18 00 90</a>
               </div>
               <div style={{ marginBottom: '12px' }}>
                 <strong>✉️ E-Mail:</strong> <a href="mailto:info@fenstermann24.de" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>info@fenstermann24.de</a>
@@ -187,8 +187,8 @@ export default function Impressum() {
                 lineHeight: '1.6'
               }}>
                 Eintragung im Handelsregister.<br />
-                Registergericht: Amtsgericht Hamburg<br />
-                Registernummer: HRB 123456
+                Registergericht: Amtsgericht Pinneberg<br />
+                Registernummer: HRB 5847 PI
               </div>
             </div>
 
@@ -218,7 +218,7 @@ export default function Impressum() {
                 lineHeight: '1.6'
               }}>
                 Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br />
-                <strong>DE123456789</strong>
+                <strong>DE225840195</strong>
               </div>
             </div>
 
@@ -248,7 +248,7 @@ export default function Impressum() {
                 lineHeight: '1.6'
               }}>
                 Max Mustermann<br />
-                Musterstraße 123, 12345 Hamburg
+                Industriestraße 47, 22880 Wedel
               </div>
             </div>
           </div>
