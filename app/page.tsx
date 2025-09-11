@@ -22,7 +22,7 @@ export default function Home() {
             marginBottom: '32px',
             border: '1px solid rgba(37, 99, 235, 0.15)'
           }}>
-            Fenstermann24.de · Ihr Partner für Qualität seit 25+ Jahren
+            Fenstermann24.de · Zertifizierter Meisterbetrieb seit 1995
           </div>
           
           <h1 style={{ 
@@ -32,9 +32,9 @@ export default function Home() {
             marginBottom: '24px',
             letterSpacing: '-0.03em'
           }}>
-            <span style={{ color: '#000000' }}>Fenster & Türen nach Maß</span>
+            <span style={{ color: '#000000' }}>Premium Fenster & Türen</span>
             <br />
-            <span style={{ color: '#2563eb' }}>direkt online konfigurieren</span>
+            <span style={{ color: '#2563eb' }}>deutschlandweit direkt zu Ihnen</span>
           </h1>
           
           <p style={{ 
@@ -44,8 +44,8 @@ export default function Home() {
             margin: '0 auto 48px auto',
             lineHeight: '1.7'
           }}>
-            Höchste Qualität vom deutschen Meisterbetrieb. Individuelle Fertigung,
-            transparente Preise und fachgerechte Montage – alles aus einer Hand.
+            Professioneller Fensterversand vom Meisterbetrieb. Individuelle Fertigung nach Maß, 
+            transparente Preisgestaltung und kostenfreie Lieferung ab 10 Fenstern – deutschlandweit.
           </p>
 
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: '64px' }}>
@@ -62,7 +62,7 @@ export default function Home() {
             }}>
               Jetzt konfigurieren
             </Link>
-            <a href="tel:+49-40-123456789" style={{
+            <a href="tel:+49-4103-180090" style={{
               background: 'white',
               color: '#374151',
               fontSize: '1.1rem',
@@ -78,6 +78,59 @@ export default function Home() {
           </div>
 
 
+        </div>
+      </section>
+
+      {/* PROFESSIONAL TRUST INDICATORS */}
+      <section style={{ 
+        padding: '60px 60px',
+        background: 'linear-gradient(135deg, #1e40af 0%, #2563eb 100%)',
+        color: 'white'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ 
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '40px',
+            textAlign: 'center'
+          }}>
+            <div>
+              <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🏆</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '8px' }}>
+                Meisterbetrieb
+              </div>
+              <div style={{ fontSize: '1rem', opacity: 0.9 }}>
+                Zertifizierte Qualität nach deutschen Handwerksstandards
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🛡️</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '8px' }}>
+                25+ Jahre Erfahrung
+              </div>
+              <div style={{ fontSize: '1rem', opacity: 0.9 }}>
+                Bewährte Expertise im Fenster- und Türenbau
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: '3rem', marginBottom: '12px' }}>📋</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '8px' }}>
+                DIN-Zertifiziert
+              </div>
+              <div style={{ fontSize: '1rem', opacity: 0.9 }}>
+                Alle Produkte nach deutschen Qualitätsnormen
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🌟</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '8px' }}>
+                RAL-Gütezeichen
+              </div>
+              <div style={{ fontSize: '1rem', opacity: 0.9 }}>
+                Höchste Qualitätsstandards garantiert
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1099,7 +1152,7 @@ export default function Home() {
                 margin: '0 auto 20px auto',
                 fontSize: '1.5rem'
               }}>
-                📱
+                🚚
               </div>
               <h3 style={{
                 fontSize: '1.25rem',
@@ -1107,14 +1160,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Online Konfigurator
+                Professioneller Versand
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Einfach online konfigurieren und Preis berechnen. 
-                Schnell, unkompliziert und jederzeit verfügbar.
+                Deutschlandweite Lieferung mit kostenfreiem Versand ab 10 Fenstern. 
+                Sichere Verpackung und pünktliche Anlieferung garantiert.
               </p>
             </div>
           </div>
@@ -1163,7 +1216,7 @@ export default function Home() {
             }}>
               🚀 Jetzt konfigurieren
             </Link>
-            <a href="tel:+49-40-123456789" style={{
+            <a href="tel:+49-4103-180090" style={{
               background: 'white',
               color: '#374151',
               fontSize: '1.2rem',
