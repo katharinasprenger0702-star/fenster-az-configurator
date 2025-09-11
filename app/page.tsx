@@ -62,7 +62,7 @@ export default function Home() {
             }}>
               Jetzt konfigurieren
             </Link>
-            <a href="tel:+49-[TELEFONNUMMER]" style={{
+            <a href="tel:+49-40-123456789" style={{
               background: 'white',
               color: '#374151',
               fontSize: '1.1rem',
@@ -1163,7 +1163,7 @@ export default function Home() {
             }}>
               🚀 Jetzt konfigurieren
             </Link>
-            <a href="tel:+49-[TELEFONNUMMER]" style={{
+            <a href="tel:+49-40-123456789" style={{
               background: 'white',
               color: '#374151',
               fontSize: '1.2rem',
