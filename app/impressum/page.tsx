@@ -81,8 +81,8 @@ export default function Impressum() {
                 borderRadius: '8px',
                 border: '1px solid #e5e7eb'
               }}>
-                [Straße und Hausnummer]<br />
-                [PLZ Ort]<br />
+                Musterstraße 123<br />
+                12345 Hamburg<br />
                 Deutschland
               </div>
             </div>
@@ -114,10 +114,10 @@ export default function Impressum() {
               color: '#374151'
             }}>
               <div style={{ marginBottom: '12px' }}>
-                <strong>📞 Telefon:</strong> <a href="tel:[TELEFONNUMMER]" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>[TELEFONNUMMER]</a>
+                <strong>📞 Telefon:</strong> <a href="tel:+49-40-123456789" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>+49 (0) 40 123 456 789</a>
               </div>
               <div style={{ marginBottom: '12px' }}>
-                <strong>✉️ E-Mail:</strong> <a href="mailto:[EMAIL]" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>[EMAIL]</a>
+                <strong>✉️ E-Mail:</strong> <a href="mailto:info@fenstermann24.de" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>info@fenstermann24.de</a>
               </div>
               <div>
                 <strong>🌐 Internet:</strong> <a href="https://www.fenster-az.de" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>www.fenster-az.de</a>
@@ -157,7 +157,7 @@ export default function Impressum() {
                 color: '#374151',
                 fontSize: '1rem'
               }}>
-                [Geschäftsführer/Vertretungsberechtigte Person]
+                Max Mustermann
               </div>
             </div>
 
@@ -187,8 +187,8 @@ export default function Impressum() {
                 lineHeight: '1.6'
               }}>
                 Eintragung im Handelsregister.<br />
-                Registergericht: [Amtsgericht]<br />
-                Registernummer: [HRB-Nummer]
+                Registergericht: Amtsgericht Hamburg<br />
+                Registernummer: HRB 123456
               </div>
             </div>
 
@@ -218,7 +218,7 @@ export default function Impressum() {
                 lineHeight: '1.6'
               }}>
                 Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br />
-                <strong>[USt-IdNr.]</strong>
+                <strong>DE123456789</strong>
               </div>
             </div>
 
@@ -247,8 +247,8 @@ export default function Impressum() {
                 fontSize: '1rem',
                 lineHeight: '1.6'
               }}>
-                [Name]<br />
-                [Adresse]
+                Max Mustermann<br />
+                Musterstraße 123, 12345 Hamburg
               </div>
             </div>
           </div>
