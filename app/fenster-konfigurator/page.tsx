@@ -142,6 +142,8 @@ export default function ConfiguratorPage() {
           body: JSON.stringify({
             width_mm: form.width_mm,
             height_mm: form.height_mm,
+            DATA: DATA,
+            filter: filter,
             opening: form.opening,
             qty: form.qty,
             product: form.product,
@@ -570,6 +572,64 @@ export default function ConfiguratorPage() {
                 <div><strong>Sicherheit:</strong> {form.security}</div>
                 <div><strong>Anzahl:</strong> {form.qty}</div>
                 <div><strong>Lieferung:</strong> {form.delivery}</div>
+              </div>
+            </div>
+
+            {/* Price Display */}
+            <div style={{ marginBottom: '24px' }}>
+              <h3>Preisberechnung</h3>
+              <div style={{ 
+                padding: '16px', 
+                backgroundColor: '#f8f9fa', 
+                borderRadius: '8px',
+                border: '2px solid #28a745'
+              }}>
+                {/* Simple Calculation Price */}
+                <div style={{ marginBottom: '16px' }}>
+                  <h4 style={{ margin: '0 0 8px 0', color: '#28a745' }}>Standard-Kalkulation:</h4>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#28a745' }}>
+                    {breakdown.totalGross.toFixed(2)} € 
+                    <span style={{ fontSize: '14px', fontWeight: 'normal', marginLeft: '8px' }}>
+                      (inkl. MwSt., {form.qty} Stück)
+                    </span>
+                  </div>
+                  <div style={{ fontSize: '14px', color: '#6c757d', marginTop: '4px' }}>
+                    Einzelpreis: {breakdown.grossPerUnit.toFixed(2)} € brutto | {breakdown.netPerUnit.toFixed(2)} € netto
+                  </div>
+                </div>
+
+                {/* Data-Based Price (if available) */}
+                {price.eur_sell_gross > 0 && (
+                  <div style={{ 
+                    paddingTop: '16px', 
+                    borderTop: '1px solid #dee2e6',
+                    marginTop: '16px'
+                  }}>
+                    <h4 style={{ margin: '0 0 8px 0', color: '#007bff' }}>Datenbank-Preis:</h4>
+                    <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#007bff' }}>
+                      {(price.eur_sell_gross * form.qty).toFixed(2)} €
+                      <span style={{ fontSize: '14px', fontWeight: 'normal', marginLeft: '8px' }}>
+                        (inkl. MwSt., {form.qty} Stück)
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '14px', color: '#6c757d', marginTop: '4px' }}>
+                      Einzelpreis: {price.eur_sell_gross.toFixed(2)} € brutto | {price.eur_sell_net.toFixed(2)} € netto
+                    </div>
+                  </div>
+                )}
+
+                {/* Show message if no data-based price available */}
+                {price.eur_sell_gross === 0 && (
+                  <div style={{ 
+                    paddingTop: '16px', 
+                    borderTop: '1px solid #dee2e6',
+                    marginTop: '16px',
+                    fontSize: '14px',
+                    color: '#6c757d'
+                  }}>
+                    <span>📋 Für eine detaillierte Preisberechnung kontaktieren Sie uns.</span>
+                  </div>
+                )}
               </div>
             </div>
 
