@@ -22,7 +22,7 @@ export default function Home() {
             marginBottom: '32px',
             border: '1px solid rgba(37, 99, 235, 0.15)'
           }}>
-            Fenstermann24.de · Ihr Partner für Qualität seit 25+ Jahren
+            Fensterversand.com · Premium Fenster & Türen seit 1995
           </div>
           
           <h1 style={{ 
@@ -32,9 +32,9 @@ export default function Home() {
             marginBottom: '24px',
             letterSpacing: '-0.03em'
           }}>
-            <span style={{ color: '#000000' }}>Fenster & Türen nach Maß</span>
+            <span style={{ color: '#000000' }}>Premium Fenster & Türen</span>
             <br />
-            <span style={{ color: '#2563eb' }}>direkt online konfigurieren</span>
+            <span style={{ color: '#2563eb' }}>schnell & sicher versandt</span>
           </h1>
           
           <p style={{ 
@@ -44,8 +44,8 @@ export default function Home() {
             margin: '0 auto 48px auto',
             lineHeight: '1.7'
           }}>
-            Höchste Qualität vom deutschen Meisterbetrieb. Individuelle Fertigung,
-            transparente Preise und fachgerechte Montage – alles aus einer Hand.
+            Hochwertige Fenster & Türen direkt vom Hersteller. Schneller Versand,
+            faire Preise und professionelle Beratung für Ihr Traumzuhause.
           </p>
 
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: '64px' }}>
@@ -60,7 +60,7 @@ export default function Home() {
               boxShadow: '0 8px 16px rgba(37, 99, 235, 0.3)',
               transition: 'all 0.2s ease'
             }}>
-              Jetzt konfigurieren
+              Jetzt bestellen
             </Link>
             <a href="tel:+49-40-123456789" style={{
               background: 'white',
@@ -103,7 +103,7 @@ export default function Home() {
               maxWidth: '600px',
               margin: '0 auto'
             }}>
-              Von der ersten Konfiguration bis zur professionellen Montage – 
+              Von der Bestellung bis zur schnellen Lieferung – 
               in nur wenigen Schritten zu Ihren neuen Fenstern und Türen.
             </p>
           </div>
@@ -137,14 +137,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Selbst ausmessen
+                Produkt auswählen
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Mit unserer Anleitung messen Sie einfach und präzise selbst aus. 
-                Schritt-für-Schritt Hilfe inklusive.
+                Wählen Sie aus unserem Premium-Sortiment das passende Fenster oder die Tür. 
+                Alle Maße und Optionen verfügbar.
               </p>
             </div>
 
@@ -172,14 +172,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Online Konfigurieren
+                Online bestellen
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Wählen Sie Material, Größe, Farbe und alle Extras. 
-                Sofortige Preisberechnung inklusive.
+                Konfigurieren Sie Größe, Material und Farbe. 
+                Sofortige Preisberechnung und sichere Bestellung.
               </p>
             </div>
 
@@ -207,14 +207,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Individuelle Fertigung
+                Schnelle Fertigung
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Millimetergenaue Produktion in unserer eigenen Manufaktur. 
-                Höchste Qualität garantiert.
+                Professionelle Produktion in deutscher Qualität. 
+                Lieferbereit in nur 2-3 Wochen.
               </p>
             </div>
 
@@ -242,14 +242,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Profi-Montage
+                Sicherer Versand
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Fachgerechte Installation durch unsere qualifizierten Montagepartner. 
-                Inklusive Entsorgung der alten Fenster.
+                Professionell verpackt und versichert direkt zu Ihnen. 
+                Tracking inklusive für volle Transparenz.
               </p>
             </div>
           </div>
@@ -270,29 +270,29 @@ export default function Home() {
             textAlign: 'center'
           }}>
             <div>
-              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🚚</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Kostenlose Lieferung</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Ab 10 Fenstern deutschlandweit</div>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📦</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Sichere Verpackung</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Professionell geschützt</div>
             </div>
             <div>
               <div style={{ fontSize: '2rem', marginBottom: '8px' }}>⚡</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Express-Fertigung</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Lieferung in nur 3-4 Wochen</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Express-Versand</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>1-2 Werktage möglich</div>
             </div>
             <div>
               <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🛡️</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Herstellergarantie</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Vollumfänglicher Schutz</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Versandversicherung</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Vollständig abgesichert</div>
             </div>
             <div>
               <div style={{ fontSize: '2rem', marginBottom: '8px' }}>💰</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Bestpreis-Garantie</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Faire Preise, keine Nachverhandlung</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Faire Versandkosten</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Ab 10 Fenstern kostenfrei</div>
             </div>
             <div>
-              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🔧</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Profi-Montage</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Qualifizierte Montagepartner</div>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📱</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Live-Tracking</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Immer informiert</div>
             </div>
           </div>
         </div>
@@ -810,7 +810,7 @@ export default function Home() {
               maxWidth: '600px',
               margin: '0 auto'
             }}>
-              Wir sind deutschlandweit für Sie da – mit Montage-Service 
+              Wir sind deutschlandweit für Sie da – mit schnellem Versand 
               und kostenfreier Lieferung ab 10 Fenstern.
             </p>
           </div>
@@ -949,7 +949,7 @@ export default function Home() {
               color: '#111827',
               marginBottom: '16px'
             }}>
-              Warum Fenstermann24?
+              Warum Fensterversand?
             </h2>
             <p style={{ 
               fontSize: '1.1rem',
@@ -1135,7 +1135,7 @@ export default function Home() {
             color: '#111827',
             marginBottom: '20px'
           }}>
-            Starten Sie jetzt Ihr Projekt
+            Bestellen Sie jetzt online
           </h2>
           <p style={{
             fontSize: '1.2rem',
@@ -1143,8 +1143,8 @@ export default function Home() {
             marginBottom: '40px',
             lineHeight: '1.6'
           }}>
-            Konfigurieren Sie Ihre Wunschfenster und -türen online. 
-            Kostenlos, unverbindlich und in nur wenigen Minuten.
+            Bestellen Sie Ihre Premium-Fenster und -türen direkt online. 
+            Schneller Versand, faire Preise und professionelle Qualität.
           </p>
           
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
@@ -1161,7 +1161,7 @@ export default function Home() {
               transition: 'all 0.2s ease',
               display: 'inline-block'
             }}>
-              🚀 Jetzt konfigurieren
+              🛒 Jetzt bestellen
             </Link>
             <a href="tel:+49-40-123456789" style={{
               background: 'white',

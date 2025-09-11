@@ -172,7 +172,7 @@ function validateMeasurementsAndProvideGuidance(measurements: MeasurementMatch[]
 }
 
 const PREDEFINED_RESPONSES = {
-  greeting: "Hallo! Ich bin der Fenstermann24-Berater und helfe Ihnen gerne bei der Auswahl und Konfiguration Ihrer Fenster und Türen. Was kann ich für Sie tun?",
+  greeting: "Hallo! Ich bin der Fensterversand-Berater und helfe Ihnen gerne bei der Auswahl und Bestellung Ihrer Fenster und Türen. Was kann ich für Sie tun?",
   fenster: "Ausgezeichnet! Bei Fenstern biete ich Ihnen eine professionelle Beratung: Für Energieeffizienz empfehle ich 3-fach Verglasung. Im Konfigurator können Sie Materialien vergleichen: Kunststoff (pflegeleicht), Aluminium (modern) oder Holz (natürlich). Soll ich Sie zum Konfigurator führen?",
   tueren: "Perfekte Wahl! Bei Haustüren ist Sicherheit wichtig: RC2-Standard ist empfehlenswert. Im Konfigurator achten Sie auf: Materialauswahl, Glaselemente und Sicherheitsausstattung. Möchten Sie dass ich Sie durch den Konfigurator führe?",
   preise: "Gerne erkläre ich Ihnen die Preisgestaltung: Im Konfigurator sehen Sie sofort alle Kosten transparent - ohne versteckte Gebühren. Tipp: Vergleichen Sie verschiedene Ausstattungen, um das beste Preis-Leistungs-Verhältnis zu finden.",
@@ -293,7 +293,7 @@ export default function Chatbot() {
           transform: isOpen ? 'scale(0.9)' : 'scale(1)',
           transition: 'all 0.3s ease'
         }}
-        title="Fenstermann24 Berater"
+        title="Fensterversand Berater"
       >
         {/* Character Base */}
         <div style={{
@@ -412,7 +412,7 @@ export default function Chatbot() {
             </div>
             <div>
               <div style={{ fontWeight: '700', fontSize: '18px' }}>
-                Fenstermann24 Berater
+                Fensterversand Berater
               </div>
               <div style={{ fontSize: '13px', opacity: 0.9 }}>
                 Ihr persönlicher Fenster- & Türenexperte
