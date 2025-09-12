@@ -562,11 +562,6 @@ export default function ConfiguratorPage() {
                 </select>
               </div>
             </div>
- copilot/fix-3ce8262e-1cd5-4f2d-982a-3d1519c31c7e
-
-
-
- main
           </div>
         )}
 
