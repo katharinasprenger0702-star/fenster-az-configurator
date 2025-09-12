@@ -28,9 +28,8 @@ const schema = z.object({
   sunProtection: z.boolean().default(false),
   trickleVent: z.boolean().default(false),
   insectScreen: z.boolean().default(false),
-  rollerShutter: z.boolean().default(false),
   childLock: z.boolean().default(false),
-  montage: z.enum(['Keine', 'Standard', 'Premium']).default('Keine'),
+  versand: z.enum(['Standard', 'Premium', 'Express']).default('Standard'),
   oldWindowDisposal: z.boolean().default(false),
   delivery: z.enum(['Abholung','Hamburg (Zone 1)','Zone 2']).default('Abholung'),
   qty: z.coerce.number().int().min(1).max(50).default(1),
@@ -41,7 +40,7 @@ const steps = [
   'Maße',
   'Ausführung & Sicherheit',
   'Glas & Farbe',
-  'Montage & Lieferung',
+  'Versand & Lieferung',
   'Übersicht',
 ];
 
@@ -114,8 +113,8 @@ export default function ConfiguratorPage() {
     material: 'PVC', profile: 'Standard', opening: 'Dreh-Kipp links',
     glazing: '2-fach', color: 'Weiß', handle: 'Standard', security: 'Basis',
     warmEdge: false, soundInsulation: false, safetyGlass: false, sunProtection: false,
-    trickleVent: false, insectScreen: false, rollerShutter: false, childLock: false,
-    montage: 'Keine', oldWindowDisposal: false,
+    trickleVent: false, insectScreen: false, childLock: false,
+    versand: 'Standard', oldWindowDisposal: false,
     delivery: 'Abholung', qty: 1
   });
   const parsed = schema.safeParse(form);
@@ -418,6 +417,36 @@ export default function ConfiguratorPage() {
                 </select>
               </div>
             </div>
+
+            <div style={{ marginTop: '24px' }}>
+              <h3>Zusatzleistungen</h3>
+              <div className="grid" style={{ gap: 8 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.trickleVent}
+                    onChange={(e) => setK('trickleVent', e.target.checked)}
+                  />
+                  Lüftungsschlitze
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.insectScreen}
+                    onChange={(e) => setK('insectScreen', e.target.checked)}
+                  />
+                  Insektenschutz
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.oldWindowDisposal}
+                    onChange={(e) => setK('oldWindowDisposal', e.target.checked)}
+                  />
+                  Entsorgung der alten Fenster
+                </label>
+              </div>
+            </div>
           </div>
         )}
 
@@ -493,11 +522,32 @@ export default function ConfiguratorPage() {
           </div>
         )}
 
-        {/* === STEP 4: Montage & Lieferung === */}
+        {/* === STEP 4: Versand & Lieferung === */}
         {step === 4 && (
           <div>
-            <h2>Montage & Lieferung</h2>
+            <h2>Versand & Lieferung</h2>
             <div className="grid" style={{ gap: 16 }}>
+              <div>
+                <label htmlFor="versand">Versandoption</label>
+                <select
+                  id="versand"
+                  value={form.versand}
+                  onChange={(e) => setK('versand', e.target.value as any)}
+                  disabled={form.delivery === 'Abholung'}
+                  style={{ 
+                    width: '100%', 
+                    padding: '8px', 
+                    marginTop: '4px',
+                    backgroundColor: form.delivery === 'Abholung' ? '#f5f5f5' : 'white',
+                    color: form.delivery === 'Abholung' ? '#999' : 'black',
+                    cursor: form.delivery === 'Abholung' ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  <option value="Standard">Standard Versand (89€, 3-5 Werktage)</option>
+                  <option value="Premium">Premium Versand (149€, 1-2 Werktage)</option>
+                  <option value="Express">Express Versand (249€, 24h)</option>
+                </select>
+              </div>
               <div>
                 <label htmlFor="delivery">Lieferung</label>
                 <select
@@ -510,37 +560,6 @@ export default function ConfiguratorPage() {
                   <option value="Hamburg (Zone 1)">Hamburg (Zone 1)</option>
                   <option value="Zone 2">Zone 2</option>
                 </select>
-              </div>
-            </div>
-
-            <div style={{ marginTop: '24px' }}>
-              <h3>Zusatzleistungen</h3>
-              <div className="grid" style={{ gap: 8 }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.trickleVent}
-                    onChange={(e) => setK('trickleVent', e.target.checked)}
-                  />
-                  Lüftungsschlitze
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.insectScreen}
-                    onChange={(e) => setK('insectScreen', e.target.checked)}
-                  />
-                  Insektenschutz
-                </label>
-
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.oldWindowDisposal}
-                    onChange={(e) => setK('oldWindowDisposal', e.target.checked)}
-                  />
-                  Entsorgung der alten Fenster
-                </label>
               </div>
             </div>
           </div>
@@ -564,6 +583,7 @@ export default function ConfiguratorPage() {
                 <div><strong>Griff:</strong> {form.handle}</div>
                 <div><strong>Sicherheit:</strong> {form.security}</div>
                 <div><strong>Anzahl:</strong> {form.qty}</div>
+                {form.delivery !== 'Abholung' && <div><strong>Versand:</strong> {form.versand}</div>}
                 <div><strong>Lieferung:</strong> {form.delivery}</div>
               </div>
             </div>

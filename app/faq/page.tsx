@@ -52,15 +52,15 @@ export default function FAQ() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Wie lange dauert die Lieferung und Montage?
+                Wie lange dauert die Lieferung und der Versand?
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
                 Nach Auftragsbestätigung beträgt die Lieferzeit 3-4 Wochen. 
-                Die Montage erfolgt durch unser eigenes Fachpersonal und dauert 
-                je nach Umfang 1-3 Tage.
+                Der Versand erfolgt durch unser eigenes Logistiknetzwerk und dauert 
+                je nach Versandoption 1-5 Werktage.
               </p>
             </div>
 
@@ -85,7 +85,7 @@ export default function FAQ() {
               }}>
                 Die Garantie auf unsere Fenster und Türen wird direkt vom Hersteller gewährt. 
                 Die Herstellergarantie auf Profile beträgt bis zu 10 Jahre, 
-                auf die Montage gewähren wir 2 Jahre.
+                auf den Versand gewähren wir 2 Jahre.
               </p>
             </div>
 

@@ -22,7 +22,7 @@ export default function Home() {
             marginBottom: '32px',
             border: '1px solid rgba(37, 99, 235, 0.15)'
           }}>
-            Fenstermann24.de · Ihr Partner für Qualität seit 25+ Jahren
+            Fenstermann24.de · Online‑Konfigurator seit 1995
           </div>
           
           <h1 style={{ 
@@ -32,9 +32,9 @@ export default function Home() {
             marginBottom: '24px',
             letterSpacing: '-0.03em'
           }}>
-            <span style={{ color: '#000000' }}>Fenster & Türen nach Maß</span>
+            <span style={{ color: '#000000' }}>Fenster & Türen</span>
             <br />
-            <span style={{ color: '#2563eb' }}>direkt online konfigurieren</span>
+            <span style={{ color: '#2563eb' }}>online konfigurieren</span>
           </h1>
           
           <p style={{ 
@@ -44,8 +44,8 @@ export default function Home() {
             margin: '0 auto 48px auto',
             lineHeight: '1.7'
           }}>
-            Höchste Qualität vom deutschen Meisterbetrieb. Individuelle Fertigung,
-            transparente Preise und fachgerechte Montage – alles aus einer Hand.
+            Hochwertige Fenster & Türen direkt vom Hersteller. Sofortige Preisberechnung,
+            transparente Kosten und professionelle Beratung für Ihr Traumzuhause.
           </p>
 
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: '64px' }}>
@@ -103,8 +103,8 @@ export default function Home() {
               maxWidth: '600px',
               margin: '0 auto'
             }}>
-              Von der ersten Konfiguration bis zur professionellen Montage – 
-              in nur wenigen Schritten zu Ihren neuen Fenstern und Türen.
+              Von der Auswahl bis zum Versand – 
+              in nur 3 einfachen Schritten zu Ihren maßgefertigten Fenstern.
             </p>
           </div>
 
@@ -137,14 +137,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Selbst ausmessen
+                Produkt auswählen
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Mit unserer Anleitung messen Sie einfach und präzise selbst aus. 
-                Schritt-für-Schritt Hilfe inklusive.
+                Wählen Sie aus unserem Premium-Sortiment das passende Fenster oder die Tür. 
+                Alle Maße und Optionen verfügbar.
               </p>
             </div>
 
@@ -172,14 +172,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Online Konfigurieren
+                Konfigurieren
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Wählen Sie Material, Größe, Farbe und alle Extras. 
-                Sofortige Preisberechnung inklusive.
+                Konfigurieren Sie Größe, Material und Farbe im Online-Konfigurator. 
+                Sofortige Preisberechnung und transparente Kosten.
               </p>
             </div>
 
@@ -207,49 +207,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Individuelle Fertigung
+                Versand & Service
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Millimetergenaue Produktion in unserer eigenen Manufaktur. 
-                Höchste Qualität garantiert.
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div style={{ textAlign: 'center', position: 'relative' }}>
-              <div style={{
-                width: '80px',
-                height: '80px',
-                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 24px auto',
-                color: 'white',
-                fontSize: '2rem',
-                fontWeight: '800',
-                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
-              }}>
-                4
-              </div>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: '700',
-                color: '#111827',
-                marginBottom: '12px'
-              }}>
-                Profi-Montage
-              </h3>
-              <p style={{
-                color: '#6b7280',
-                lineHeight: '1.6'
-              }}>
-                Fachgerechte Installation durch unsere qualifizierten Montagepartner. 
-                Inklusive Entsorgung der alten Fenster.
+                Schneller Versand durch qualifizierte Logistikpartner. 
+                Vollservice inklusive sicherer Verpackung und Lieferung.
               </p>
             </div>
           </div>
@@ -270,29 +235,29 @@ export default function Home() {
             textAlign: 'center'
           }}>
             <div>
-              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🚚</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Kostenlose Lieferung</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Ab 10 Fenstern deutschlandweit</div>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>⚡</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Sofort-Berechnung</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Live-Preis im Konfigurator</div>
             </div>
             <div>
-              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>⚡</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Express-Fertigung</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Lieferung in nur 3-4 Wochen</div>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🎯</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Maßgenaue Fertigung</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Millimetergenau nach Maß</div>
             </div>
             <div>
               <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🛡️</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Herstellergarantie</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Vollumfänglicher Schutz</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Premium-Qualität</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Deutsche Markenqualität</div>
             </div>
             <div>
               <div style={{ fontSize: '2rem', marginBottom: '8px' }}>💰</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Bestpreis-Garantie</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Faire Preise, keine Nachverhandlung</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Transparente Preise</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Keine versteckten Kosten</div>
             </div>
             <div>
-              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🔧</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Profi-Montage</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Qualifizierte Montagepartner</div>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🚚</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Versand-Service</div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Deutschlandweit verfügbar</div>
             </div>
           </div>
         </div>
@@ -440,7 +405,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Rolladen */}
+          {/* Rollladen */}
           <div style={{
             background: 'white',
             border: '1px solid #e5e7eb',
@@ -460,7 +425,7 @@ export default function Home() {
             }}>
               <div style={{ textAlign: 'center', color: '#9ca3af' }}>
                 <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🎛️</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Premium Rolladen</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Premium Rollladen</div>
               </div>
             </div>
             <div style={{ padding: '24px' }}>
@@ -470,14 +435,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Rolladen
+                Rollladen
               </h3>
               <p style={{ 
                 color: '#6b7280',
                 marginBottom: '20px',
                 lineHeight: '1.6'
               }}>
-                Moderne Rolladen für optimalen Sonnenschutz, Sicherheit 
+                Moderne Rollladen für optimalen Sonnenschutz, Sicherheit 
                 und Energieeffizienz - manuell oder elektrisch.
               </p>
               <Link href="/fenster-konfigurator" style={{
@@ -490,7 +455,7 @@ export default function Home() {
                 display: 'inline-block',
                 transition: 'all 0.2s ease'
               }}>
-                Rolladen konfigurieren
+                Rollladen konfigurieren
               </Link>
             </div>
           </div>
@@ -569,8 +534,8 @@ export default function Home() {
               border: '1px solid #e5e7eb'
             }}>
               <div style={{ textAlign: 'center', color: '#9ca3af' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🔧</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Professionelle Montage</div>
+                <div style={{ fontSize: '3rem', marginBottom: '8px' }}>📦</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Professioneller Versand</div>
               </div>
             </div>
             <div style={{ padding: '24px' }}>
@@ -587,7 +552,7 @@ export default function Home() {
                 marginBottom: '20px',
                 lineHeight: '1.6'
               }}>
-                Kompletter Service von der Beratung bis zur fachgerechten Montage.
+                Kompletter Service von der Beratung bis zum fachgerechten Versand.
               </p>
               <Link href="/impressum" style={{
                 background: '#2563eb',
@@ -810,7 +775,7 @@ export default function Home() {
               maxWidth: '600px',
               margin: '0 auto'
             }}>
-              Wir sind deutschlandweit für Sie da – mit Montage-Service 
+              Wir sind deutschlandweit für Sie da – mit schnellem Versand 
               und kostenfreier Lieferung ab 10 Fenstern.
             </p>
           </div>
@@ -856,14 +821,14 @@ export default function Home() {
                   color: '#111827',
                   marginBottom: '8px'
                 }}>
-                  Montage-Service:
+                  Versand-Service:
                 </h4>
                 <p style={{
                   color: '#6b7280',
                   lineHeight: '1.6'
                 }}>
-                  Für unseren Montageservice greifen wir auf unser flächendeckendes Netzwerk 
-                  an qualifizierten Montagepartnern zurück. Wir arbeiten mit Monteuren in ganz Deutschland zusammen.
+                  Für unseren Versandservice greifen wir auf unser flächendeckendes Netzwerk 
+                  an qualifizierten Logistikpartnern zurück. Wir arbeiten mit Versanddienstleistern in ganz Deutschland zusammen.
                 </p>
               </div>
 
@@ -1069,14 +1034,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Montage vom Profi
+                Versand vom Profi
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Qualifizierte Montagepartner in ganz Deutschland. Fachgerechte Installation 
-                mit Garantie und professioneller Entsorgung.
+                Qualifizierte Versandpartner in ganz Deutschland. Sichere Verpackung 
+                mit Garantie und professioneller Lieferung bis zur Bordsteinkante.
               </p>
             </div>
 
@@ -1135,7 +1100,7 @@ export default function Home() {
             color: '#111827',
             marginBottom: '20px'
           }}>
-            Starten Sie jetzt Ihr Projekt
+            Konfigurieren Sie jetzt online
           </h2>
           <p style={{
             fontSize: '1.2rem',
@@ -1143,8 +1108,8 @@ export default function Home() {
             marginBottom: '40px',
             lineHeight: '1.6'
           }}>
-            Konfigurieren Sie Ihre Wunschfenster und -türen online. 
-            Kostenlos, unverbindlich und in nur wenigen Minuten.
+            Konfigurieren Sie Ihre Premium-Fenster und -türen direkt online. 
+            Sofortige Preisberechnung, transparente Kosten und professionelle Qualität.
           </p>
           
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
@@ -1161,7 +1126,7 @@ export default function Home() {
               transition: 'all 0.2s ease',
               display: 'inline-block'
             }}>
-              🚀 Jetzt konfigurieren
+              🛠️ Jetzt konfigurieren
             </Link>
             <a href="tel:+49-40-123456789" style={{
               background: 'white',

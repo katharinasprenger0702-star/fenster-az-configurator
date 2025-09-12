@@ -65,7 +65,7 @@ export default function Impressum() {
                 marginBottom: '16px',
                 color: '#6b7280'
               }}>
-                <strong style={{ color: '#111827' }}>Fenstermann24.de</strong> <span style={{ color: '#6b7280' }}>– eine Marke der</span>
+                <strong style={{ color: '#111827' }}>Fenstermann24.de</strong> <span style={{ color: '#6b7280' }}>– Online‑Konfigurator</span>
               </p>
               <p style={{ 
                 fontSize: '1rem',
@@ -120,7 +120,7 @@ export default function Impressum() {
                 <strong>✉️ E-Mail:</strong> <a href="mailto:info@fenstermann24.de" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>info@fenstermann24.de</a>
               </div>
               <div>
-                <strong>🌐 Internet:</strong> <a href="https://www.fenster-az.de" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>www.fenster-az.de</a>
+                <strong>🌐 Internet:</strong> <a href="https://www.fenstermann24.de" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>www.fenstermann24.de</a>
               </div>
             </div>
           </div>

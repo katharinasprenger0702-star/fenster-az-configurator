@@ -23,45 +23,55 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <header className="header">
           <div className="logo">
             <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-              {/* Window frame with modern design */}
-              <rect x="4" y="8" width="40" height="32" rx="4" ry="4" stroke="url(#windowGradient)" strokeWidth="2.5" fill="none"/>
-              <rect x="6" y="10" width="36" height="28" rx="2" ry="2" fill="url(#glassGradient)" opacity="0.3"/>
+              {/* Modern window frame with rounded corners */}
+              <rect x="6" y="6" width="36" height="36" rx="8" ry="8" stroke="url(#modernFrameGradient)" strokeWidth="3" fill="url(#modernBackgroundGradient)"/>
               
-              {/* Window cross bars */}
-              <line x1="24" y1="10" x2="24" y2="38" stroke="url(#frameGradient)" strokeWidth="2"/>
-              <line x1="6" y1="24" x2="42" y2="24" stroke="url(#frameGradient)" strokeWidth="2"/>
+              {/* Modern glass panes */}
+              <rect x="9" y="9" width="15" height="15" rx="3" fill="url(#modernGlassGradient)" opacity="0.6"/>
+              <rect x="27" y="9" width="15" height="15" rx="3" fill="url(#modernGlassGradient)" opacity="0.6"/>
+              <rect x="9" y="27" width="15" height="15" rx="3" fill="url(#modernGlassGradient)" opacity="0.6"/>
+              <rect x="27" y="27" width="15" height="15" rx="3" fill="url(#modernGlassGradient)" opacity="0.6"/>
               
-              {/* Window handle */}
-              <circle cx="36" cy="30" r="2" fill="url(#handleGradient)"/>
-              <rect x="34" y="29" width="4" height="2" rx="1" fill="url(#handleGradient)"/>
+              {/* Sleek window dividers */}
+              <rect x="23" y="9" width="2" height="33" rx="1" fill="url(#modernDividerGradient)"/>
+              <rect x="9" y="23" width="33" height="2" rx="1" fill="url(#modernDividerGradient)"/>
               
-              {/* Company initial "F" */}
-              <text x="24" y="18" textAnchor="middle" fontSize="8" fontWeight="bold" fill="url(#textGradient)">F24</text>
+              {/* Modern handle accent */}
+              <circle cx="38" cy="18" r="2.5" fill="url(#modernAccentGradient)"/>
+              <rect x="35" y="16.5" width="6" height="3" rx="1.5" fill="url(#modernAccentGradient)" opacity="0.8"/>
+              
+              {/* Company branding "F24" with modern typography */}
+              <text x="24" y="31" textAnchor="middle" fontSize="7" fontWeight="700" fill="url(#modernTextGradient)" letterSpacing="0.5px">F24</text>
               
               <defs>
-                <linearGradient id="windowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#1e40af"/>
+                <linearGradient id="modernFrameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#1e3a8a"/>
                   <stop offset="100%" stopColor="#3b82f6"/>
                 </linearGradient>
-                <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#bfdbfe"/>
+                <linearGradient id="modernBackgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#f8fafc" stopOpacity="0.9"/>
+                  <stop offset="100%" stopColor="#e2e8f0" stopOpacity="0.9"/>
+                </linearGradient>
+                <linearGradient id="modernGlassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#dbeafe"/>
+                  <stop offset="50%" stopColor="#bfdbfe"/>
                   <stop offset="100%" stopColor="#93c5fd"/>
                 </linearGradient>
-                <linearGradient id="frameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#374151"/>
-                  <stop offset="100%" stopColor="#6b7280"/>
+                <linearGradient id="modernDividerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#475569"/>
+                  <stop offset="100%" stopColor="#64748b"/>
                 </linearGradient>
-                <linearGradient id="handleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <linearGradient id="modernAccentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#dc2626"/>
-                  <stop offset="100%" stopColor="#ef4444"/>
+                  <stop offset="100%" stopColor="#f97316"/>
                 </linearGradient>
-                <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#1e40af"/>
-                  <stop offset="100%" stopColor="#3b82f6"/>
+                <linearGradient id="modernTextGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#1e3a8a"/>
+                  <stop offset="100%" stopColor="#2563eb"/>
                 </linearGradient>
               </defs>
             </svg>
-            <span style={{ color: '#2563eb' }}>Fenstermann24 | Online‑Konfigurator</span>
+            <span style={{ color: '#2563eb', fontWeight: '600', fontSize: '18px' }}>Fenstermann24 | Online‑Konfigurator</span>
           </div>
           <nav style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
             <Link href="/" style={{marginRight:8, fontWeight: 600}}>Start</Link>

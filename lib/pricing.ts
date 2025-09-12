@@ -5,7 +5,7 @@ export type Product = 'Fenster' | 'Balkontüren' | 'Schiebetüren' | 'Haustüren
 export type Manufacturer = 'DRUTEX' | 'Eko-Okna' | 'Gabit' | 'Inotherm' | 'HOOPE' | 'Schüco';
 export type OpeningType = string;
 export type SecurityLevel = 'Basis' | 'RC1N' | 'RC2N';
-export type Montage = 'Keine' | 'Standard' | 'Premium';
+export type Versand = 'Standard' | 'Premium' | 'Express';
 export type Lieferzone = 'Abholung' | 'Hamburg (Zone 1)' | 'Zone 2';
 
 export interface Config {
@@ -26,9 +26,8 @@ export interface Config {
   sunProtection: boolean;
   trickleVent: boolean;
   insectScreen: boolean;
-  rollerShutter: boolean;
   childLock: boolean;
-  montage: Montage;
+  versand: Versand;
   oldWindowDisposal: boolean;
   delivery: Lieferzone;
   qty: number;
@@ -101,14 +100,13 @@ const PER_AREA_ADDONS = {
 const PER_UNIT_ADDONS = {
   trickleVent: 35,
   insectScreen: 59,
-  rollerShutter: 219,
   childLock: 12
 };
 
-const MONTAGE_PER_UNIT: Record<Montage, number> = {
-  'Keine': 0,
-  'Standard': 139,
-  'Premium': 219
+const VERSAND_PER_UNIT: Record<Versand, number> = {
+  'Standard': 89,
+  'Premium': 149,
+  'Express': 249
 };
 
 const DELIVERY_PER_ORDER: Record<Lieferzone, number> = {
@@ -148,14 +146,13 @@ export function calculatePrice(c: Config): PriceBreakdown {
   const perUnit: { label: string; amount: number }[] = [];
   if (c.trickleVent) perUnit.push({ label: 'Falzlüfter', amount: PER_UNIT_ADDONS.trickleVent });
   if (c.insectScreen) perUnit.push({ label: 'Insektenschutz', amount: PER_UNIT_ADDONS.insectScreen });
-  if (c.rollerShutter) perUnit.push({ label: 'Rollladen', amount: PER_UNIT_ADDONS.rollerShutter });
   if (c.childLock) perUnit.push({ label: 'Kindersicherung', amount: PER_UNIT_ADDONS.childLock });
 
-  const montage = MONTAGE_PER_UNIT[c.montage] + (c.oldWindowDisposal && c.montage == 'Keine' ? 25 : 0);
+  const versand = VERSAND_PER_UNIT[c.versand] + (c.oldWindowDisposal ? 25 : 0);
   const deliveryTotal = DELIVERY_PER_ORDER[c.delivery];
   const deliveryPerUnit = c.qty > 0 ? deliveryTotal / c.qty : 0;
 
-  let netPerUnit = factored + handle + montage + perUnit.reduce((s,o)=>s+o.amount,0) + perArea.reduce((s,o)=>s+o.amount,0) + deliveryPerUnit;
+  let netPerUnit = factored + handle + versand + perUnit.reduce((s,o)=>s+o.amount,0) + perArea.reduce((s,o)=>s+o.amount,0) + deliveryPerUnit;
   netPerUnit = Math.round(netPerUnit * 100) / 100;
   const vatPerUnit = Math.round(netPerUnit * 0.19 * 100) / 100;
   const grossPerUnit = Math.round((netPerUnit + vatPerUnit) * 100) / 100;

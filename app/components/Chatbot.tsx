@@ -122,9 +122,8 @@ function validateMeasurementsAndProvideGuidance(measurements: MeasurementMatch[]
     sunProtection: false,
     trickleVent: false,
     insectScreen: false,
-    rollerShutter: false,
     childLock: false,
-    montage: 'Keine',
+    versand: 'Standard',
     oldWindowDisposal: false,
     delivery: 'Abholung',
     qty: 1
@@ -177,11 +176,11 @@ const PREDEFINED_RESPONSES = {
   tueren: "Perfekte Wahl! Bei Haustüren ist Sicherheit wichtig: RC2-Standard ist empfehlenswert. Im Konfigurator achten Sie auf: Materialauswahl, Glaselemente und Sicherheitsausstattung. Möchten Sie dass ich Sie durch den Konfigurator führe?",
   preise: "Gerne erkläre ich Ihnen die Preisgestaltung: Im Konfigurator sehen Sie sofort alle Kosten transparent - ohne versteckte Gebühren. Tipp: Vergleichen Sie verschiedene Ausstattungen, um das beste Preis-Leistungs-Verhältnis zu finden.",
   kontakt: "Sie erreichen unser Beratungsteam unter +49 (0) 40 123 456 789. Aber lassen Sie mich Ihnen zuerst mit dem Konfigurator helfen - dort erhalten Sie bereits 80% aller Antworten sofort!",
-  montage: "Unsere Montage-Profis sorgen für perfekten Einbau mit 5 Jahren Garantie. Tipp im Konfigurator: Wählen Sie 'Montage-Service' für automatische Terminplanung und kostenlose Altfenster-Entsorgung.",
+  versand: "Wir bieten verschiedene Versandoptionen: Standard (89€, 3-5 Werktage), Premium (149€, 1-2 Werktage) und Express (249€, 24h). Im Konfigurator können Sie die passende Option auswählen.",
   konfigurator_help: "Gerne helfe ich Ihnen beim Konfigurator! Schritt für Schritt: 1) Produkttyp wählen 2) Abmessungen eingeben 3) Material auswählen 4) Extras konfigurieren. Bei Fehlern erscheint ein roter Hinweis - beachten Sie diese für ein korrektes Angebot.",
   fehler: "Keine Sorge! Häufige Konfigurator-Fehler: Unrealistische Abmessungen (min. 40cm, max. 300cm), fehlende Pflichtangaben oder unpassende Kombinationen. Prüfen Sie die rot markierten Felder und folgen Sie den Hinweisen.",
   technical_validation: "🔧 **Technische Validierung:** Ich prüfe alle Maße automatisch gegen DIN 18055 und andere deutsche Normen. Bei Abweichungen erhalten Sie sofort konkrete Hinweise zu den technischen Anforderungen und Grenzwerten.",
-  default: "Das ist eine sehr gute Frage! Als Ihr Fenstermann-Berater empfehle ich: Nutzen Sie den Konfigurator für Details oder rufen Sie uns an: +49 (0) 40 123 456 789. Ich helfe Ihnen gerne weiter!"
+  default: "Das ist eine sehr gute Frage! Als Ihr Fenstermann24-Berater empfehle ich: Nutzen Sie den Konfigurator für Details oder rufen Sie uns an: +49 (0) 40 123 456 789. Ich helfe Ihnen gerne weiter!"
 };
 
 export default function Chatbot() {
@@ -243,8 +242,8 @@ export default function Chatbot() {
     if (message.includes('kontakt') || message.includes('telefon') || message.includes('anrufen')) {
       return PREDEFINED_RESPONSES.kontakt;
     }
-    if (message.includes('montage') || message.includes('einbau') || message.includes('installation')) {
-      return PREDEFINED_RESPONSES.montage;
+    if (message.includes('versand') || message.includes('lieferung') || message.includes('transport')) {
+      return PREDEFINED_RESPONSES.versand;
     }
     
     return PREDEFINED_RESPONSES.default;
@@ -489,7 +488,7 @@ export default function Chatbot() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Fragen Sie den Fenstermann..."
+              placeholder="Fragen Sie den Fenstermann24-Berater..."
               style={{
                 flex: 1,
                 padding: '12px 16px',
