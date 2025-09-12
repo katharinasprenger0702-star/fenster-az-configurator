@@ -31,6 +31,15 @@ export interface Config {
   oldWindowDisposal: boolean;
   delivery: Lieferzone;
   qty: number;
+  // Customer information
+  customerFirstName: string;
+  customerLastName: string;
+  customerEmail: string;
+  customerPhone: string;
+  customerStreet: string;
+  customerCity: string;
+  customerZip: string;
+  customerCountry: string;
 }
 
 export interface PriceBreakdown {

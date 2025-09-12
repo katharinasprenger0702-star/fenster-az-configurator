@@ -126,7 +126,16 @@ function validateMeasurementsAndProvideGuidance(measurements: MeasurementMatch[]
     versand: 'Standard',
     oldWindowDisposal: false,
     delivery: 'Abholung',
-    qty: 1
+    qty: 1,
+    // Default customer information (empty for chatbot)
+    customerFirstName: '',
+    customerLastName: '',
+    customerEmail: '',
+    customerPhone: '',
+    customerStreet: '',
+    customerCity: '',
+    customerZip: '',
+    customerCountry: 'Deutschland'
   };
 
   // Validate the configuration
