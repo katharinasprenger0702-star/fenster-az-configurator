@@ -581,7 +581,7 @@ export default function ConfiguratorPage() {
                 <div><strong>Griff:</strong> {form.handle}</div>
                 <div><strong>Sicherheit:</strong> {form.security}</div>
                 <div><strong>Anzahl:</strong> {form.qty}</div>
-                <div><strong>Versand:</strong> {form.versand}</div>
+                {form.delivery !== 'Abholung' && <div><strong>Versand:</strong> {form.versand}</div>}
                 <div><strong>Lieferung:</strong> {form.delivery}</div>
               </div>
             </div>
