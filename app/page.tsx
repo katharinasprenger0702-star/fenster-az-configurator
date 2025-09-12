@@ -242,14 +242,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Montage & Service
+                Versand & Service
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Professionelle Montage durch qualifizierte Partner. 
-                Vollservice inklusive fachgerechter Installation.
+                Schneller Versand durch qualifizierte Logistikpartner. 
+                Vollservice inklusive sicherer Verpackung und Lieferung.
               </p>
             </div>
           </div>
@@ -290,8 +290,8 @@ export default function Home() {
               <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Keine versteckten Kosten</div>
             </div>
             <div>
-              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🔧</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Montage-Service</div>
+              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🚚</div>
+              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Versand-Service</div>
               <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Deutschlandweit verfügbar</div>
             </div>
           </div>
@@ -856,14 +856,14 @@ export default function Home() {
                   color: '#111827',
                   marginBottom: '8px'
                 }}>
-                  Montage-Service:
+                  Versand-Service:
                 </h4>
                 <p style={{
                   color: '#6b7280',
                   lineHeight: '1.6'
                 }}>
-                  Für unseren Montageservice greifen wir auf unser flächendeckendes Netzwerk 
-                  an qualifizierten Montagepartnern zurück. Wir arbeiten mit Monteuren in ganz Deutschland zusammen.
+                  Für unseren Versandservice greifen wir auf unser flächendeckendes Netzwerk 
+                  an qualifizierten Logistikpartnern zurück. Wir arbeiten mit Versanddienstleistern in ganz Deutschland zusammen.
                 </p>
               </div>
 
@@ -1069,14 +1069,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Montage vom Profi
+                Versand vom Profi
               </h3>
               <p style={{
                 color: '#6b7280',
                 lineHeight: '1.6'
               }}>
-                Qualifizierte Montagepartner in ganz Deutschland. Fachgerechte Installation 
-                mit Garantie und professioneller Entsorgung.
+                Qualifizierte Versandpartner in ganz Deutschland. Sichere Verpackung 
+                mit Garantie und professioneller Lieferung bis zur Bordsteinkante.
               </p>
             </div>
 
