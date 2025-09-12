@@ -405,7 +405,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Rolladen */}
+          {/* Rollladen */}
           <div style={{
             background: 'white',
             border: '1px solid #e5e7eb',
@@ -425,7 +425,7 @@ export default function Home() {
             }}>
               <div style={{ textAlign: 'center', color: '#9ca3af' }}>
                 <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🎛️</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Premium Rolladen</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Premium Rollladen</div>
               </div>
             </div>
             <div style={{ padding: '24px' }}>
@@ -435,14 +435,14 @@ export default function Home() {
                 color: '#111827',
                 marginBottom: '12px'
               }}>
-                Rolladen
+                Rollladen
               </h3>
               <p style={{ 
                 color: '#6b7280',
                 marginBottom: '20px',
                 lineHeight: '1.6'
               }}>
-                Moderne Rolladen für optimalen Sonnenschutz, Sicherheit 
+                Moderne Rollladen für optimalen Sonnenschutz, Sicherheit 
                 und Energieeffizienz - manuell oder elektrisch.
               </p>
               <Link href="/fenster-konfigurator" style={{
@@ -455,7 +455,7 @@ export default function Home() {
                 display: 'inline-block',
                 transition: 'all 0.2s ease'
               }}>
-                Rolladen konfigurieren
+                Rollladen konfigurieren
               </Link>
             </div>
           </div>

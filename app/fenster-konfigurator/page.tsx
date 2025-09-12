@@ -531,7 +531,15 @@ export default function ConfiguratorPage() {
                   id="versand"
                   value={form.versand}
                   onChange={(e) => setK('versand', e.target.value as any)}
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  disabled={form.delivery === 'Abholung'}
+                  style={{ 
+                    width: '100%', 
+                    padding: '8px', 
+                    marginTop: '4px',
+                    backgroundColor: form.delivery === 'Abholung' ? '#f5f5f5' : 'white',
+                    color: form.delivery === 'Abholung' ? '#999' : 'black',
+                    cursor: form.delivery === 'Abholung' ? 'not-allowed' : 'pointer'
+                  }}
                 >
                   <option value="Standard">Standard Versand (89€, 3-5 Werktage)</option>
                   <option value="Premium">Premium Versand (149€, 1-2 Werktage)</option>
