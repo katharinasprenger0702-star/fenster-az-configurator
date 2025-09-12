@@ -103,8 +103,8 @@ export default function Home() {
               maxWidth: '600px',
               margin: '0 auto'
             }}>
-              Von der Auswahl bis zur Bestellung – 
-              in nur wenigen Schritten zu Ihrem individuellen Angebot.
+              Von der Auswahl bis zum Versand – 
+              in nur 3 einfachen Schritten zu Ihren maßgefertigten Fenstern.
             </p>
           </div>
 
@@ -200,41 +200,6 @@ export default function Home() {
                 boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
               }}>
                 3
-              </div>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: '700',
-                color: '#111827',
-                marginBottom: '12px'
-              }}>
-                Angebot erhalten
-              </h3>
-              <p style={{
-                color: '#6b7280',
-                lineHeight: '1.6'
-              }}>
-                Detailliertes Angebot mit allen Spezifikationen. 
-                Professionelle Beratung und individuelle Lösungen.
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div style={{ textAlign: 'center', position: 'relative' }}>
-              <div style={{
-                width: '80px',
-                height: '80px',
-                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 24px auto',
-                color: 'white',
-                fontSize: '2rem',
-                fontWeight: '800',
-                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.3)'
-              }}>
-                4
               </div>
               <h3 style={{
                 fontSize: '1.25rem',
