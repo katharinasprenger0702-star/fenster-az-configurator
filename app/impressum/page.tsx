@@ -65,7 +65,7 @@ export default function Impressum() {
                 marginBottom: '16px',
                 color: '#6b7280'
               }}>
-                <strong style={{ color: '#111827' }}>Fensterversand.com</strong> <span style={{ color: '#6b7280' }}>– Premium Fenster & Türen</span>
+                <strong style={{ color: '#111827' }}>Fenstermann24.de</strong> <span style={{ color: '#6b7280' }}>– Online‑Konfigurator</span>
               </p>
               <p style={{ 
                 fontSize: '1rem',
@@ -73,7 +73,7 @@ export default function Impressum() {
                 color: '#6b7280',
                 marginBottom: '20px'
               }}>
-                Fensterversand GmbH
+                AZ Fenster und Türen GmbH
               </p>
               <div style={{
                 background: '#f9fafb',
@@ -117,10 +117,10 @@ export default function Impressum() {
                 <strong>📞 Telefon:</strong> <a href="tel:+49-40-123456789" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>+49 (0) 40 123 456 789</a>
               </div>
               <div style={{ marginBottom: '12px' }}>
-                <strong>✉️ E-Mail:</strong> <a href="mailto:info@fensterversand.com" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>info@fensterversand.com</a>
+                <strong>✉️ E-Mail:</strong> <a href="mailto:info@fenstermann24.de" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>info@fenstermann24.de</a>
               </div>
               <div>
-                <strong>🌐 Internet:</strong> <a href="https://www.fensterversand.com" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>www.fensterversand.com</a>
+                <strong>🌐 Internet:</strong> <a href="https://www.fenstermann24.de" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '600' }}>www.fenstermann24.de</a>
               </div>
             </div>
           </div>

@@ -5,9 +5,9 @@ import type { ReactNode } from 'react';
 import Chatbot from './components/Chatbot';
 
 export const metadata = {
-  title: 'Fensterversand – Premium Fenster & Türen',
-  description: 'Fensterversand.com – Ihr zuverlässiger Partner für hochwertige Fenster & Türen. Schneller Versand, faire Preise, professionelle Beratung.',
-  keywords: 'Fensterversand, Fenster, Türen, Haustüren, PVC, Aluminium, Holz, Versand, Online-Shop',
+  title: 'Fenstermann24 – Online‑Konfigurator',
+  description: 'Fenstermann24.de – eine Marke der AZ Fenster und Türen GmbH. Fenster & Türen direkt online konfigurieren mit sofortiger Preisberechnung.',
+  keywords: 'Fenster, Türen, Haustüren, PVC, Aluminium, Holz, Konfigurator, Preiskalkulator, AZ Fenster',
   robots: 'index, follow'
 };
 
@@ -35,8 +35,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <circle cx="36" cy="30" r="2" fill="url(#handleGradient)"/>
               <rect x="34" y="29" width="4" height="2" rx="1" fill="url(#handleGradient)"/>
               
-              {/* Company initial "FV" for Fensterversand */}
-              <text x="24" y="18" textAnchor="middle" fontSize="7" fontWeight="bold" fill="url(#textGradient)">FV</text>
+              {/* Company initial "F24" for Fenstermann24 */}
+              <text x="24" y="18" textAnchor="middle" fontSize="8" fontWeight="bold" fill="url(#textGradient)">F24</text>
               
               <defs>
                 <linearGradient id="windowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -61,13 +61,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 </linearGradient>
               </defs>
             </svg>
-            <span style={{ color: '#2563eb' }}>Fensterversand | Premium Fenster & Türen</span>
+            <span style={{ color: '#2563eb' }}>Fenstermann24 | Online‑Konfigurator</span>
           </div>
           <nav style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
             <Link href="/" style={{marginRight:8, fontWeight: 600}}>Start</Link>
             <Link href="/fenster-konfigurator" style={{marginRight:8, fontWeight: 600}}>Konfigurator</Link>
             <Link href="/referenzen" style={{marginRight:8, fontWeight: 600}}>Referenzen</Link>
-            <Link href="/versand" style={{marginRight:8, fontWeight: 600}}>Versand</Link>
             <Link href="/faq" style={{marginRight:8, fontWeight: 600}}>FAQ</Link>
             <Link href="/impressum" style={{ fontWeight: 600 }}>Impressum</Link>
           </nav>
@@ -77,7 +76,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         
         <main className="container">{children}</main>
         <footer className="footer">
-          © {new Date().getFullYear()} Fensterversand.com — Premium Fenster & Türen Versand · <a href="/impressum">Impressum</a>
+          © {new Date().getFullYear()} Fenstermann24.de — eine Marke der AZ Fenster und Türen GmbH · <a href="/impressum">Impressum</a>
         </footer>
         <Chatbot />
       </body>
