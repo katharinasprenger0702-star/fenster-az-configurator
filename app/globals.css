@@ -698,6 +698,11 @@ td,th{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left}
   100% { transform:translateX(100%) translateY(100%) rotate(45deg); }
 }
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @keyframes float {
   0%, 100% { transform:translateY(0px); }
   50% { transform:translateY(-20px); }
