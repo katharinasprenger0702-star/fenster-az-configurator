@@ -415,6 +415,36 @@ export default function ConfiguratorPage() {
                 </select>
               </div>
             </div>
+
+            <div style={{ marginTop: '24px' }}>
+              <h3>Zusatzleistungen</h3>
+              <div className="grid" style={{ gap: 8 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.trickleVent}
+                    onChange={(e) => setK('trickleVent', e.target.checked)}
+                  />
+                  Lüftungsschlitze
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.insectScreen}
+                    onChange={(e) => setK('insectScreen', e.target.checked)}
+                  />
+                  Insektenschutz
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.oldWindowDisposal}
+                    onChange={(e) => setK('oldWindowDisposal', e.target.checked)}
+                  />
+                  Entsorgung der alten Fenster
+                </label>
+              </div>
+            </div>
           </div>
         )}
 
@@ -520,36 +550,6 @@ export default function ConfiguratorPage() {
                   <option value="Hamburg (Zone 1)">Hamburg (Zone 1)</option>
                   <option value="Zone 2">Zone 2</option>
                 </select>
-              </div>
-            </div>
-
-            <div style={{ marginTop: '24px' }}>
-              <h3>Zusatzleistungen</h3>
-              <div className="grid" style={{ gap: 8 }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.trickleVent}
-                    onChange={(e) => setK('trickleVent', e.target.checked)}
-                  />
-                  Lüftungsschlitze
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.insectScreen}
-                    onChange={(e) => setK('insectScreen', e.target.checked)}
-                  />
-                  Insektenschutz
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.oldWindowDisposal}
-                    onChange={(e) => setK('oldWindowDisposal', e.target.checked)}
-                  />
-                  Entsorgung der alten Fenster
-                </label>
               </div>
             </div>
           </div>
