@@ -534,8 +534,8 @@ export default function Home() {
               border: '1px solid #e5e7eb'
             }}>
               <div style={{ textAlign: 'center', color: '#9ca3af' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🔧</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Professionelle Montage</div>
+                <div style={{ fontSize: '3rem', marginBottom: '8px' }}>📦</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Professioneller Versand</div>
               </div>
             </div>
             <div style={{ padding: '24px' }}>
@@ -552,7 +552,7 @@ export default function Home() {
                 marginBottom: '20px',
                 lineHeight: '1.6'
               }}>
-                Kompletter Service von der Beratung bis zur fachgerechten Montage.
+                Kompletter Service von der Beratung bis zum fachgerechten Versand.
               </p>
               <Link href="/impressum" style={{
                 background: '#2563eb',
