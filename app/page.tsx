@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -304,19 +305,24 @@ export default function Home() {
             transition: 'all 0.2s ease',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
           }}>
-            {/* Photo placeholder */}
+            {/* Product image */}
             <div style={{
               height: '250px',
               background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '1px solid #e5e7eb'
+              border: '1px solid #e5e7eb',
+              position: 'relative',
+              overflow: 'hidden'
             }}>
-              <div style={{ textAlign: 'center', color: '#9ca3af' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🪟</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Premium Fenster</div>
-              </div>
+              <Image
+                src="/images/fenster.svg"
+                alt="Premium Fenster"
+                width={300}
+                height={250}
+                style={{ objectFit: 'contain' }}
+              />
             </div>
             <div style={{ padding: '24px' }}>
               <h3 style={{ 
@@ -359,19 +365,24 @@ export default function Home() {
             transition: 'all 0.2s ease',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
           }}>
-            {/* Photo placeholder */}
+            {/* Product image */}
             <div style={{
               height: '250px',
               background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '1px solid #e5e7eb'
+              border: '1px solid #e5e7eb',
+              position: 'relative',
+              overflow: 'hidden'
             }}>
-              <div style={{ textAlign: 'center', color: '#9ca3af' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🚪</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Designer Haustüren</div>
-              </div>
+              <Image
+                src="/images/haustueren.svg"
+                alt="Designer Haustüren"
+                width={300}
+                height={250}
+                style={{ objectFit: 'contain' }}
+              />
             </div>
             <div style={{ padding: '24px' }}>
               <h3 style={{ 
@@ -414,19 +425,24 @@ export default function Home() {
             transition: 'all 0.2s ease',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
           }}>
-            {/* Photo placeholder */}
+            {/* Product image */}
             <div style={{
               height: '250px',
               background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '1px solid #e5e7eb'
+              border: '1px solid #e5e7eb',
+              position: 'relative',
+              overflow: 'hidden'
             }}>
-              <div style={{ textAlign: 'center', color: '#9ca3af' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🎛️</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Premium Rollladen</div>
-              </div>
+              <Image
+                src="/images/rollladen.svg"
+                alt="Premium Rollladen"
+                width={300}
+                height={250}
+                style={{ objectFit: 'contain' }}
+              />
             </div>
             <div style={{ padding: '24px' }}>
               <h3 style={{ 
@@ -469,19 +485,24 @@ export default function Home() {
             transition: 'all 0.2s ease',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
           }}>
-            {/* Photo placeholder */}
+            {/* Product image */}
             <div style={{
               height: '250px',
               background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '1px solid #e5e7eb'
+              border: '1px solid #e5e7eb',
+              position: 'relative',
+              overflow: 'hidden'
             }}>
-              <div style={{ textAlign: 'center', color: '#9ca3af' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🏠</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Hochwertige Garagentore</div>
-              </div>
+              <Image
+                src="/images/garagentore.svg"
+                alt="Hochwertige Garagentore"
+                width={300}
+                height={250}
+                style={{ objectFit: 'contain' }}
+              />
             </div>
             <div style={{ padding: '24px' }}>
               <h3 style={{ 
@@ -524,19 +545,24 @@ export default function Home() {
             transition: 'all 0.2s ease',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
           }}>
-            {/* Photo placeholder */}
+            {/* Service image */}
             <div style={{
               height: '250px',
               background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '1px solid #e5e7eb'
+              border: '1px solid #e5e7eb',
+              position: 'relative',
+              overflow: 'hidden'
             }}>
-              <div style={{ textAlign: 'center', color: '#9ca3af' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '8px' }}>📦</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: '500' }}>Professioneller Versand</div>
-              </div>
+              <Image
+                src="/images/service.svg"
+                alt="Professioneller Versand"
+                width={300}
+                height={250}
+                style={{ objectFit: 'contain' }}
+              />
             </div>
             <div style={{ padding: '24px' }}>
               <h3 style={{ 
