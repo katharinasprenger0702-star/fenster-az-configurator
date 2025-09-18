@@ -50,7 +50,6 @@ const steps = [
   'Ausführung & Sicherheit',
   'Glas & Farbe',
   'Versand & Lieferung',
-  'Kundendaten',
   'Übersicht',
 ];
 
@@ -144,6 +143,7 @@ export default function ConfiguratorPage() {
   const [step, setStep] = useState(0);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [showCustomerDataModal, setShowCustomerDataModal] = useState(false);
 
   useEffect(() => {
     // Calculate prices for all supported products
@@ -182,6 +182,44 @@ export default function ConfiguratorPage() {
       }
     })();
   }, [form]);
+
+  // Function to handle initial checkout click - checks if customer data is complete
+  function handleCheckoutClick() {
+    // Check if customer data is complete
+    const customerDataValid = parsed.success && 
+      form.customerFirstName && 
+      form.customerLastName && 
+      form.customerEmail && 
+      form.customerPhone && 
+      form.customerStreet && 
+      form.customerCity && 
+      form.customerZip;
+
+    if (customerDataValid) {
+      // Customer data is complete, proceed directly to checkout
+      checkout();
+    } else {
+      // Customer data is incomplete, show modal
+      setShowCustomerDataModal(true);
+    }
+  }
+
+  // Function to handle customer data form submission
+  function handleCustomerDataSubmit() {
+    const customerDataValid = parsed.success && 
+      form.customerFirstName && 
+      form.customerLastName && 
+      form.customerEmail && 
+      form.customerPhone && 
+      form.customerStreet && 
+      form.customerCity && 
+      form.customerZip;
+
+    if (customerDataValid) {
+      setShowCustomerDataModal(false);
+      checkout();
+    }
+  }
 
   async function checkout() {
     if (!valid) return;
@@ -606,134 +644,8 @@ export default function ConfiguratorPage() {
           </div>
         )}
 
-        {/* === STEP 5: Kundendaten === */}
+        {/* === STEP 5: Übersicht === */}
         {step === 5 && (
-          <div>
-            <h2>Kundendaten</h2>
-            <div style={{ marginBottom: '24px' }}>
-              <h3>Ihre Kontaktdaten</h3>
-              <div className="grid" style={{ gap: 16, gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
-                <div>
-                  <label htmlFor="customerFirstName">Vorname *</label>
-                  <input
-                    id="customerFirstName"
-                    type="text"
-                    value={form.customerFirstName}
-                    onChange={(e) => setK('customerFirstName', e.target.value)}
-                    style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                    placeholder="Ihr Vorname"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="customerLastName">Nachname *</label>
-                  <input
-                    id="customerLastName"
-                    type="text"
-                    value={form.customerLastName}
-                    onChange={(e) => setK('customerLastName', e.target.value)}
-                    style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                    placeholder="Ihr Nachname"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="customerEmail">E-Mail *</label>
-                  <input
-                    id="customerEmail"
-                    type="email"
-                    value={form.customerEmail}
-                    onChange={(e) => setK('customerEmail', e.target.value)}
-                    style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                    placeholder="ihre.email@beispiel.de"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="customerPhone">Telefon *</label>
-                  <input
-                    id="customerPhone"
-                    type="tel"
-                    value={form.customerPhone}
-                    onChange={(e) => setK('customerPhone', e.target.value)}
-                    style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                    placeholder="+49 123 456789"
-                  />
-                </div>
-              </div>
-
-              <h3 style={{ marginTop: '24px' }}>Rechnungsadresse</h3>
-              <div className="grid" style={{ gap: 16, gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <label htmlFor="customerStreet">Straße und Hausnummer *</label>
-                  <input
-                    id="customerStreet"
-                    type="text"
-                    value={form.customerStreet}
-                    onChange={(e) => setK('customerStreet', e.target.value)}
-                    style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                    placeholder="Musterstraße 123"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="customerZip">PLZ *</label>
-                  <input
-                    id="customerZip"
-                    type="text"
-                    value={form.customerZip}
-                    onChange={(e) => setK('customerZip', e.target.value)}
-                    style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                    placeholder="12345"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="customerCity">Stadt *</label>
-                  <input
-                    id="customerCity"
-                    type="text"
-                    value={form.customerCity}
-                    onChange={(e) => setK('customerCity', e.target.value)}
-                    style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                    placeholder="Musterstadt"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="customerCountry">Land</label>
-                  <select
-                    id="customerCountry"
-                    value={form.customerCountry}
-                    onChange={(e) => setK('customerCountry', e.target.value)}
-                    style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                  >
-                    <option value="Deutschland">Deutschland</option>
-                    <option value="Österreich">Österreich</option>
-                    <option value="Schweiz">Schweiz</option>
-                  </select>
-                </div>
-              </div>
-
-              {!parsed.success && (
-                <div style={{ 
-                  marginTop: '16px', 
-                  padding: '12px', 
-                  backgroundColor: '#f8d7da', 
-                  color: '#721c24', 
-                  borderRadius: '6px',
-                  border: '1px solid #f5c6cb'
-                }}>
-                  <strong>Bitte korrigieren Sie folgende Fehler:</strong>
-                  <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
-                    {parsed.error?.issues
-                      .filter(issue => issue.path.some(p => typeof p === 'string' && p.startsWith('customer')))
-                      .map((issue, i) => (
-                        <li key={i}>{issue.message}</li>
-                      ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* === STEP 6: Übersicht === */}
-        {step === 6 && (
           <div>
             <h2>Übersicht</h2>
             <div style={{ marginBottom: '24px' }}>
@@ -894,9 +806,12 @@ export default function ConfiguratorPage() {
               </div>
             )}
 
-            {valid && (
+            {/* Show checkout button if basic configuration is complete (excluding customer data) */}
+            {parsed.success || (!parsed.success && parsed.error?.issues.every(issue => 
+              issue.path.some(p => typeof p === 'string' && p.startsWith('customer'))
+            )) ? (
               <button
-                onClick={checkout}
+                onClick={handleCheckoutClick}
                 disabled={isCheckoutLoading}
                 style={{
                   padding: '12px 24px',
@@ -924,7 +839,7 @@ export default function ConfiguratorPage() {
                 )}
                 {isCheckoutLoading ? 'Wird geladen...' : 'Jetzt bestellen'}
               </button>
-            )}
+            ) : null}
           </div>
         )}
 
@@ -961,6 +876,211 @@ export default function ConfiguratorPage() {
         </div>
       </div>
 
+      {/* Customer Data Modal */}
+      {showCustomerDataModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            padding: '24px',
+            maxWidth: '600px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ margin: 0 }}>Kundendaten eingeben</h2>
+              <button
+                onClick={() => setShowCustomerDataModal(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: '#6c757d'
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h3>Ihre Kontaktdaten</h3>
+              <div className="grid" style={{ gap: 16, gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
+                <div>
+                  <label htmlFor="modalCustomerFirstName">Vorname *</label>
+                  <input
+                    id="modalCustomerFirstName"
+                    type="text"
+                    value={form.customerFirstName}
+                    onChange={(e) => setK('customerFirstName', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="Ihr Vorname"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerLastName">Nachname *</label>
+                  <input
+                    id="modalCustomerLastName"
+                    type="text"
+                    value={form.customerLastName}
+                    onChange={(e) => setK('customerLastName', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="Ihr Nachname"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerEmail">E-Mail *</label>
+                  <input
+                    id="modalCustomerEmail"
+                    type="email"
+                    value={form.customerEmail}
+                    onChange={(e) => setK('customerEmail', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="ihre.email@beispiel.de"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerPhone">Telefon *</label>
+                  <input
+                    id="modalCustomerPhone"
+                    type="tel"
+                    value={form.customerPhone}
+                    onChange={(e) => setK('customerPhone', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="+49 123 456789"
+                  />
+                </div>
+              </div>
+
+              <h3 style={{ marginTop: '24px' }}>Rechnungsadresse</h3>
+              <div className="grid" style={{ gap: 16, gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label htmlFor="modalCustomerStreet">Straße und Hausnummer *</label>
+                  <input
+                    id="modalCustomerStreet"
+                    type="text"
+                    value={form.customerStreet}
+                    onChange={(e) => setK('customerStreet', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="Musterstraße 123"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerZip">PLZ *</label>
+                  <input
+                    id="modalCustomerZip"
+                    type="text"
+                    value={form.customerZip}
+                    onChange={(e) => setK('customerZip', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="12345"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerCity">Stadt *</label>
+                  <input
+                    id="modalCustomerCity"
+                    type="text"
+                    value={form.customerCity}
+                    onChange={(e) => setK('customerCity', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="Musterstadt"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerCountry">Land</label>
+                  <select
+                    id="modalCustomerCountry"
+                    value={form.customerCountry}
+                    onChange={(e) => setK('customerCountry', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                  >
+                    <option value="Deutschland">Deutschland</option>
+                    <option value="Österreich">Österreich</option>
+                    <option value="Schweiz">Schweiz</option>
+                  </select>
+                </div>
+              </div>
+
+              {!parsed.success && (
+                <div style={{ 
+                  marginTop: '16px', 
+                  padding: '12px', 
+                  backgroundColor: '#f8d7da', 
+                  color: '#721c24', 
+                  borderRadius: '6px',
+                  border: '1px solid #f5c6cb'
+                }}>
+                  <strong>Bitte korrigieren Sie folgende Fehler:</strong>
+                  <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
+                    {parsed.error?.issues
+                      .filter(issue => issue.path.some(p => typeof p === 'string' && p.startsWith('customer')))
+                      .map((issue, i) => (
+                        <li key={i}>{issue.message}</li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '12px', marginTop: '24px', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={() => setShowCustomerDataModal(false)}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#6c757d',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Abbrechen
+                </button>
+                <button
+                  onClick={handleCustomerDataSubmit}
+                  disabled={isCheckoutLoading}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: isCheckoutLoading ? '#6c757d' : '#007bff',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: isCheckoutLoading ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  {isCheckoutLoading && (
+                    <div style={{
+                      width: '16px',
+                      height: '16px',
+                      border: '2px solid #ffffff',
+                      borderTop: '2px solid transparent',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }} />
+                  )}
+                  {isCheckoutLoading ? 'Wird geladen...' : 'Zur Bezahlung'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
