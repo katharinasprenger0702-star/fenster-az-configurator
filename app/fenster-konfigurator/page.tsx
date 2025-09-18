@@ -33,6 +33,15 @@ const schema = z.object({
   oldWindowDisposal: z.boolean().default(false),
   delivery: z.enum(['Abholung','Hamburg (Zone 1)','Zone 2']).default('Abholung'),
   qty: z.coerce.number().int().min(1).max(50).default(1),
+  // Customer information
+  customerFirstName: z.string().min(1, 'Vorname ist erforderlich').default(''),
+  customerLastName: z.string().min(1, 'Nachname ist erforderlich').default(''),
+  customerEmail: z.string().email('Gültige E-Mail-Adresse erforderlich').default(''),
+  customerPhone: z.string().min(1, 'Telefonnummer ist erforderlich').default(''),
+  customerStreet: z.string().min(1, 'Straße ist erforderlich').default(''),
+  customerCity: z.string().min(1, 'Stadt ist erforderlich').default(''),
+  customerZip: z.string().min(1, 'PLZ ist erforderlich').default(''),
+  customerCountry: z.string().default('Deutschland'),
 });
 
 const steps = [
@@ -115,7 +124,10 @@ export default function ConfiguratorPage() {
     warmEdge: false, soundInsulation: false, safetyGlass: false, sunProtection: false,
     trickleVent: false, insectScreen: false, childLock: false,
     versand: 'Standard', oldWindowDisposal: false,
-    delivery: 'Abholung', qty: 1
+    delivery: 'Abholung', qty: 1,
+    // Customer information defaults
+    customerFirstName: '', customerLastName: '', customerEmail: '', customerPhone: '',
+    customerStreet: '', customerCity: '', customerZip: '', customerCountry: 'Deutschland'
   });
   const parsed = schema.safeParse(form);
   const valid = parsed.success;
@@ -129,6 +141,9 @@ export default function ConfiguratorPage() {
     eur_sell_gross: number;
   }>({ base_pln: 0, eur_buy_net: 0, eur_sell_net: 0, eur_sell_gross: 0 });
   const [step, setStep] = useState(0);
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [showCustomerDataModal, setShowCustomerDataModal] = useState(false);
 
   useEffect(() => {
     // Calculate prices for all supported products
@@ -168,53 +183,117 @@ export default function ConfiguratorPage() {
     })();
   }, [form]);
 
+  // Function to handle initial checkout click - checks if customer data is complete
+  function handleCheckoutClick() {
+    // Check if customer data is complete
+    const customerDataValid = parsed.success && 
+      form.customerFirstName && 
+      form.customerLastName && 
+      form.customerEmail && 
+      form.customerPhone && 
+      form.customerStreet && 
+      form.customerCity && 
+      form.customerZip;
+
+    if (customerDataValid) {
+      // Customer data is complete, proceed directly to checkout
+      checkout();
+    } else {
+      // Customer data is incomplete, show modal
+      setShowCustomerDataModal(true);
+    }
+  }
+
+  // Function to handle customer data form submission
+  function handleCustomerDataSubmit() {
+    const customerDataValid = parsed.success && 
+      form.customerFirstName && 
+      form.customerLastName && 
+      form.customerEmail && 
+      form.customerPhone && 
+      form.customerStreet && 
+      form.customerCity && 
+      form.customerZip;
+
+    if (customerDataValid) {
+      setShowCustomerDataModal(false);
+      checkout();
+    }
+  }
+
   async function checkout() {
     if (!valid) return;
-    const stripe = await getStripe();
-    const name = configToLabel(form);
-    const successUrl = `${window.location.origin}/success`;
-    const cancelUrl = `${window.location.origin}/cancel`;
-
-    // Gesamtpreis (brutto) aus Lookup für Stripe berechnen
-    const { DATA, filter } = pickDatasetAndFilter(form);
-    const basePerUnit = lookupPriceEURFrom(DATA, form.width_mm, form.height_mm, filter) ?? 0;
-    const qty = Number(form.qty ?? 1);
-    const vat = 0.19;
-    const totalForCheckout = (basePerUnit * qty) * (1 + vat);
-
-    const payload = {
-      lineItems: [{
-        quantity: form.qty,
-        price_data: {
-          currency: 'eur',
-          unit_amount: Math.round(totalForCheckout * 100),
-          product_data: {
-            name,
-            description: 'Individuelle Konfiguration (inkl. MwSt.)'
-          }
-        },
-      }],
-      successUrl,
-      cancelUrl,
-      metadata: { config: JSON.stringify(form), label: name }
-    };
-
-    const checkoutRes = await fetch('/api/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-
-    const checkoutData = await checkoutRes.json();
     
-    if (checkoutData.sessionId) {
-      const result = await stripe?.redirectToCheckout({
-        sessionId: checkoutData.sessionId,
+    setIsCheckoutLoading(true);
+    setCheckoutError(null);
+    
+    try {
+      const stripe = await getStripe();
+      const name = configToLabel(form);
+      const successUrl = `${window.location.origin}/success`;
+      const cancelUrl = `${window.location.origin}/cancel`;
+
+      // Gesamtpreis (brutto) aus Lookup für Stripe berechnen
+      const { DATA, filter } = pickDatasetAndFilter(form);
+      const basePerUnit = lookupPriceEURFrom(DATA, form.width_mm, form.height_mm, filter) ?? 0;
+      const qty = Number(form.qty ?? 1);
+      const vat = 0.19;
+      const totalForCheckout = (basePerUnit * qty) * (1 + vat);
+
+      const payload = {
+        lineItems: [{
+          quantity: form.qty,
+          price_data: {
+            currency: 'eur',
+            unit_amount: Math.round(totalForCheckout * 100),
+            product_data: {
+              name,
+              description: 'Individuelle Konfiguration (inkl. MwSt.)'
+            }
+          },
+        }],
+        successUrl,
+        cancelUrl,
+        customer_email: form.customerEmail,
+        billing_address_collection: 'required',
+        metadata: { 
+          config: JSON.stringify(form), 
+          label: name,
+          customerName: `${form.customerFirstName} ${form.customerLastName}`,
+          customerEmail: form.customerEmail,
+          customerPhone: form.customerPhone,
+          customerAddress: `${form.customerStreet}, ${form.customerZip} ${form.customerCity}, ${form.customerCountry}`
+        }
+      };
+
+      const checkoutRes = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       });
+
+      const checkoutData = await checkoutRes.json();
       
-      if (result?.error) {
-        console.error('Stripe checkout error:', result.error);
+      if (checkoutData.error) {
+        throw new Error(checkoutData.error);
       }
+      
+      if (checkoutData.sessionId) {
+        const result = await stripe?.redirectToCheckout({
+          sessionId: checkoutData.sessionId,
+        });
+        
+        if (result?.error) {
+          throw new Error(result.error.message || 'Stripe checkout error');
+        }
+      } else {
+        throw new Error('No session ID received from checkout API');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      setCheckoutError(error instanceof Error ? error.message : 'Ein Fehler ist beim Checkout aufgetreten');
+    } finally {
+      setIsCheckoutLoading(false);
     }
   }
 
@@ -588,6 +667,17 @@ export default function ConfiguratorPage() {
               </div>
             </div>
 
+            {/* Customer Information Display */}
+            <div style={{ marginBottom: '24px' }}>
+              <h3>Kundendaten</h3>
+              <div className="config-summary" style={{ padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                <div><strong>Name:</strong> {form.customerFirstName} {form.customerLastName}</div>
+                <div><strong>E-Mail:</strong> {form.customerEmail}</div>
+                <div><strong>Telefon:</strong> {form.customerPhone}</div>
+                <div><strong>Adresse:</strong> {form.customerStreet}, {form.customerZip} {form.customerCity}, {form.customerCountry}</div>
+              </div>
+            </div>
+
             {/* Price Display */}
             <div style={{ marginBottom: '24px' }}>
               <h3>Preisberechnung</h3>
@@ -703,23 +793,53 @@ export default function ConfiguratorPage() {
               </div>
             )}
 
-            {valid && (
+            {checkoutError && (
+              <div style={{ 
+                marginTop: '16px', 
+                padding: '12px', 
+                backgroundColor: '#f8d7da', 
+                color: '#721c24', 
+                borderRadius: '6px',
+                border: '1px solid #f5c6cb'
+              }}>
+                <strong>Fehler beim Checkout:</strong> {checkoutError}
+              </div>
+            )}
+
+            {/* Show checkout button if basic configuration is complete (excluding customer data) */}
+            {parsed.success || (!parsed.success && parsed.error?.issues.every(issue => 
+              issue.path.some(p => typeof p === 'string' && p.startsWith('customer'))
+            )) ? (
               <button
-                onClick={checkout}
+                onClick={handleCheckoutClick}
+                disabled={isCheckoutLoading}
                 style={{
                   padding: '12px 24px',
-                  backgroundColor: '#007bff',
+                  backgroundColor: isCheckoutLoading ? '#6c757d' : '#007bff',
                   color: 'white',
                   border: 'none',
                   borderRadius: '6px',
                   fontSize: '16px',
-                  cursor: 'pointer',
-                  marginTop: '16px'
+                  cursor: isCheckoutLoading ? 'not-allowed' : 'pointer',
+                  marginTop: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
                 }}
               >
-                Jetzt bestellen
+                {isCheckoutLoading && (
+                  <div style={{
+                    width: '16px',
+                    height: '16px',
+                    border: '2px solid #ffffff',
+                    borderTop: '2px solid transparent',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite'
+                  }} />
+                )}
+                {isCheckoutLoading ? 'Wird geladen...' : 'Jetzt bestellen'}
               </button>
-            )}
+            ) : null}
           </div>
         )}
 
@@ -756,6 +876,211 @@ export default function ConfiguratorPage() {
         </div>
       </div>
 
+      {/* Customer Data Modal */}
+      {showCustomerDataModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            padding: '24px',
+            maxWidth: '600px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ margin: 0 }}>Kundendaten eingeben</h2>
+              <button
+                onClick={() => setShowCustomerDataModal(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: '#6c757d'
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h3>Ihre Kontaktdaten</h3>
+              <div className="grid" style={{ gap: 16, gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
+                <div>
+                  <label htmlFor="modalCustomerFirstName">Vorname *</label>
+                  <input
+                    id="modalCustomerFirstName"
+                    type="text"
+                    value={form.customerFirstName}
+                    onChange={(e) => setK('customerFirstName', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="Ihr Vorname"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerLastName">Nachname *</label>
+                  <input
+                    id="modalCustomerLastName"
+                    type="text"
+                    value={form.customerLastName}
+                    onChange={(e) => setK('customerLastName', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="Ihr Nachname"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerEmail">E-Mail *</label>
+                  <input
+                    id="modalCustomerEmail"
+                    type="email"
+                    value={form.customerEmail}
+                    onChange={(e) => setK('customerEmail', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="ihre.email@beispiel.de"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerPhone">Telefon *</label>
+                  <input
+                    id="modalCustomerPhone"
+                    type="tel"
+                    value={form.customerPhone}
+                    onChange={(e) => setK('customerPhone', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="+49 123 456789"
+                  />
+                </div>
+              </div>
+
+              <h3 style={{ marginTop: '24px' }}>Rechnungsadresse</h3>
+              <div className="grid" style={{ gap: 16, gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label htmlFor="modalCustomerStreet">Straße und Hausnummer *</label>
+                  <input
+                    id="modalCustomerStreet"
+                    type="text"
+                    value={form.customerStreet}
+                    onChange={(e) => setK('customerStreet', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="Musterstraße 123"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerZip">PLZ *</label>
+                  <input
+                    id="modalCustomerZip"
+                    type="text"
+                    value={form.customerZip}
+                    onChange={(e) => setK('customerZip', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="12345"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerCity">Stadt *</label>
+                  <input
+                    id="modalCustomerCity"
+                    type="text"
+                    value={form.customerCity}
+                    onChange={(e) => setK('customerCity', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                    placeholder="Musterstadt"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modalCustomerCountry">Land</label>
+                  <select
+                    id="modalCustomerCountry"
+                    value={form.customerCountry}
+                    onChange={(e) => setK('customerCountry', e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '4px', border: '1px solid #ddd', borderRadius: '4px' }}
+                  >
+                    <option value="Deutschland">Deutschland</option>
+                    <option value="Österreich">Österreich</option>
+                    <option value="Schweiz">Schweiz</option>
+                  </select>
+                </div>
+              </div>
+
+              {!parsed.success && (
+                <div style={{ 
+                  marginTop: '16px', 
+                  padding: '12px', 
+                  backgroundColor: '#f8d7da', 
+                  color: '#721c24', 
+                  borderRadius: '6px',
+                  border: '1px solid #f5c6cb'
+                }}>
+                  <strong>Bitte korrigieren Sie folgende Fehler:</strong>
+                  <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
+                    {parsed.error?.issues
+                      .filter(issue => issue.path.some(p => typeof p === 'string' && p.startsWith('customer')))
+                      .map((issue, i) => (
+                        <li key={i}>{issue.message}</li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '12px', marginTop: '24px', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={() => setShowCustomerDataModal(false)}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#6c757d',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Abbrechen
+                </button>
+                <button
+                  onClick={handleCustomerDataSubmit}
+                  disabled={isCheckoutLoading}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: isCheckoutLoading ? '#6c757d' : '#007bff',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: isCheckoutLoading ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  {isCheckoutLoading && (
+                    <div style={{
+                      width: '16px',
+                      height: '16px',
+                      border: '2px solid #ffffff',
+                      borderTop: '2px solid transparent',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }} />
+                  )}
+                  {isCheckoutLoading ? 'Wird geladen...' : 'Zur Bezahlung'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
