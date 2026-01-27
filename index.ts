@@ -5,3 +5,4 @@ export { default as balkontuerenPrices } from "./groups/balkontueren.data";
 export { default as schiebetuerenPrices } from "./groups/schiebetueren.data";
 export { default as haustuerenPrices } from "./groups/haustueren.data";
 export { default as sonstigesPrices } from "./groups/sonstiges.data";
+export { default as garagentorePrices } from "./groups/garagentore.data";
