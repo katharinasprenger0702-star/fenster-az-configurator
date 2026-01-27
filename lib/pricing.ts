@@ -11,13 +11,18 @@ export type Lieferzone = 'Abholung' | 'Hamburg (Zone 1)' | 'Zone 2';
 // System types for different product categories
 export type FensterSystem = 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster';
 export type TuerSystem = 'Kunststoff-Türen' | 'Holz-Türen' | 'Aluminium-Türen' | 'Holz-Aluminium-Türen';
+export type PSKTuerSystem = 'Kunststoff-PSK Türen' | 'Holz' | 'Aluminium' | 'Kunststoff-Alu';
+export type HebeschiebetuerSystem = 'Kunststoff' | 'Aluminium' | 'Kunststoff-Alu';
+export type SchiebetuerSystem = PSKTuerSystem | HebeschiebetuerSystem;
+export type BalkontuerSystem = 'Kunststoffbalkontüren' | 'Holzbalkontüren' | 'Aluminiumbalkontüren' | 'Kunststoff-Alubalkontüren';
 export type RollladenSystem = 'Aufputz-Rollladen' | 'Unterputz-Rollladen' | 'Vorbau-Rollladen' | 'Aufsatz-Rollladen';
 export type GaragentorSystem = 'Sektionaltor' | 'Schwingtor' | 'Rolltor' | 'Flügeltor';
-export type SystemType = FensterSystem | TuerSystem | RollladenSystem | GaragentorSystem;
+export type SystemType = FensterSystem | TuerSystem | SchiebetuerSystem | BalkontuerSystem | RollladenSystem | GaragentorSystem;
 
 export interface Config {
   product: Product;
-  system?: 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster' | 'Kunststoffbalkontüren' | 'Holzbalkontüren' | 'Aluminiumbalkontüren' | 'Kunststoff-Alubalkontüren';
+  doorType?: 'PSK-Türen' | 'Hebeschiebetüren';
+  system?: SystemType;
   serie?: 'Iglo 5' | 'Standard' | 'Premium';
   width_mm: number;
   height_mm: number;
@@ -194,13 +199,21 @@ export function configToLabel(c: Config) {
 }
 
 // Helper function to get available system options for each product type
-export function getSystemsForProduct(product: Product): SystemType[] {
+export function getSystemsForProduct(product: Product, doorType?: 'PSK-Türen' | 'Hebeschiebetüren'): SystemType[] {
   switch (product) {
     case 'Fenster':
       return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
-    case 'Haustüren':
     case 'Balkontüren':
+      return ['Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren'];
     case 'Schiebetüren':
+      if (doorType === 'PSK-Türen') {
+        return ['Kunststoff-PSK Türen', 'Holz', 'Aluminium', 'Kunststoff-Alu'];
+      } else if (doorType === 'Hebeschiebetüren') {
+        return ['Kunststoff', 'Aluminium', 'Kunststoff-Alu'];
+      }
+      // Default to Hebeschiebetüren systems if no door type selected
+      return ['Kunststoff', 'Aluminium', 'Kunststoff-Alu'];
+    case 'Haustüren':
       return ['Kunststoff-Türen', 'Holz-Türen', 'Aluminium-Türen', 'Holz-Aluminium-Türen'];
     case 'Rollladen':
       return ['Aufputz-Rollladen', 'Unterputz-Rollladen', 'Vorbau-Rollladen', 'Aufsatz-Rollladen'];
@@ -212,7 +225,7 @@ export function getSystemsForProduct(product: Product): SystemType[] {
 }
 
 // Helper function to get default system for each product type
-export function getDefaultSystemForProduct(product: Product): SystemType {
-  const systems = getSystemsForProduct(product);
+export function getDefaultSystemForProduct(product: Product, doorType?: 'PSK-Türen' | 'Hebeschiebetüren'): SystemType {
+  const systems = getSystemsForProduct(product, doorType);
   return systems[0];
 }
