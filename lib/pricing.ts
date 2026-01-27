@@ -43,12 +43,6 @@ export interface Config {
   oldWindowDisposal: boolean;
   delivery: Lieferzone;
   qty: number;
-  // Garage-specific options
-  driveType?: 'Manuell' | 'Elektrisch' | 'Elektrisch mit Notentriegelung';
-  remoteControl?: boolean;
-  serviceDoor?: boolean;
-  windows?: boolean;
-  lightBarrier?: boolean;
   // Customer information
   customerFirstName: string;
   customerLastName: string;
@@ -128,20 +122,6 @@ const PER_UNIT_ADDONS = {
   trickleVent: 35,
   insectScreen: 59,
   childLock: 12
-};
-
-// Garage-specific addons
-const GARAGE_DRIVE_SURCHARGE = {
-  'Manuell': 0,
-  'Elektrisch': 450,
-  'Elektrisch mit Notentriegelung': 650
-};
-
-const GARAGE_ADDONS = {
-  remoteControl: 89,
-  serviceDoor: 450,
-  windows: 150,
-  lightBarrier: 120
 };
 
 const VERSAND_PER_UNIT: Record<Versand, number> = {

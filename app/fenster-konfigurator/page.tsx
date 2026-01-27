@@ -36,12 +36,6 @@ const schema = z.object({
   oldWindowDisposal: z.boolean().default(false),
   delivery: z.enum(['Abholung','Hamburg (Zone 1)','Zone 2']).default('Abholung'),
   qty: z.coerce.number().int().min(1).max(50).default(1),
-  // Garage-specific options
-  driveType: z.enum(['Manuell', 'Elektrisch', 'Elektrisch mit Notentriegelung']).default('Manuell').optional(),
-  remoteControl: z.boolean().default(false),
-  serviceDoor: z.boolean().default(false),
-  windows: z.boolean().default(false),
-  lightBarrier: z.boolean().default(false),
   // Customer information
   customerFirstName: z.string().min(1, 'Vorname ist erforderlich').default(''),
   customerLastName: z.string().min(1, 'Nachname ist erforderlich').default(''),
@@ -128,8 +122,6 @@ export default function ConfiguratorPage() {
     trickleVent: false, insectScreen: false, childLock: false,
     versand: 'Standard', oldWindowDisposal: false,
     delivery: 'Abholung', qty: 1,
-    // Garage-specific defaults
-    driveType: 'Manuell', remoteControl: false, serviceDoor: false, windows: false, lightBarrier: false,
     // Customer information defaults
     customerFirstName: '', customerLastName: '', customerEmail: '', customerPhone: '',
     customerStreet: '', customerCity: '', customerZip: '', customerCountry: 'Deutschland'
