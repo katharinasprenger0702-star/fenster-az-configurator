@@ -2,7 +2,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { z } from 'zod';
 import getStripe from '@/lib/stripeClient';
-import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
+import { calculatePrice, configToLabel, type Config, getSystemsForProduct, getDefaultSystemForProduct } from '@/lib/pricing';
 import { validateTechnicalCompliance, getRecommendations, type ValidationResult } from '@/lib/technical-validation';
 // Preis-Daten jetzt über index.ts (saubere zentrale Sammelstelle)
 import {
@@ -12,7 +12,16 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
-  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster']).default('Kunststofffenster').optional(),
+  system: z.enum([
+    // Fenster systems
+    'Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster',
+    // Türen systems
+    'Kunststoff-Türen', 'Holz-Türen', 'Aluminium-Türen', 'Holz-Aluminium-Türen',
+    // Rollladen systems
+    'Aufputz-Rollladen', 'Unterputz-Rollladen', 'Vorbau-Rollladen', 'Aufsatz-Rollladen',
+    // Garagentore systems
+    'Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'
+  ]).optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -330,6 +339,9 @@ export default function ConfiguratorPage() {
                   className={['product-option', form.product === product && 'selected'].filter(Boolean).join(' ')}
                   onClick={() => {
                     setK('product', product as any);
+                    // Update system when product changes
+                    const newDefaultSystem = getDefaultSystemForProduct(product as any);
+                    setK('system', newDefaultSystem as any);
                     // Update opening type when product changes
                     const openingTypes = getOpeningTypesForProduct(product);
                     if (!openingTypes.includes(form.opening)) {
@@ -361,7 +373,7 @@ export default function ConfiguratorPage() {
             <div style={{ marginTop: '24px' }}>
               <h3>System auswählen</h3>
               <div className="grid" style={{ gap: 16 }}>
-                {['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'].map(system => (
+                {getSystemsForProduct(form.product).map(system => (
                   <div
                     key={system}
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
