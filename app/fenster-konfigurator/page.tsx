@@ -2,7 +2,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { z } from 'zod';
 import getStripe from '@/lib/stripeClient';
-import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
+import { calculatePrice, configToLabel, type Config, getSystemsForProduct, getDefaultSystemForProduct } from '@/lib/pricing';
 import { validateTechnicalCompliance, getRecommendations, type ValidationResult } from '@/lib/technical-validation';
 // Preis-Daten jetzt über index.ts (saubere zentrale Sammelstelle)
 import {
@@ -14,6 +14,7 @@ const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
   doorType: z.enum(['PSK-Türen', 'Hebeschiebetüren']).optional(),
   system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster', 'Kunststoff-PSK Türen', 'Holz', 'Aluminium', 'Kunststoff-Alu', 'Kunststoff']).default('Kunststofffenster').optional(),
+  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster', 'Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren']).default('Kunststofffenster').optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -74,22 +75,15 @@ function getOpeningTypesForProduct(product: string): string[] {
   }
 }
 
-type SystemType = 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster' | 'Kunststoff-PSK Türen' | 'Holz' | 'Aluminium' | 'Kunststoff-Alu' | 'Kunststoff';
-
-function getSystemsForProductAndDoorType(product: string, doorType?: string): SystemType[] {
-  // For Schiebetüren (terrace doors), system options depend on door type
-  if (product === 'Schiebetüren') {
-    if (doorType === 'PSK-Türen') {
-      return ['Kunststoff-PSK Türen', 'Holz', 'Aluminium', 'Kunststoff-Alu'];
-    } else if (doorType === 'Hebeschiebetüren') {
-      return ['Kunststoff', 'Aluminium', 'Kunststoff-Alu'];
-    }
-    // Default to Hebeschiebetüren systems if no door type selected
-    return ['Kunststoff', 'Aluminium', 'Kunststoff-Alu'];
+function getSystemsForProduct(product: string): string[] {
+  switch (product) {
+    case 'Fenster':
+      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
+    case 'Balkontüren':
+      return ['Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren'];
+    default:
+      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
   }
-  
-  // For all other products, use the standard systems
-  return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
 }
 
 function pickDatasetAndFilter(form: any) {
@@ -349,14 +343,20 @@ export default function ConfiguratorPage() {
                   className={['product-option', form.product === product && 'selected'].filter(Boolean).join(' ')}
                   onClick={() => {
                     setK('product', product as any);
+                    // Update system when product changes
+                    const newDefaultSystem = getDefaultSystemForProduct(product as any);
+                    setK('system', newDefaultSystem as any);
                     // Update opening type when product changes
                     const openingTypes = getOpeningTypesForProduct(product);
                     if (!openingTypes.includes(form.opening)) {
                       setK('opening', openingTypes[0]);
                     }
-                    // Set default door type for Schiebetüren
-                    if (product === 'Schiebetüren' && !form.doorType) {
-                      setK('doorType', 'Hebeschiebetüren');
+                    // Update system when product changes
+                    const systemOptions = getSystemsForProduct(product);
+                    if (form.system && !systemOptions.includes(form.system)) {
+                      setK('system', systemOptions[0] as any);
+                    } else if (!form.system) {
+                      setK('system', systemOptions[0] as any);
                     }
                   }}
                   style={{
@@ -416,7 +416,7 @@ export default function ConfiguratorPage() {
             <div style={{ marginTop: '24px' }}>
               <h3>System auswählen</h3>
               <div className="grid" style={{ gap: 16 }}>
-                {getSystemsForProductAndDoorType(form.product, form.doorType).map(system => (
+                {getSystemsForProduct(form.product).map(system => (
                   <div
                     key={system}
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}

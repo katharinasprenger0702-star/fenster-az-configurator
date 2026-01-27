@@ -8,10 +8,16 @@ export type SecurityLevel = 'Basis' | 'RC1N' | 'RC2N';
 export type Versand = 'Standard' | 'Premium' | 'Express';
 export type Lieferzone = 'Abholung' | 'Hamburg (Zone 1)' | 'Zone 2';
 
+// System types for different product categories
+export type FensterSystem = 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster';
+export type TuerSystem = 'Kunststoff-Türen' | 'Holz-Türen' | 'Aluminium-Türen' | 'Holz-Aluminium-Türen';
+export type RollladenSystem = 'Aufputz-Rollladen' | 'Unterputz-Rollladen' | 'Vorbau-Rollladen' | 'Aufsatz-Rollladen';
+export type GaragentorSystem = 'Sektionaltor' | 'Schwingtor' | 'Rolltor' | 'Flügeltor';
+export type SystemType = FensterSystem | TuerSystem | RollladenSystem | GaragentorSystem;
+
 export interface Config {
   product: Product;
-  doorType?: 'PSK-Türen' | 'Hebeschiebetüren';
-  system?: 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster' | 'Kunststoff-PSK Türen' | 'Holz' | 'Aluminium' | 'Kunststoff-Alu' | 'Kunststoff';
+  system?: 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster' | 'Kunststoffbalkontüren' | 'Holzbalkontüren' | 'Aluminiumbalkontüren' | 'Kunststoff-Alubalkontüren';
   serie?: 'Iglo 5' | 'Standard' | 'Premium';
   width_mm: number;
   height_mm: number;
@@ -185,4 +191,28 @@ export function calculatePrice(c: Config): PriceBreakdown {
 
 export function configToLabel(c: Config) {
   return `${c.product} ${c.width_mm}×${c.height_mm} mm, ${c.material} ${c.profile}, ${c.opening}, ${c.glazing} Verglasung, ${c.color}, Griff ${c.handle}, Sicherheit ${c.security}`;
+}
+
+// Helper function to get available system options for each product type
+export function getSystemsForProduct(product: Product): SystemType[] {
+  switch (product) {
+    case 'Fenster':
+      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
+    case 'Haustüren':
+    case 'Balkontüren':
+    case 'Schiebetüren':
+      return ['Kunststoff-Türen', 'Holz-Türen', 'Aluminium-Türen', 'Holz-Aluminium-Türen'];
+    case 'Rollladen':
+      return ['Aufputz-Rollladen', 'Unterputz-Rollladen', 'Vorbau-Rollladen', 'Aufsatz-Rollladen'];
+    case 'Garagentore':
+      return ['Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'];
+    default:
+      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
+  }
+}
+
+// Helper function to get default system for each product type
+export function getDefaultSystemForProduct(product: Product): SystemType {
+  const systems = getSystemsForProduct(product);
+  return systems[0];
 }
