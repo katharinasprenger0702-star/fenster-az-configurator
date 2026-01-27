@@ -188,7 +188,8 @@ export function calculatePrice(c: Config): PriceBreakdown {
   // Add garage-specific addons
   if (c.product === 'Garagentore') {
     if (c.driveType && c.driveType !== 'Manuell') {
-      perUnit.push({ label: `Antrieb: ${c.driveType}`, amount: GARAGE_DRIVE_SURCHARGE[c.driveType] });
+      const driveSurcharge = GARAGE_DRIVE_SURCHARGE[c.driveType] ?? 0;
+      perUnit.push({ label: `Antrieb: ${c.driveType}`, amount: driveSurcharge });
     }
     if (c.remoteControl) perUnit.push({ label: 'Fernbedienung', amount: GARAGE_ADDONS.remoteControl });
     if (c.serviceDoor) perUnit.push({ label: 'Servicetür', amount: GARAGE_ADDONS.serviceDoor });

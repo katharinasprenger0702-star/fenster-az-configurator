@@ -581,7 +581,7 @@ export default function ConfiguratorPage() {
                           checked={form.lightBarrier}
                           onChange={(e) => setK('lightBarrier', e.target.checked)}
                         />
-                        Lichtschranke / Fotowell
+                        Lichtschranke / Fotowelle
                       </label>
                     )}
                   </div>
