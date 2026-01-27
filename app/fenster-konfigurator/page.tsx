@@ -541,8 +541,8 @@ export default function ConfiguratorPage() {
               </div>
             </div>
             
-            {/* Real-time dimension validation feedback for step 1 */}
-            {step === 1 && validation.errors.length > 0 && (
+            {/* Real-time dimension validation feedback */}
+            {validation.errors.length > 0 && (
               <div style={{
                 marginTop: '16px',
                 padding: '12px',
