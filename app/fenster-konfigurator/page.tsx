@@ -12,16 +12,7 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
-  system: z.enum([
-    // Fenster systems
-    'Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster',
-    // Türen systems
-    'Kunststoff-Türen', 'Holz-Türen', 'Aluminium-Türen', 'Holz-Aluminium-Türen',
-    // Rollladen systems
-    'Aufputz-Rollladen', 'Unterputz-Rollladen', 'Vorbau-Rollladen', 'Aufsatz-Rollladen',
-    // Garagentore systems
-    'Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'
-  ]).optional(),
+  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster', 'Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren']).default('Kunststofffenster').optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -79,6 +70,17 @@ function getOpeningTypesForProduct(product: string): string[] {
       return ['Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'];
     default:
       return ['Dreh-Kipp links'];
+  }
+}
+
+function getSystemsForProduct(product: string): string[] {
+  switch (product) {
+    case 'Fenster':
+      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
+    case 'Balkontüren':
+      return ['Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren'];
+    default:
+      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
   }
 }
 
@@ -346,6 +348,13 @@ export default function ConfiguratorPage() {
                     const openingTypes = getOpeningTypesForProduct(product);
                     if (!openingTypes.includes(form.opening)) {
                       setK('opening', openingTypes[0]);
+                    }
+                    // Update system when product changes
+                    const systemOptions = getSystemsForProduct(product);
+                    if (form.system && !systemOptions.includes(form.system)) {
+                      setK('system', systemOptions[0] as any);
+                    } else if (!form.system) {
+                      setK('system', systemOptions[0] as any);
                     }
                   }}
                   style={{
