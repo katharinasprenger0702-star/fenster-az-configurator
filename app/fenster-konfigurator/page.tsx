@@ -2,7 +2,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { z } from 'zod';
 import getStripe from '@/lib/stripeClient';
-import { calculatePrice, configToLabel, type Config } from '@/lib/pricing';
+import { calculatePrice, configToLabel, type Config, getSystemsForProduct, getDefaultSystemForProduct } from '@/lib/pricing';
 import { validateTechnicalCompliance, getRecommendations, type ValidationResult } from '@/lib/technical-validation';
 // Preis-Daten jetzt über index.ts (saubere zentrale Sammelstelle)
 import {
@@ -341,6 +341,9 @@ export default function ConfiguratorPage() {
                   className={['product-option', form.product === product && 'selected'].filter(Boolean).join(' ')}
                   onClick={() => {
                     setK('product', product as any);
+                    // Update system when product changes
+                    const newDefaultSystem = getDefaultSystemForProduct(product as any);
+                    setK('system', newDefaultSystem as any);
                     // Update opening type when product changes
                     const openingTypes = getOpeningTypesForProduct(product);
                     if (!openingTypes.includes(form.opening)) {
