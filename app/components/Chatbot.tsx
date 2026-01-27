@@ -106,7 +106,8 @@ function validateMeasurementsAndProvideGuidance(measurements: MeasurementMatch[]
   // Create a basic config for validation
   const config: Config = {
     product: productType as any,
-    system: 'IGLO 5',
+    system: 'Kunststofffenster',
+    serie: 'Iglo 5',
     width_mm: measurement.width,
     height_mm: measurement.height,
     material: 'PVC',
