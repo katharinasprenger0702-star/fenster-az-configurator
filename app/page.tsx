@@ -22,7 +22,7 @@ export default function Home() {
             marginBottom: '32px',
             border: '1px solid rgba(37, 99, 235, 0.15)'
           }}>
-            Fenstermann24.de · Online‑Konfigurator seit 1995
+            Fenstermann24.de · Online‑Konfigurator
           </div>
           
           <h1 style={{ 
