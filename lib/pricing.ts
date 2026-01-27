@@ -8,6 +8,11 @@ export type SecurityLevel = 'Basis' | 'RC1N' | 'RC2N';
 export type Versand = 'Standard' | 'Premium' | 'Express';
 export type Lieferzone = 'Abholung' | 'Hamburg (Zone 1)' | 'Zone 2';
 
+// Rollladen-specific types
+export type RollladenDriveType = 'Gurtantrieb' | 'Kurbel' | 'Motor' | 'Funk/Smart' | 'Solar';
+export type RollladenBoxType = 'Rund' | 'Eckig' | 'Unterputz' | 'Soft-Line';
+export type RollladenMaterial = 'Aluminium' | 'PVC';
+
 // System types for different product categories
 export type FensterSystem = 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster';
 export type TuerSystem = 'Kunststoff-Türen' | 'Holz-Türen' | 'Aluminium-Türen' | 'Holz-Aluminium-Türen';
@@ -17,7 +22,7 @@ export type SystemType = FensterSystem | TuerSystem | RollladenSystem | Garagent
 
 export interface Config {
   product: Product;
-  system?: 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster' | 'Kunststoffbalkontüren' | 'Holzbalkontüren' | 'Aluminiumbalkontüren' | 'Kunststoff-Alubalkontüren';
+  system?: SystemType;
   serie?: 'Iglo 5' | 'Standard' | 'Premium';
   width_mm: number;
   height_mm: number;
@@ -48,6 +53,12 @@ export interface Config {
   customerCity: string;
   customerZip: string;
   customerCountry: string;
+  // Rollladen-specific fields
+  rollladenDriveType?: RollladenDriveType;
+  rollladenBoxType?: RollladenBoxType;
+  rollladenMaterial?: RollladenMaterial;
+  rollladenLamellenColor?: string;
+  rollladenKastenColor?: string;
 }
 
 export interface PriceBreakdown {

@@ -12,7 +12,12 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
-  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster', 'Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren']).default('Kunststofffenster').optional(),
+  system: z.enum([
+    'Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster',
+    'Kunststoff-Türen', 'Holz-Türen', 'Aluminium-Türen', 'Holz-Aluminium-Türen',
+    'Aufputz-Rollladen', 'Unterputz-Rollladen', 'Vorbau-Rollladen', 'Aufsatz-Rollladen',
+    'Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'
+  ]).default('Kunststofffenster').optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -43,6 +48,12 @@ const schema = z.object({
   customerCity: z.string().min(1, 'Stadt ist erforderlich').default(''),
   customerZip: z.string().min(1, 'PLZ ist erforderlich').default(''),
   customerCountry: z.string().default('Deutschland'),
+  // Rollladen-specific fields
+  rollladenDriveType: z.enum(['Gurtantrieb', 'Kurbel', 'Motor', 'Funk/Smart', 'Solar']).optional(),
+  rollladenBoxType: z.enum(['Rund', 'Eckig', 'Unterputz', 'Soft-Line']).optional(),
+  rollladenMaterial: z.enum(['Aluminium', 'PVC']).optional(),
+  rollladenLamellenColor: z.string().optional(),
+  rollladenKastenColor: z.string().optional(),
 });
 
 const steps = [
@@ -70,17 +81,6 @@ function getOpeningTypesForProduct(product: string): string[] {
       return ['Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'];
     default:
       return ['Dreh-Kipp links'];
-  }
-}
-
-function getSystemsForProduct(product: string): string[] {
-  switch (product) {
-    case 'Fenster':
-      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
-    case 'Balkontüren':
-      return ['Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren'];
-    default:
-      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
   }
 }
 
@@ -139,7 +139,13 @@ export default function ConfiguratorPage() {
     delivery: 'Abholung', qty: 1,
     // Customer information defaults
     customerFirstName: '', customerLastName: '', customerEmail: '', customerPhone: '',
-    customerStreet: '', customerCity: '', customerZip: '', customerCountry: 'Deutschland'
+    customerStreet: '', customerCity: '', customerZip: '', customerCountry: 'Deutschland',
+    // Rollladen-specific defaults
+    rollladenDriveType: 'Gurtantrieb',
+    rollladenBoxType: 'Eckig',
+    rollladenMaterial: 'Aluminium',
+    rollladenLamellenColor: 'Weiß',
+    rollladenKastenColor: 'Weiß'
   });
   const parsed = schema.safeParse(form);
   const valid = parsed.success;
@@ -350,7 +356,7 @@ export default function ConfiguratorPage() {
                       setK('opening', openingTypes[0]);
                     }
                     // Update system when product changes
-                    const systemOptions = getSystemsForProduct(product);
+                    const systemOptions = getSystemsForProduct(product as any);
                     if (form.system && !systemOptions.includes(form.system)) {
                       setK('system', systemOptions[0] as any);
                     } else if (!form.system) {
@@ -497,83 +503,180 @@ export default function ConfiguratorPage() {
         {/* === STEP 2: Ausführung & Sicherheit === */}
         {step === 2 && (
           <div>
-            <h2>Ausführung & Sicherheit</h2>
-            <div className="grid" style={{ gap: 16 }}>
+            <h2>{form.product === 'Rollladen' ? 'Rollladen-Konfiguration' : 'Ausführung & Sicherheit'}</h2>
+            
+            {form.product === 'Rollladen' ? (
+              /* Rollladen-specific configuration */
               <div>
-                <label htmlFor="material">Material</label>
-                <select
-                  id="material"
-                  value={form.material}
-                  onChange={(e) => setK('material', e.target.value as any)}
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                >
-                  <option value="PVC">PVC</option>
-                  <option value="Aluminium">Aluminium</option>
-                  <option value="Holz">Holz</option>
-                </select>
+                <div className="grid" style={{ gap: 16 }}>
+                  <div>
+                    <label htmlFor="rollladenMaterial">Material</label>
+                    <select
+                      id="rollladenMaterial"
+                      value={form.rollladenMaterial}
+                      onChange={(e) => setK('rollladenMaterial', e.target.value as any)}
+                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                    >
+                      <option value="Aluminium">Aluminium</option>
+                      <option value="PVC">PVC</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="rollladenDriveType">Antriebsart</label>
+                    <select
+                      id="rollladenDriveType"
+                      value={form.rollladenDriveType}
+                      onChange={(e) => setK('rollladenDriveType', e.target.value as any)}
+                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                    >
+                      <option value="Gurtantrieb">Gurtantrieb (manuell)</option>
+                      <option value="Kurbel">Kurbel (manuell)</option>
+                      <option value="Motor">Motor (elektrisch)</option>
+                      <option value="Funk/Smart">Funk/Smart Home</option>
+                      <option value="Solar">Solar-Antrieb</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="rollladenBoxType">Kastenform</label>
+                    <select
+                      id="rollladenBoxType"
+                      value={form.rollladenBoxType}
+                      onChange={(e) => setK('rollladenBoxType', e.target.value as any)}
+                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                    >
+                      <option value="Eckig">Eckig</option>
+                      <option value="Rund">Rund</option>
+                      <option value="Unterputz">Unterputz</option>
+                      <option value="Soft-Line">Soft-Line</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="rollladenLamellenColor">Lamellenfarbe</label>
+                    <select
+                      id="rollladenLamellenColor"
+                      value={form.rollladenLamellenColor}
+                      onChange={(e) => setK('rollladenLamellenColor', e.target.value)}
+                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                    >
+                      <option value="Weiß">Weiß</option>
+                      <option value="Creme">Creme</option>
+                      <option value="Braun">Braun</option>
+                      <option value="Grau">Grau</option>
+                      <option value="Anthrazit">Anthrazit</option>
+                      <option value="RAL">RAL (nach Wunsch)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="rollladenKastenColor">Kastenfarbe</label>
+                    <select
+                      id="rollladenKastenColor"
+                      value={form.rollladenKastenColor}
+                      onChange={(e) => setK('rollladenKastenColor', e.target.value)}
+                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                    >
+                      <option value="Weiß">Weiß</option>
+                      <option value="Creme">Creme</option>
+                      <option value="Braun">Braun</option>
+                      <option value="Grau">Grau</option>
+                      <option value="Anthrazit">Anthrazit</option>
+                      <option value="RAL">RAL (nach Wunsch)</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div style={{ marginTop: '24px' }}>
+                  <h3>Zusatzoptionen</h3>
+                  <div className="grid" style={{ gap: 8 }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <input
+                        type="checkbox"
+                        checked={form.insectScreen}
+                        onChange={(e) => setK('insectScreen', e.target.checked)}
+                      />
+                      Integrierter Insektenschutz
+                    </label>
+                  </div>
+                </div>
               </div>
+            ) : (
+              /* Standard window/door configuration */
               <div>
-                <label htmlFor="profile">Profil</label>
-                <select
-                  id="profile"
-                  value={form.profile}
-                  onChange={(e) => setK('profile', e.target.value as any)}
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                >
-                  <option value="Standard">Standard</option>
-                  <option value="ThermoPlus">ThermoPlus</option>
-                  <option value="Premium">Premium</option>
-                </select>
-              </div>
-              <div>
-                <label htmlFor="handle">Griff</label>
-                <select
-                  id="handle"
-                  value={form.handle}
-                  onChange={(e) => setK('handle', e.target.value as any)}
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                >
-                  <option value="Standard">Standard</option>
-                  <option value="Premium">Premium</option>
-                </select>
-              </div>
-              <div>
-                <label htmlFor="security">Sicherheit</label>
-                <select
-                  id="security"
-                  value={form.security}
-                  onChange={(e) => setK('security', e.target.value as any)}
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                >
-                  <option value="Basis">Basis</option>
-                  <option value="RC1N">RC1N</option>
-                  <option value="RC2N">RC2N</option>
-                </select>
-              </div>
-            </div>
+                <div className="grid" style={{ gap: 16 }}>
+                  <div>
+                    <label htmlFor="material">Material</label>
+                    <select
+                      id="material"
+                      value={form.material}
+                      onChange={(e) => setK('material', e.target.value as any)}
+                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                    >
+                      <option value="PVC">PVC</option>
+                      <option value="Aluminium">Aluminium</option>
+                      <option value="Holz">Holz</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="profile">Profil</label>
+                    <select
+                      id="profile"
+                      value={form.profile}
+                      onChange={(e) => setK('profile', e.target.value as any)}
+                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                    >
+                      <option value="Standard">Standard</option>
+                      <option value="ThermoPlus">ThermoPlus</option>
+                      <option value="Premium">Premium</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="handle">Griff</label>
+                    <select
+                      id="handle"
+                      value={form.handle}
+                      onChange={(e) => setK('handle', e.target.value as any)}
+                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                    >
+                      <option value="Standard">Standard</option>
+                      <option value="Premium">Premium</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="security">Sicherheit</label>
+                    <select
+                      id="security"
+                      value={form.security}
+                      onChange={(e) => setK('security', e.target.value as any)}
+                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                    >
+                      <option value="Basis">Basis</option>
+                      <option value="RC1N">RC1N</option>
+                      <option value="RC2N">RC2N</option>
+                    </select>
+                  </div>
+                </div>
 
-            <div style={{ marginTop: '24px' }}>
-              <h3>Zusatzleistungen</h3>
-              <div className="grid" style={{ gap: 8 }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.trickleVent}
-                    onChange={(e) => setK('trickleVent', e.target.checked)}
-                  />
-                  Lüftungsschlitze
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.insectScreen}
-                    onChange={(e) => setK('insectScreen', e.target.checked)}
-                  />
-                  Insektenschutz
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
+                <div style={{ marginTop: '24px' }}>
+                  <h3>Zusatzleistungen</h3>
+                  <div className="grid" style={{ gap: 8 }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <input
+                        type="checkbox"
+                        checked={form.trickleVent}
+                        onChange={(e) => setK('trickleVent', e.target.checked)}
+                      />
+                      Lüftungsschlitze
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <input
+                        type="checkbox"
+                        checked={form.insectScreen}
+                        onChange={(e) => setK('insectScreen', e.target.checked)}
+                      />
+                      Insektenschutz
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <input
+                        type="checkbox"
                     checked={form.oldWindowDisposal}
                     onChange={(e) => setK('oldWindowDisposal', e.target.checked)}
                   />
@@ -583,76 +686,99 @@ export default function ConfiguratorPage() {
             </div>
           </div>
         )}
+          </div>
+        )}
 
         {/* === STEP 3: Glas & Farbe === */}
         {step === 3 && (
           <div>
-            <h2>Glas & Farbe</h2>
-            <div className="grid" style={{ gap: 16 }}>
+            {form.product === 'Rollladen' ? (
+              /* For Rollladen, step 3 can be skipped or show a message */
               <div>
-                <label htmlFor="glazing">Verglasung</label>
-                <select
-                  id="glazing"
-                  value={form.glazing}
-                  onChange={(e) => setK('glazing', e.target.value as any)}
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                >
-                  <option value="2-fach">2-fach</option>
-                  <option value="3-fach">3-fach</option>
-                </select>
+                <h2>Zusätzliche Optionen</h2>
+                <p style={{ color: '#666', marginBottom: '24px' }}>
+                  Für Rollläden wurden die wichtigsten Konfigurationen bereits im vorherigen Schritt festgelegt.
+                </p>
+                <div style={{ marginTop: '24px' }}>
+                  <h3>Hinweise</h3>
+                  <ul style={{ color: '#666', lineHeight: 1.6 }}>
+                    <li>Material und Farbe wurden bereits ausgewählt</li>
+                    <li>Antriebsart und Kastenform sind konfiguriert</li>
+                    <li>Sie können direkt zum nächsten Schritt fortfahren</li>
+                  </ul>
+                </div>
               </div>
+            ) : (
+              /* Standard window/door glass and color options */
               <div>
-                <label htmlFor="color">Farbe</label>
-                <select
-                  id="color"
-                  value={form.color}
-                  onChange={(e) => setK('color', e.target.value as any)}
-                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                >
-                  <option value="Weiß">Weiß</option>
-                  <option value="RAL">RAL</option>
-                  <option value="Holzdekor">Holzdekor</option>
-                </select>
-              </div>
-            </div>
+                <h2>Glas & Farbe</h2>
+                <div className="grid" style={{ gap: 16 }}>
+                  <div>
+                    <label htmlFor="glazing">Verglasung</label>
+                    <select
+                      id="glazing"
+                      value={form.glazing}
+                      onChange={(e) => setK('glazing', e.target.value as any)}
+                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                    >
+                      <option value="2-fach">2-fach</option>
+                      <option value="3-fach">3-fach</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="color">Farbe</label>
+                    <select
+                      id="color"
+                      value={form.color}
+                      onChange={(e) => setK('color', e.target.value as any)}
+                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                    >
+                      <option value="Weiß">Weiß</option>
+                      <option value="RAL">RAL</option>
+                      <option value="Holzdekor">Holzdekor</option>
+                    </select>
+                  </div>
+                </div>
 
-            <div style={{ marginTop: '24px' }}>
-              <h3>Glasoptionen</h3>
-              <div className="grid" style={{ gap: 8 }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.warmEdge}
-                    onChange={(e) => setK('warmEdge', e.target.checked)}
-                  />
-                  Warme Kante
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.soundInsulation}
-                    onChange={(e) => setK('soundInsulation', e.target.checked)}
-                  />
-                  Schallschutz
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.safetyGlass}
-                    onChange={(e) => setK('safetyGlass', e.target.checked)}
-                  />
-                  Sicherheitsglas
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.sunProtection}
+                <div style={{ marginTop: '24px' }}>
+                  <h3>Glasoptionen</h3>
+                  <div className="grid" style={{ gap: 8 }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <input
+                        type="checkbox"
+                        checked={form.warmEdge}
+                        onChange={(e) => setK('warmEdge', e.target.checked)}
+                      />
+                      Warme Kante
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <input
+                        type="checkbox"
+                        checked={form.soundInsulation}
+                        onChange={(e) => setK('soundInsulation', e.target.checked)}
+                      />
+                      Schallschutz
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <input
+                        type="checkbox"
+                        checked={form.safetyGlass}
+                        onChange={(e) => setK('safetyGlass', e.target.checked)}
+                      />
+                      Sicherheitsglas
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <input
+                        type="checkbox"
+                        checked={form.sunProtection}
                     onChange={(e) => setK('sunProtection', e.target.checked)}
                   />
                   Sonnenschutz
                 </label>
               </div>
             </div>
+          </div>
+        )}
           </div>
         )}
 
