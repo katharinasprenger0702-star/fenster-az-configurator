@@ -11,7 +11,7 @@ export type Lieferzone = 'Abholung' | 'Hamburg (Zone 1)' | 'Zone 2';
 export interface Config {
   product: Product;
   system?: 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster';
-  serie?: string; // e.g., 'Iglo 5', 'Standard', 'Premium'
+  serie?: 'Iglo 5' | 'Standard' | 'Premium';
   width_mm: number;
   height_mm: number;
   material: Material;

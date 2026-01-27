@@ -13,7 +13,7 @@ import { lookupPriceEURFrom } from '@/lookup';
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
   system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster']).default('Kunststofffenster').optional(),
-  serie: z.string().optional(),
+  serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
   material: z.enum(['PVC', 'Aluminium', 'Holz']).default('PVC'),
@@ -367,8 +367,10 @@ export default function ConfiguratorPage() {
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
                     onClick={() => {
                       setK('system', system as any);
-                      // Reset serie when switching away from Kunststofffenster
-                      if (system !== 'Kunststofffenster') {
+                      // Set default serie when switching to Kunststofffenster, reset when switching away
+                      if (system === 'Kunststofffenster' && !form.serie) {
+                        setK('serie', 'Iglo 5');
+                      } else if (system !== 'Kunststofffenster') {
                         setK('serie', undefined);
                       }
                     }}
@@ -391,7 +393,7 @@ export default function ConfiguratorPage() {
               <div style={{ marginTop: '24px' }}>
                 <h3>Serie auswählen</h3>
                 <div className="grid" style={{ gap: 16 }}>
-                  {['Iglo 5', 'Standard', 'Premium'].map(serie => (
+                  {(['Iglo 5', 'Standard', 'Premium'] as const).map(serie => (
                     <div
                       key={serie}
                       className={['serie-option', form.serie === serie && 'selected'].filter(Boolean).join(' ')}
