@@ -89,7 +89,7 @@ function getSystemsForProductLocal(product: string): string[] {
 
 function getConfiguratorLinkForSystem(product: string, system: string): string | null {
   // Haustüren (all systems) use the Inotherm configurator
-  if (product === 'Haustüren' && (system === 'Kunststoff-Türen' || system === 'Holz-Türen' || system === 'Aluminium-Türen')) {
+  if (product === 'Haustüren' && getSystemsForProductLocal(product).includes(system)) {
     return 'https://doordesigner.inotherm-tuer.de/configurator/?partnerCode=51842#/home/0,0,0,0,0/0,0,0,0,0/0,0,0,0/0,0,0,0/0,0,0/1,0,0,0';
   }
   return null;
