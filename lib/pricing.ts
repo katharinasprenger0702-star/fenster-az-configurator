@@ -8,12 +8,12 @@ export type SecurityLevel = 'Basis' | 'RC1N' | 'RC2N';
 export type Versand = 'Standard' | 'Premium' | 'Express';
 export type Lieferzone = 'Abholung' | 'Hamburg (Zone 1)' | 'Zone 2';
 
-// System types for different product categories
-export type FensterSystem = 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster';
-export type TuerSystem = 'Kunststoff-Türen' | 'Holz-Türen' | 'Aluminium-Türen' | 'Holz-Aluminium-Türen';
-export type RollladenSystem = 'Aufputz-Rollladen' | 'Unterputz-Rollladen' | 'Vorbau-Rollladen' | 'Aufsatz-Rollladen';
-export type GaragentorSystem = 'Sektionaltor' | 'Schwingtor' | 'Rolltor' | 'Flügeltor';
-export type SystemType = FensterSystem | TuerSystem | RollladenSystem | GaragentorSystem;
+// Material types for different product categories
+export type FensterMaterial = 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster';
+export type TuerMaterial = 'Kunststoff-Türen' | 'Holz-Türen' | 'Aluminium-Türen' | 'Holz-Aluminium-Türen';
+export type RollladenMaterial = 'Aufputz-Rollladen' | 'Unterputz-Rollladen' | 'Vorbau-Rollladen' | 'Aufsatz-Rollladen';
+export type GaragentorMaterial = 'Sektionaltor' | 'Schwingtor' | 'Rolltor' | 'Flügeltor';
+export type MaterialType = FensterMaterial | TuerMaterial | RollladenMaterial | GaragentorMaterial;
 
 export interface Config {
   product: Product;
@@ -193,8 +193,8 @@ export function configToLabel(c: Config) {
   return `${c.product} ${c.width_mm}×${c.height_mm} mm, ${c.material} ${c.profile}, ${c.opening}, ${c.glazing} Verglasung, ${c.color}, Griff ${c.handle}, Sicherheit ${c.security}`;
 }
 
-// Helper function to get available system options for each product type
-export function getSystemsForProduct(product: Product): SystemType[] {
+// Helper function to get available material options for each product type
+export function getMaterialsForProduct(product: Product): MaterialType[] {
   switch (product) {
     case 'Fenster':
       return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
@@ -211,8 +211,8 @@ export function getSystemsForProduct(product: Product): SystemType[] {
   }
 }
 
-// Helper function to get default system for each product type
-export function getDefaultSystemForProduct(product: Product): SystemType {
-  const systems = getSystemsForProduct(product);
-  return systems[0];
+// Helper function to get default material for each product type
+export function getDefaultMaterialForProduct(product: Product): MaterialType {
+  const materials = getMaterialsForProduct(product);
+  return materials[0];
 }

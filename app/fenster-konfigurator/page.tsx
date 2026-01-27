@@ -2,7 +2,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { z } from 'zod';
 import getStripe from '@/lib/stripeClient';
-import { calculatePrice, configToLabel, type Config, getSystemsForProduct, getDefaultSystemForProduct } from '@/lib/pricing';
+import { calculatePrice, configToLabel, type Config, getMaterialsForProduct, getDefaultMaterialForProduct } from '@/lib/pricing';
 import { validateTechnicalCompliance, getRecommendations, type ValidationResult } from '@/lib/technical-validation';
 // Preis-Daten jetzt über index.ts (saubere zentrale Sammelstelle)
 import {
@@ -73,7 +73,7 @@ function getOpeningTypesForProduct(product: string): string[] {
   }
 }
 
-function getSystemsForProduct(product: string): string[] {
+function getMaterialsForProductLocal(product: string): string[] {
   switch (product) {
     case 'Fenster':
       return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
@@ -341,20 +341,20 @@ export default function ConfiguratorPage() {
                   className={['product-option', form.product === product && 'selected'].filter(Boolean).join(' ')}
                   onClick={() => {
                     setK('product', product as any);
-                    // Update system when product changes
-                    const newDefaultSystem = getDefaultSystemForProduct(product as any);
-                    setK('system', newDefaultSystem as any);
+                    // Update material when product changes
+                    const newDefaultMaterial = getDefaultMaterialForProduct(product as any);
+                    setK('system', newDefaultMaterial as any);
                     // Update opening type when product changes
                     const openingTypes = getOpeningTypesForProduct(product);
                     if (!openingTypes.includes(form.opening)) {
                       setK('opening', openingTypes[0]);
                     }
-                    // Update system when product changes
-                    const systemOptions = getSystemsForProduct(product);
-                    if (form.system && !systemOptions.includes(form.system)) {
-                      setK('system', systemOptions[0] as any);
+                    // Update material when product changes
+                    const materialOptions = getMaterialsForProductLocal(product);
+                    if (form.system && !materialOptions.includes(form.system)) {
+                      setK('system', materialOptions[0] as any);
                     } else if (!form.system) {
-                      setK('system', systemOptions[0] as any);
+                      setK('system', materialOptions[0] as any);
                     }
                   }}
                   style={{
@@ -378,32 +378,32 @@ export default function ConfiguratorPage() {
               ))}
             </div>
 
-            {/* System Selection */}
+            {/* Material Selection */}
             <div style={{ marginTop: '24px' }}>
-              <h3>System auswählen</h3>
+              <h3>Material auswählen</h3>
               <div className="grid" style={{ gap: 16 }}>
-                {getSystemsForProduct(form.product).map(system => (
+                {getMaterialsForProductLocal(form.product).map(material => (
                   <div
-                    key={system}
-                    className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
+                    key={material}
+                    className={['system-option', form.system === material && 'selected'].filter(Boolean).join(' ')}
                     onClick={() => {
-                      setK('system', system as any);
+                      setK('system', material as any);
                       // Set default serie when switching to Kunststofffenster, reset when switching away
-                      if (system === 'Kunststofffenster' && !form.serie) {
+                      if (material === 'Kunststofffenster' && !form.serie) {
                         setK('serie', 'Iglo 5');
-                      } else if (system !== 'Kunststofffenster') {
+                      } else if (material !== 'Kunststofffenster') {
                         setK('serie', undefined);
                       }
                     }}
                     style={{
                       padding: '16px',
-                      border: form.system === system ? '2px solid #007bff' : '1px solid #ddd',
+                      border: form.system === material ? '2px solid #007bff' : '1px solid #ddd',
                       borderRadius: '8px',
                       cursor: 'pointer',
                       textAlign: 'center'
                     }}
                   >
-                    <div style={{ fontWeight: 'bold' }}>{system}</div>
+                    <div style={{ fontWeight: 'bold' }}>{material}</div>
                   </div>
                 ))}
               </div>
@@ -707,10 +707,10 @@ export default function ConfiguratorPage() {
               <h3>Ihre Konfiguration</h3>
               <div className="config-summary" style={{ padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
                 <div><strong>Produkt:</strong> {form.product}</div>
-                {form.system && <div><strong>System:</strong> {form.system}</div>}
+                {form.system && <div><strong>Material:</strong> {form.system}</div>}
                 {form.serie && <div><strong>Serie:</strong> {form.serie}</div>}
                 <div><strong>Abmessungen:</strong> {form.width_mm} × {form.height_mm} mm</div>
-                <div><strong>Material:</strong> {form.material}</div>
+                <div><strong>Basismaterial:</strong> {form.material}</div>
                 <div><strong>Profil:</strong> {form.profile}</div>
                 <div><strong>Öffnungsart:</strong> {form.opening}</div>
                 <div><strong>Verglasung:</strong> {form.glazing}</div>
