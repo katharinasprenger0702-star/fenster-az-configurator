@@ -355,13 +355,6 @@ export default function ConfiguratorPage() {
                     if (!openingTypes.includes(form.opening)) {
                       setK('opening', openingTypes[0]);
                     }
-                    // Update system when product changes
-                    const systemOptions = getSystemsForProduct(product as any);
-                    if (form.system && !systemOptions.includes(form.system)) {
-                      setK('system', systemOptions[0] as any);
-                    } else if (!form.system) {
-                      setK('system', systemOptions[0] as any);
-                    }
                   }}
                   style={{
                     padding: '16px',
