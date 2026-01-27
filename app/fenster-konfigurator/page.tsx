@@ -12,6 +12,7 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
+  doorType: z.enum(['PSK-Türen', 'Hebeschiebetüren']).optional(),
   system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster']).default('Kunststofffenster').optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
@@ -71,6 +72,22 @@ function getOpeningTypesForProduct(product: string): string[] {
     default:
       return ['Dreh-Kipp links'];
   }
+}
+
+function getSystemsForProductAndDoorType(product: string, doorType?: string): string[] {
+  // For Schiebetüren (terrace doors), system options depend on door type
+  if (product === 'Schiebetüren') {
+    if (doorType === 'PSK-Türen') {
+      return ['Kunststoff-PSK Türen', 'Holz', 'Aluminium', 'Kunststoff-Alu'];
+    } else if (doorType === 'Hebeschiebetüren') {
+      return ['Kunststoff', 'Aluminium', 'Kunststoff-Alu'];
+    }
+    // Default to Hebeschiebetüren systems if no door type selected
+    return ['Kunststoff', 'Aluminium', 'Kunststoff-Alu'];
+  }
+  
+  // For all other products, use the standard systems
+  return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
 }
 
 function pickDatasetAndFilter(form: any) {
@@ -335,6 +352,10 @@ export default function ConfiguratorPage() {
                     if (!openingTypes.includes(form.opening)) {
                       setK('opening', openingTypes[0]);
                     }
+                    // Set default door type for Schiebetüren
+                    if (product === 'Schiebetüren' && !form.doorType) {
+                      setK('doorType', 'Hebeschiebetüren');
+                    }
                   }}
                   style={{
                     padding: '16px',
@@ -357,11 +378,43 @@ export default function ConfiguratorPage() {
               ))}
             </div>
 
+            {/* Door Type Selection for Schiebetüren */}
+            {form.product === 'Schiebetüren' && (
+              <div style={{ marginTop: '24px' }}>
+                <h3>Türtyp auswählen</h3>
+                <div className="grid" style={{ gap: 16 }}>
+                  {(['PSK-Türen', 'Hebeschiebetüren'] as const).map(doorType => (
+                    <div
+                      key={doorType}
+                      className={['door-type-option', form.doorType === doorType && 'selected'].filter(Boolean).join(' ')}
+                      onClick={() => {
+                        setK('doorType', doorType);
+                        // Reset system when door type changes to ensure valid selection
+                        const availableSystems = getSystemsForProductAndDoorType(form.product, doorType);
+                        if (form.system && !availableSystems.includes(form.system)) {
+                          setK('system', availableSystems[0] as any);
+                        }
+                      }}
+                      style={{
+                        padding: '16px',
+                        border: form.doorType === doorType ? '2px solid #007bff' : '1px solid #ddd',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold' }}>{doorType}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* System Selection */}
             <div style={{ marginTop: '24px' }}>
               <h3>System auswählen</h3>
               <div className="grid" style={{ gap: 16 }}>
-                {['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'].map(system => (
+                {getSystemsForProductAndDoorType(form.product, form.doorType).map(system => (
                   <div
                     key={system}
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}

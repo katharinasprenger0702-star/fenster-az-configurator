@@ -10,6 +10,7 @@ export type Lieferzone = 'Abholung' | 'Hamburg (Zone 1)' | 'Zone 2';
 
 export interface Config {
   product: Product;
+  doorType?: 'PSK-Türen' | 'Hebeschiebetüren';
   system?: 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster';
   serie?: 'Iglo 5' | 'Standard' | 'Premium';
   width_mm: number;
