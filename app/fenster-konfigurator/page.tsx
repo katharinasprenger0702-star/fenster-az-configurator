@@ -13,6 +13,7 @@ import { lookupPriceEURFrom } from '@/lookup';
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
   doorType: z.enum(['PSK-Türen', 'Hebeschiebetüren']).optional(),
+  // System uses z.string() because valid values are dynamically determined by getSystemsForProduct()
   system: z.string().optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
@@ -331,9 +332,11 @@ export default function ConfiguratorPage() {
                   className={['product-option', form.product === product && 'selected'].filter(Boolean).join(' ')}
                   onClick={() => {
                     setK('product', product as any);
-                    // Set default door type for Schiebetüren
+                    // Set default door type for Schiebetüren, clear it for other products
                     if (product === 'Schiebetüren' && !form.doorType) {
                       setK('doorType', 'Hebeschiebetüren');
+                    } else if (product !== 'Schiebetüren' && form.doorType) {
+                      setK('doorType', undefined);
                     }
                     // Update system when product changes
                     const doorTypeForSystem = product === 'Schiebetüren' ? (form.doorType || 'Hebeschiebetüren') : undefined;
