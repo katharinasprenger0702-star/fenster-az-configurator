@@ -12,7 +12,8 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
-  system: z.enum(['IGLO 5', 'Standard', 'Premium']).default('IGLO 5').optional(),
+  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster']).default('Kunststofffenster').optional(),
+  serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
   material: z.enum(['PVC', 'Aluminium', 'Holz']).default('PVC'),
@@ -118,7 +119,7 @@ function pickDatasetAndFilter(form: any) {
 
 export default function ConfiguratorPage() {
   const [form, setForm] = useState<Config>({
-    product: 'Fenster', system: 'IGLO 5', width_mm: 1200, height_mm: 1200,
+    product: 'Fenster', system: 'Kunststofffenster', serie: 'Iglo 5', width_mm: 1200, height_mm: 1200,
     material: 'PVC', profile: 'Standard', opening: 'Dreh-Kipp links',
     glazing: '2-fach', color: 'Weiß', handle: 'Standard', security: 'Basis',
     warmEdge: false, soundInsulation: false, safetyGlass: false, sunProtection: false,
@@ -360,11 +361,19 @@ export default function ConfiguratorPage() {
             <div style={{ marginTop: '24px' }}>
               <h3>System auswählen</h3>
               <div className="grid" style={{ gap: 16 }}>
-                {['IGLO 5', 'Standard', 'Premium'].map(system => (
+                {['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'].map(system => (
                   <div
                     key={system}
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
-                    onClick={() => setK('system', system as any)}
+                    onClick={() => {
+                      setK('system', system as any);
+                      // Set default serie when switching to Kunststofffenster, reset when switching away
+                      if (system === 'Kunststofffenster' && !form.serie) {
+                        setK('serie', 'Iglo 5');
+                      } else if (system !== 'Kunststofffenster') {
+                        setK('serie', undefined);
+                      }
+                    }}
                     style={{
                       padding: '16px',
                       border: form.system === system ? '2px solid #007bff' : '1px solid #ddd',
@@ -378,6 +387,31 @@ export default function ConfiguratorPage() {
                 ))}
               </div>
             </div>
+
+            {/* Serie Selection for Kunststofffenster */}
+            {form.system === 'Kunststofffenster' && (
+              <div style={{ marginTop: '24px' }}>
+                <h3>Serie auswählen</h3>
+                <div className="grid" style={{ gap: 16 }}>
+                  {(['Iglo 5', 'Standard', 'Premium'] as const).map(serie => (
+                    <div
+                      key={serie}
+                      className={['serie-option', form.serie === serie && 'selected'].filter(Boolean).join(' ')}
+                      onClick={() => setK('serie', serie)}
+                      style={{
+                        padding: '16px',
+                        border: form.serie === serie ? '2px solid #007bff' : '1px solid #ddd',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold' }}>{serie}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -653,6 +687,7 @@ export default function ConfiguratorPage() {
               <div className="config-summary" style={{ padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
                 <div><strong>Produkt:</strong> {form.product}</div>
                 {form.system && <div><strong>System:</strong> {form.system}</div>}
+                {form.serie && <div><strong>Serie:</strong> {form.serie}</div>}
                 <div><strong>Abmessungen:</strong> {form.width_mm} × {form.height_mm} mm</div>
                 <div><strong>Material:</strong> {form.material}</div>
                 <div><strong>Profil:</strong> {form.profile}</div>
