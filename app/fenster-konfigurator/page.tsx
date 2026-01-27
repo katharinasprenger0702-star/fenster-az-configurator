@@ -79,17 +79,6 @@ function getOpeningTypesForProduct(product: string): string[] {
   }
 }
 
-function getSystemsForProduct(product: string): string[] {
-  switch (product) {
-    case 'Fenster':
-      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
-    case 'Balkontüren':
-      return ['Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren'];
-    default:
-      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
-  }
-}
-
 function pickDatasetAndFilter(form: any) {
   let DATA: any;
 
@@ -366,8 +355,8 @@ export default function ConfiguratorPage() {
                       setK('opening', openingTypes[0]);
                     }
                     // Update system when product changes
-                    const systemOptions = getSystemsForProduct(product);
-                    if (form.system && !systemOptions.includes(form.system)) {
+                    const systemOptions = getSystemsForProduct(product as any);
+                    if (form.system && !systemOptions.includes(form.system as any)) {
                       setK('system', systemOptions[0] as any);
                     } else if (!form.system) {
                       setK('system', systemOptions[0] as any);
