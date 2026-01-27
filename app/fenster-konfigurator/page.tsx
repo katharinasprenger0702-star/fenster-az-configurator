@@ -12,7 +12,16 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
-  system: z.string().optional(),
+  system: z.enum([
+    // Fenster systems
+    'Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster',
+    // Türen systems
+    'Kunststoff-Türen', 'Holz-Türen', 'Aluminium-Türen', 'Holz-Aluminium-Türen',
+    // Rollladen systems
+    'Aufputz-Rollladen', 'Unterputz-Rollladen', 'Vorbau-Rollladen', 'Aufsatz-Rollladen',
+    // Garagentore systems
+    'Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'
+  ]).optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
