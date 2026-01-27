@@ -540,6 +540,28 @@ export default function ConfiguratorPage() {
                 />
               </div>
             </div>
+            
+            {/* Real-time dimension validation feedback */}
+            {validation.errors.length > 0 && (
+              <div style={{
+                marginTop: '16px',
+                padding: '12px',
+                backgroundColor: '#fee2e2',
+                border: '1px solid #fca5a5',
+                borderRadius: '6px',
+                fontSize: '14px',
+                color: '#991b1b'
+              }}>
+                <div style={{ fontWeight: '600', marginBottom: '8px' }}>
+                  ⚠️ Dimensionsprobleme erkannt:
+                </div>
+                <ul style={{ margin: '0', paddingLeft: '20px', lineHeight: '1.5' }}>
+                  {validation.errors.map((error, i) => (
+                    <li key={i}>{error}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
 
@@ -951,18 +973,47 @@ export default function ConfiguratorPage() {
               </div>
             </div>
 
-            {/* Technical Validation - Background Display (only critical errors shown prominently) */}
+            {/* Technical Validation - Show all errors prominently */}
             {validation.errors.length > 0 && (
               <div style={{
-                padding: '8px 16px',
-                backgroundColor: '#f6f2f2',
-                border: '1px solid #fecaca',
-                borderRadius: '6px',
-                fontSize: '14px',
-                color: '#dc2626'
+                padding: '16px',
+                backgroundColor: '#fee2e2',
+                border: '2px solid #dc2626',
+                borderRadius: '8px',
+                marginTop: '16px'
               }}>
-                <span style={{ fontWeight: '500' }}>⚠️ Technische Anforderungen nicht erfüllt</span>
-                <span style={{ marginLeft: '8px', opacity: 0.8 }}>(Details in der Übersicht)</span>
+                <div style={{ 
+                  fontWeight: '600', 
+                  fontSize: '16px',
+                  color: '#991b1b',
+                  marginBottom: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  <span>🚫</span>
+                  <span>Technische Fehler - Konfiguration nicht zulässig</span>
+                </div>
+                <ul style={{ 
+                  margin: '0', 
+                  paddingLeft: '24px',
+                  color: '#991b1b',
+                  lineHeight: '1.6'
+                }}>
+                  {validation.errors.map((error, i) => (
+                    <li key={i} style={{ marginBottom: '4px' }}>{error}</li>
+                  ))}
+                </ul>
+                <div style={{
+                  marginTop: '12px',
+                  padding: '8px 12px',
+                  backgroundColor: '#fef2f2',
+                  borderRadius: '4px',
+                  fontSize: '13px',
+                  color: '#7f1d1d'
+                }}>
+                  💡 Bitte passen Sie die Maße, das Material oder die Öffnungsart an, um fortzufahren.
+                </div>
               </div>
             )}
 
@@ -990,10 +1041,10 @@ export default function ConfiguratorPage() {
               </div>
             )}
 
-            {/* Show checkout button if basic configuration is complete (excluding customer data) */}
-            {parsed.success || (!parsed.success && parsed.error?.issues.every(issue => 
+            {/* Show checkout button if basic configuration is complete (excluding customer data) AND no validation errors */}
+            {(parsed.success || (!parsed.success && parsed.error?.issues.every(issue => 
               issue.path.some(p => typeof p === 'string' && p.startsWith('customer'))
-            )) ? (
+            ))) && validation.errors.length === 0 ? (
               <button
                 onClick={handleCheckoutClick}
                 disabled={isCheckoutLoading}
@@ -1023,6 +1074,20 @@ export default function ConfiguratorPage() {
                 )}
                 {isCheckoutLoading ? 'Wird geladen...' : 'Jetzt bestellen'}
               </button>
+            ) : validation.errors.length > 0 ? (
+              <div style={{
+                padding: '12px 24px',
+                backgroundColor: '#fecaca',
+                color: '#991b1b',
+                border: '2px solid #dc2626',
+                borderRadius: '6px',
+                fontSize: '16px',
+                marginTop: '16px',
+                fontWeight: '600',
+                textAlign: 'center'
+              }}>
+                ⛔ Bestellung nicht möglich - Bitte korrigieren Sie die technischen Fehler
+              </div>
             ) : null}
           </div>
         )}
