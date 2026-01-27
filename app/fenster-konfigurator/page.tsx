@@ -365,7 +365,13 @@ export default function ConfiguratorPage() {
                   <div
                     key={system}
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
-                    onClick={() => setK('system', system as any)}
+                    onClick={() => {
+                      setK('system', system as any);
+                      // Reset serie when switching away from Kunststofffenster
+                      if (system !== 'Kunststofffenster') {
+                        setK('serie', undefined);
+                      }
+                    }}
                     style={{
                       padding: '16px',
                       border: form.system === system ? '2px solid #007bff' : '1px solid #ddd',
