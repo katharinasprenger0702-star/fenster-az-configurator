@@ -12,7 +12,7 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
-  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster']).default('Kunststofffenster').optional(),
+  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster', 'Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren']).default('Kunststofffenster').optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -70,6 +70,17 @@ function getOpeningTypesForProduct(product: string): string[] {
       return ['Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'];
     default:
       return ['Dreh-Kipp links'];
+  }
+}
+
+function getSystemsForProduct(product: string): string[] {
+  switch (product) {
+    case 'Fenster':
+      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
+    case 'Balkontüren':
+      return ['Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren'];
+    default:
+      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
   }
 }
 
@@ -335,6 +346,13 @@ export default function ConfiguratorPage() {
                     if (!openingTypes.includes(form.opening)) {
                       setK('opening', openingTypes[0]);
                     }
+                    // Update system when product changes
+                    const systemOptions = getSystemsForProduct(product);
+                    if (form.system && !systemOptions.includes(form.system)) {
+                      setK('system', systemOptions[0] as any);
+                    } else if (!form.system) {
+                      setK('system', systemOptions[0] as any);
+                    }
                   }}
                   style={{
                     padding: '16px',
@@ -361,7 +379,7 @@ export default function ConfiguratorPage() {
             <div style={{ marginTop: '24px' }}>
               <h3>System auswählen</h3>
               <div className="grid" style={{ gap: 16 }}>
-                {['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'].map(system => (
+                {getSystemsForProduct(form.product).map(system => (
                   <div
                     key={system}
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
