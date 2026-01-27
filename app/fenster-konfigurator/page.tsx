@@ -12,7 +12,7 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
-  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster', 'Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren']).default('Kunststofffenster').optional(),
+  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster', 'Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren', 'Kunststoff-Türen', 'Holz-Türen', 'Aluminium-Türen']).default('Kunststofffenster').optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -73,15 +73,26 @@ function getOpeningTypesForProduct(product: string): string[] {
   }
 }
 
-function getSystemsForProduct(product: string): string[] {
+// Local override of getSystemsForProduct to handle page-specific system names
+function getSystemsForProductLocal(product: string): string[] {
   switch (product) {
     case 'Fenster':
       return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
     case 'Balkontüren':
       return ['Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren'];
+    case 'Haustüren':
+      return ['Kunststoff-Türen', 'Holz-Türen', 'Aluminium-Türen'];
     default:
       return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
   }
+}
+
+function getConfiguratorLinkForSystem(product: string, system: string): string | null {
+  // Haustüren (all systems) use the Inotherm configurator
+  if (product === 'Haustüren' && (system === 'Kunststoff-Türen' || system === 'Holz-Türen' || system === 'Aluminium-Türen')) {
+    return 'https://doordesigner.inotherm-tuer.de/configurator/?partnerCode=51842#/home/0,0,0,0,0/0,0,0,0,0/0,0,0,0/0,0,0,0/0,0,0/1,0,0,0';
+  }
+  return null;
 }
 
 function pickDatasetAndFilter(form: any) {
@@ -350,7 +361,7 @@ export default function ConfiguratorPage() {
                       setK('opening', openingTypes[0]);
                     }
                     // Update system when product changes
-                    const systemOptions = getSystemsForProduct(product);
+                    const systemOptions = getSystemsForProductLocal(product);
                     if (form.system && !systemOptions.includes(form.system)) {
                       setK('system', systemOptions[0] as any);
                     } else if (!form.system) {
@@ -382,30 +393,53 @@ export default function ConfiguratorPage() {
             <div style={{ marginTop: '24px' }}>
               <h3>System auswählen</h3>
               <div className="grid" style={{ gap: 16 }}>
-                {getSystemsForProduct(form.product).map(system => (
-                  <div
-                    key={system}
-                    className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
-                    onClick={() => {
-                      setK('system', system as any);
-                      // Set default serie when switching to Kunststofffenster, reset when switching away
-                      if (system === 'Kunststofffenster' && !form.serie) {
-                        setK('serie', 'Iglo 5');
-                      } else if (system !== 'Kunststofffenster') {
-                        setK('serie', undefined);
-                      }
-                    }}
-                    style={{
-                      padding: '16px',
-                      border: form.system === system ? '2px solid #007bff' : '1px solid #ddd',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      textAlign: 'center'
-                    }}
-                  >
-                    <div style={{ fontWeight: 'bold' }}>{system}</div>
-                  </div>
-                ))}
+                {getSystemsForProductLocal(form.product).map(system => {
+                  const configuratorLink = getConfiguratorLinkForSystem(form.product, system);
+                  return (
+                    <div
+                      key={system}
+                      className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
+                      onClick={() => {
+                        setK('system', system as any);
+                        // Set default serie when switching to Kunststofffenster, reset when switching away
+                        if (system === 'Kunststofffenster' && !form.serie) {
+                          setK('serie', 'Iglo 5');
+                        } else if (system !== 'Kunststofffenster') {
+                          setK('serie', undefined);
+                        }
+                      }}
+                      style={{
+                        padding: '16px',
+                        border: form.system === system ? '2px solid #007bff' : '1px solid #ddd',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold' }}>{system}</div>
+                      {configuratorLink && (
+                        <a
+                          href={configuratorLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            display: 'inline-block',
+                            marginTop: '8px',
+                            padding: '6px 12px',
+                            background: '#007bff',
+                            color: 'white',
+                            borderRadius: '4px',
+                            textDecoration: 'none',
+                            fontSize: '0.9rem'
+                          }}
+                        >
+                          Zum Konfigurator
+                        </a>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 

@@ -17,7 +17,7 @@ export type SystemType = FensterSystem | TuerSystem | RollladenSystem | Garagent
 
 export interface Config {
   product: Product;
-  system?: 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster' | 'Kunststoffbalkontüren' | 'Holzbalkontüren' | 'Aluminiumbalkontüren' | 'Kunststoff-Alubalkontüren';
+  system?: 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster' | 'Kunststoffbalkontüren' | 'Holzbalkontüren' | 'Aluminiumbalkontüren' | 'Kunststoff-Alubalkontüren' | 'Kunststoff-Türen' | 'Holz-Türen' | 'Aluminium-Türen';
   serie?: 'Iglo 5' | 'Standard' | 'Premium';
   width_mm: number;
   height_mm: number;
