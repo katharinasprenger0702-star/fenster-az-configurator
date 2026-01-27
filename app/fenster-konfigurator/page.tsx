@@ -73,6 +73,10 @@ function getOpeningTypesForProduct(product: string): string[] {
   }
 }
 
+// Local helper function to get material options specific to the UI
+// Note: This differs from lib/pricing.ts getMaterialsForProduct() because
+// it returns product-specific material names (e.g., 'Kunststoffbalkontüren')
+// rather than generic material types (e.g., 'Kunststoff-Türen')
 function getMaterialsForProductLocal(product: string): string[] {
   switch (product) {
     case 'Fenster':
