@@ -13,7 +13,7 @@ import { lookupPriceEURFrom } from '@/lookup';
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
   doorType: z.enum(['PSK-Türen', 'Hebeschiebetüren']).optional(),
-  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster']).default('Kunststofffenster').optional(),
+  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster', 'Kunststoff-PSK Türen', 'Holz', 'Aluminium', 'Kunststoff-Alu', 'Kunststoff']).default('Kunststofffenster').optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(3000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -74,7 +74,9 @@ function getOpeningTypesForProduct(product: string): string[] {
   }
 }
 
-function getSystemsForProductAndDoorType(product: string, doorType?: string): string[] {
+type SystemType = 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster' | 'Kunststoff-PSK Türen' | 'Holz' | 'Aluminium' | 'Kunststoff-Alu' | 'Kunststoff';
+
+function getSystemsForProductAndDoorType(product: string, doorType?: string): SystemType[] {
   // For Schiebetüren (terrace doors), system options depend on door type
   if (product === 'Schiebetüren') {
     if (doorType === 'PSK-Türen') {
@@ -392,7 +394,7 @@ export default function ConfiguratorPage() {
                         // Reset system when door type changes to ensure valid selection
                         const availableSystems = getSystemsForProductAndDoorType(form.product, doorType);
                         if (form.system && !availableSystems.includes(form.system)) {
-                          setK('system', availableSystems[0] as any);
+                          setK('system', availableSystems[0]);
                         }
                       }}
                       style={{
@@ -419,7 +421,7 @@ export default function ConfiguratorPage() {
                     key={system}
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
                     onClick={() => {
-                      setK('system', system as any);
+                      setK('system', system);
                       // Set default serie when switching to Kunststofffenster, reset when switching away
                       if (system === 'Kunststofffenster' && !form.serie) {
                         setK('serie', 'Iglo 5');
