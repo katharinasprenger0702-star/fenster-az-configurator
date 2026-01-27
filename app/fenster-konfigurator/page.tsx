@@ -12,7 +12,9 @@ import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
   product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
-  system: z.enum(['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster', 'Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren']).default('Kunststofffenster').optional(),
+  doorType: z.enum(['PSK-Türen', 'Hebeschiebetüren']).optional(),
+  // System uses z.string() because valid values are dynamically determined by getSystemsForProduct()
+  system: z.string().optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
   width_mm: z.coerce.number().int().min(400).max(6000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -346,20 +348,20 @@ export default function ConfiguratorPage() {
                   className={['product-option', form.product === product && 'selected'].filter(Boolean).join(' ')}
                   onClick={() => {
                     setK('product', product as any);
+                    // Set default door type for Schiebetüren, clear it for other products
+                    if (product === 'Schiebetüren' && !form.doorType) {
+                      setK('doorType', 'Hebeschiebetüren');
+                    } else if (product !== 'Schiebetüren' && form.doorType) {
+                      setK('doorType', undefined);
+                    }
                     // Update system when product changes
-                    const newDefaultSystem = getDefaultSystemForProduct(product as any);
-                    setK('system', newDefaultSystem as any);
+                    const doorTypeForSystem = product === 'Schiebetüren' ? (form.doorType || 'Hebeschiebetüren') : undefined;
+                    const newDefaultSystem = getDefaultSystemForProduct(product as any, doorTypeForSystem);
+                    setK('system', newDefaultSystem);
                     // Update opening type when product changes
                     const openingTypes = getOpeningTypesForProduct(product);
                     if (!openingTypes.includes(form.opening)) {
                       setK('opening', openingTypes[0]);
-                    }
-                    // Update system when product changes
-                    const systemOptions = getSystemsForProduct(product as any);
-                    if (form.system && !systemOptions.includes(form.system as any)) {
-                      setK('system', systemOptions[0] as any);
-                    } else if (!form.system) {
-                      setK('system', systemOptions[0] as any);
                     }
                   }}
                   style={{
@@ -383,16 +385,48 @@ export default function ConfiguratorPage() {
               ))}
             </div>
 
+            {/* Door Type Selection for Schiebetüren */}
+            {form.product === 'Schiebetüren' && (
+              <div style={{ marginTop: '24px' }}>
+                <h3>Türtyp auswählen</h3>
+                <div className="grid" style={{ gap: 16 }}>
+                  {(['PSK-Türen', 'Hebeschiebetüren'] as const).map(doorType => (
+                    <div
+                      key={doorType}
+                      className={['door-type-option', form.doorType === doorType && 'selected'].filter(Boolean).join(' ')}
+                      onClick={() => {
+                        setK('doorType', doorType);
+                        // Reset system when door type changes to ensure valid selection
+                        const availableSystems = getSystemsForProduct(form.product, doorType);
+                        if (form.system && !availableSystems.includes(form.system)) {
+                          setK('system', availableSystems[0]);
+                        }
+                      }}
+                      style={{
+                        padding: '16px',
+                        border: form.doorType === doorType ? '2px solid #007bff' : '1px solid #ddd',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold' }}>{doorType}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* System Selection */}
             <div style={{ marginTop: '24px' }}>
               <h3>System auswählen</h3>
               <div className="grid" style={{ gap: 16 }}>
-                {getSystemsForProduct(form.product).map(system => (
+                {getSystemsForProduct(form.product, form.doorType).map(system => (
                   <div
                     key={system}
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
                     onClick={() => {
-                      setK('system', system as any);
+                      setK('system', system);
                       // Set default serie when switching to Kunststofffenster, reset when switching away
                       if (system === 'Kunststofffenster' && !form.serie) {
                         setK('serie', 'Iglo 5');
