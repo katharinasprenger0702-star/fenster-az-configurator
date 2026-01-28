@@ -2,7 +2,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { z } from 'zod';
 import getStripe from '@/lib/stripeClient';
-import { calculatePrice, configToLabel, type Config, getSystemsForProduct, getDefaultSystemForProduct } from '@/lib/pricing';
+import { calculatePrice, configToLabel, type Config, getSystemsForProduct, getDefaultSystemForProduct, getManufacturersForSystem } from '@/lib/pricing';
 import { validateTechnicalCompliance, getRecommendations, type ValidationResult } from '@/lib/technical-validation';
 // Preis-Daten jetzt über index.ts (saubere zentrale Sammelstelle)
 import {
@@ -405,10 +405,17 @@ export default function ConfiguratorPage() {
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
                     onClick={() => {
                       setK('system', system);
-                      // Set default manufacturer when switching to supported systems, reset when switching away
-                      if ((system === 'Kunststoff' || system === 'Holz' || system === 'Aluminium' || system === 'Kunststoff-Aluminium') && !form.manufacturer) {
-                        setK('manufacturer', 'Drutex');
-                      } else if (system !== 'Kunststoff' && system !== 'Holz' && system !== 'Aluminium' && system !== 'Kunststoff-Aluminium') {
+                      // Get available manufacturers for the new system
+                      const availableManufacturers = getManufacturersForSystem(system);
+                      // Clear manufacturer if it's not available for the new system
+                      if (form.manufacturer && !availableManufacturers.includes(form.manufacturer)) {
+                        setK('manufacturer', undefined);
+                        setK('serie', undefined);
+                      } else if (availableManufacturers.length > 0 && !form.manufacturer) {
+                        // Set default manufacturer when switching to supported systems
+                        setK('manufacturer', availableManufacturers[0]);
+                      } else if (availableManufacturers.length === 0) {
+                        // Clear manufacturer and serie when switching to systems without manufacturers
                         setK('manufacturer', undefined);
                         setK('serie', undefined);
                       } else {
@@ -435,7 +442,7 @@ export default function ConfiguratorPage() {
               <div style={{ marginTop: '24px' }}>
                 <h3>Hersteller</h3>
                 <div className="grid" style={{ gap: 16 }}>
-                  {(['Schüco', 'Drutex', 'Aluplast', 'Gealan', 'Salamander', 'Veka', 'Kömmerling', 'Aluprof', 'Inotherm'] as const).map(manufacturer => (
+                  {getManufacturersForSystem(form.system).map(manufacturer => (
                     <div
                       key={manufacturer}
                       className={['manufacturer-option', form.manufacturer === manufacturer && 'selected'].filter(Boolean).join(' ')}
