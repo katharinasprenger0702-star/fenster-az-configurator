@@ -9,12 +9,12 @@ export type Versand = 'Standard' | 'Premium' | 'Express';
 export type Lieferzone = 'Abholung' | 'Hamburg (Zone 1)' | 'Zone 2';
 
 // System types for different product categories
-export type FensterSystem = 'Kunststofffenster' | 'Holzfenster' | 'Aluminiumfenster' | 'Holz-Aluminium-Fenster';
-export type TuerSystem = 'Kunststoff-Türen' | 'Holz-Türen' | 'Aluminium-Türen' | 'Holz-Aluminium-Türen';
-export type PSKTuerSystem = 'Kunststoff-PSK Türen' | 'Holz' | 'Aluminium' | 'Kunststoff-Alu';
-export type HebeschiebetuerSystem = 'Kunststoff' | 'Aluminium' | 'Kunststoff-Alu';
+export type FensterSystem = 'Kunststoff' | 'Holz' | 'Aluminium' | 'Kunststoff-Aluminium';
+export type TuerSystem = 'Kunststoff' | 'Holz' | 'Aluminium' | 'Kunststoff-Aluminium';
+export type PSKTuerSystem = 'Kunststoff' | 'Holz' | 'Aluminium' | 'Kunststoff-Aluminium';
+export type HebeschiebetuerSystem = 'Kunststoff' | 'Aluminium' | 'Kunststoff-Aluminium';
 export type SchiebetuerSystem = PSKTuerSystem | HebeschiebetuerSystem;
-export type BalkontuerSystem = 'Kunststoffbalkontüren' | 'Holzbalkontüren' | 'Aluminiumbalkontüren' | 'Kunststoff-Alubalkontüren';
+export type BalkontuerSystem = 'Kunststoff' | 'Holz' | 'Aluminium' | 'Kunststoff-Aluminium';
 export type RollladenSystem = 'Vorbau-Rollladen' | 'Aufsatz-Rollladen';
 export type SystemType = FensterSystem | TuerSystem | SchiebetuerSystem | BalkontuerSystem | RollladenSystem;
 
@@ -201,23 +201,23 @@ export function configToLabel(c: Config) {
 export function getSystemsForProduct(product: Product, doorType?: 'PSK-Türen' | 'Hebeschiebetüren'): SystemType[] {
   switch (product) {
     case 'Fenster':
-      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
+      return ['Kunststoff', 'Holz', 'Aluminium', 'Kunststoff-Aluminium'];
     case 'Balkontüren':
-      return ['Kunststoffbalkontüren', 'Holzbalkontüren', 'Aluminiumbalkontüren', 'Kunststoff-Alubalkontüren'];
+      return ['Kunststoff', 'Holz', 'Aluminium', 'Kunststoff-Aluminium'];
     case 'Schiebetüren':
       if (doorType === 'PSK-Türen') {
-        return ['Kunststoff-PSK Türen', 'Holz', 'Aluminium', 'Kunststoff-Alu'];
+        return ['Kunststoff', 'Holz', 'Aluminium', 'Kunststoff-Aluminium'];
       } else if (doorType === 'Hebeschiebetüren') {
-        return ['Kunststoff', 'Aluminium', 'Kunststoff-Alu'];
+        return ['Kunststoff', 'Aluminium', 'Kunststoff-Aluminium'];
       }
       // Default to Hebeschiebetüren systems if no door type selected
-      return ['Kunststoff', 'Aluminium', 'Kunststoff-Alu'];
+      return ['Kunststoff', 'Aluminium', 'Kunststoff-Aluminium'];
     case 'Haustüren':
-      return ['Kunststoff-Türen', 'Holz-Türen', 'Aluminium-Türen', 'Holz-Aluminium-Türen'];
+      return ['Kunststoff', 'Holz', 'Aluminium', 'Kunststoff-Aluminium'];
     case 'Rollladen':
       return ['Vorbau-Rollladen', 'Aufsatz-Rollladen'];
     default:
-      return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
+      return ['Kunststoff', 'Holz', 'Aluminium', 'Kunststoff-Aluminium'];
   }
 }
 

@@ -115,7 +115,7 @@ function pickDatasetAndFilter(form: any) {
 
 export default function ConfiguratorPage() {
   const [form, setForm] = useState<Config>({
-    product: 'Fenster', system: 'Kunststofffenster', serie: 'Iglo 5', width_mm: 1200, height_mm: 1200,
+    product: 'Fenster', system: 'Kunststoff', serie: 'Iglo 5', width_mm: 1200, height_mm: 1200,
     material: 'PVC', profile: 'Standard', opening: 'Dreh-Kipp links',
     glazing: '2-fach', color: 'Weiß', handle: 'Standard', security: 'Basis',
     warmEdge: false, soundInsulation: false, safetyGlass: false, sunProtection: false,
@@ -404,10 +404,10 @@ export default function ConfiguratorPage() {
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
                     onClick={() => {
                       setK('system', system);
-                      // Set default serie when switching to Kunststofffenster, reset when switching away
-                      if (system === 'Kunststofffenster' && !form.serie) {
+                      // Set default serie when switching to Kunststoff, reset when switching away
+                      if (system === 'Kunststoff' && !form.serie) {
                         setK('serie', 'Iglo 5');
-                      } else if (system !== 'Kunststofffenster') {
+                      } else if (system !== 'Kunststoff') {
                         setK('serie', undefined);
                       }
                     }}
@@ -425,8 +425,8 @@ export default function ConfiguratorPage() {
               </div>
             </div>
 
-            {/* Serie Selection for Kunststofffenster */}
-            {form.system === 'Kunststofffenster' && (
+            {/* Serie Selection for Kunststoff */}
+            {form.system === 'Kunststoff' && (
               <div style={{ marginTop: '24px' }}>
                 <h3>Serie auswählen</h3>
                 <div className="grid" style={{ gap: 16 }}>
