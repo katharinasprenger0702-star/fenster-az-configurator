@@ -1,4 +1,10 @@
 
+export const metadata = {
+  title: 'Datenschutzerklärung – Fenstermann24',
+  description: 'Informationen zur Verarbeitung Ihrer personenbezogenen Daten bei Fenstermann24.de – eine Marke der AZ Fenster und Türen GmbH.',
+  robots: 'index, follow'
+};
+
 export default function Datenschutz() {
   return (
     <div style={{ 

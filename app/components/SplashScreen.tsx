@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 export default function SplashScreen({ onEnter }: { onEnter: () => void }) {
   return (
     <div style={{
@@ -92,6 +90,14 @@ export default function SplashScreen({ onEnter }: { onEnter: () => void }) {
             e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.3)';
           }}
           onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)';
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
+            e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.3)';
+          }}
+          onBlur={(e) => {
             e.currentTarget.style.transform = 'translateY(0) scale(1)';
             e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)';
           }}

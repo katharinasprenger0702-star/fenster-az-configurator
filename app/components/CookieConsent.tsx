@@ -7,19 +7,32 @@ export default function CookieConsent() {
 
   useEffect(() => {
     // Check if user has already consented
-    const consent = localStorage.getItem('cookieConsent');
-    if (!consent) {
+    try {
+      const consent = localStorage.getItem('cookieConsent');
+      if (!consent) {
+        setShowBanner(true);
+      }
+    } catch (e) {
+      // LocalStorage not available, show banner
       setShowBanner(true);
     }
   }, []);
 
   const acceptCookies = () => {
-    localStorage.setItem('cookieConsent', 'accepted');
+    try {
+      localStorage.setItem('cookieConsent', 'accepted');
+    } catch (e) {
+      // LocalStorage not available, ignore
+    }
     setShowBanner(false);
   };
 
   const declineCookies = () => {
-    localStorage.setItem('cookieConsent', 'declined');
+    try {
+      localStorage.setItem('cookieConsent', 'declined');
+    } catch (e) {
+      // LocalStorage not available, ignore
+    }
     setShowBanner(false);
   };
 
@@ -97,6 +110,14 @@ export default function CookieConsent() {
               e.currentTarget.style.borderColor = '#e5e7eb';
               e.currentTarget.style.background = 'white';
             }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = '#d1d5db';
+              e.currentTarget.style.background = '#f9fafb';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = '#e5e7eb';
+              e.currentTarget.style.background = 'white';
+            }}
           >
             Ablehnen
           </button>
@@ -121,6 +142,14 @@ export default function CookieConsent() {
               e.currentTarget.style.boxShadow = '0 6px 16px rgba(10, 108, 241, 0.4)';
             }}
             onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(10, 108, 241, 0.3)';
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(10, 108, 241, 0.4)';
+            }}
+            onBlur={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
               e.currentTarget.style.boxShadow = '0 4px 12px rgba(10, 108, 241, 0.3)';
             }}

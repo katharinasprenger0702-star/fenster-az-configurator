@@ -10,15 +10,24 @@ export default function Home() {
 
   useEffect(() => {
     // Check if splash was already seen in this session
-    const seen = sessionStorage.getItem('splashSeen');
-    if (seen) {
+    try {
+      const seen = sessionStorage.getItem('splashSeen');
+      if (seen) {
+        setShowSplash(false);
+        setSplashSeen(true);
+      }
+    } catch (e) {
+      // SessionStorage not available, proceed without splash
       setShowSplash(false);
-      setSplashSeen(true);
     }
   }, []);
 
   const handleEnter = () => {
-    sessionStorage.setItem('splashSeen', 'true');
+    try {
+      sessionStorage.setItem('splashSeen', 'true');
+    } catch (e) {
+      // SessionStorage not available, ignore
+    }
     setShowSplash(false);
     setSplashSeen(true);
   };
