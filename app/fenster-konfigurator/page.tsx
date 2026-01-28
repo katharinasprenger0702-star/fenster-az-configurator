@@ -6,12 +6,12 @@ import { calculatePrice, configToLabel, type Config, getSystemsForProduct, getDe
 import { validateTechnicalCompliance, getRecommendations, type ValidationResult } from '@/lib/technical-validation';
 // Preis-Daten jetzt über index.ts (saubere zentrale Sammelstelle)
 import {
-  fensterPrices, balkontuerenPrices, schiebetuerenPrices, haustuerenPrices, sonstigesPrices, garagentorePrices
+  fensterPrices, balkontuerenPrices, schiebetuerenPrices, haustuerenPrices, sonstigesPrices
 } from '@/index';
 import { lookupPriceEURFrom } from '@/lookup';
 
 const schema = z.object({
-  product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore']).default('Fenster'),
+  product: z.enum(['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen']).default('Fenster'),
   doorType: z.enum(['PSK-Türen', 'Hebeschiebetüren']).optional(),
   // System uses z.string() because valid values are dynamically determined by getSystemsForProduct()
   system: z.string().optional(),
@@ -36,12 +36,6 @@ const schema = z.object({
   oldWindowDisposal: z.boolean().default(false),
   delivery: z.enum(['Abholung','Hamburg (Zone 1)','Zone 2']).default('Abholung'),
   qty: z.coerce.number().int().min(1).max(50).default(1),
-  // Garage-specific options
-  driveType: z.enum(['Manuell', 'Elektrisch', 'Elektrisch mit Notentriegelung']).default('Manuell').optional(),
-  remoteControl: z.boolean().default(false),
-  serviceDoor: z.boolean().default(false),
-  windows: z.boolean().default(false),
-  lightBarrier: z.boolean().default(false),
   // Customer information
   customerFirstName: z.string().min(1, 'Vorname ist erforderlich').default(''),
   customerLastName: z.string().min(1, 'Nachname ist erforderlich').default(''),
@@ -74,8 +68,6 @@ function getOpeningTypesForProduct(product: string): string[] {
       return ['Dreh links', 'Dreh rechts'];
     case 'Rollladen':
       return ['Aufputz', 'Unterputz', 'Vorbaurollladen', 'Aufsatzrollladen'];
-    case 'Garagentore':
-      return ['Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'];
     default:
       return ['Dreh-Kipp links'];
   }
@@ -102,10 +94,6 @@ function pickDatasetAndFilter(form: any) {
       // For now, use a subset of fenster pricing for rollladen
       DATA = fensterPrices;
       break;
-    case 'Garagentore':
-      // Use dedicated garage door pricing data
-      DATA = garagentorePrices;
-      break;
     default:
       DATA = fensterPrices;
   }
@@ -113,22 +101,14 @@ function pickDatasetAndFilter(form: any) {
   const filter: Record<string, string> = {};
   const opening = String(form.opening ?? '').toLowerCase();
 
-  // For Garagentore, filter by tor type
-  if (form.product === 'Garagentore') {
-    if (opening.includes('sektional')) filter.source_file = 'Sektionaltor';
-    else if (opening.includes('schwing')) filter.source_file = 'Schwingtor';
-    else if (opening.includes('roll')) filter.source_file = 'Rolltor';
-    else if (opening.includes('flügel')) filter.source_file = 'Flügeltor';
-  } else {
-    // Match the actual source_file patterns in the data
-    if (opening.includes('fest')) filter.source_file = 'FEST';
-    else if (opening.includes('dreh-kipp')) filter.source_file = 'DK + DR+DK'; // Match "FENSTER DK + DR+DK"
-    else if (opening.includes('dreh')) filter.source_file = 'DREH';
-    else if (opening.includes('schiebe')) filter.source_file = 'SCHIEBE';
+  // Match the actual source_file patterns in the data
+  if (opening.includes('fest')) filter.source_file = 'FEST';
+  else if (opening.includes('dreh-kipp')) filter.source_file = 'DK + DR+DK'; // Match "FENSTER DK + DR+DK"
+  else if (opening.includes('dreh')) filter.source_file = 'DREH';
+  else if (opening.includes('schiebe')) filter.source_file = 'SCHIEBE';
 
-    if (form.profile === 'ThermoPlus' || form.profile === 'Premium')
-      filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'PFOSTEN';
-  }
+  if (form.profile === 'ThermoPlus' || form.profile === 'Premium')
+    filter.source_file = (filter.source_file ? filter.source_file + ' ' : '') + 'PFOSTEN';
   
   return { DATA, filter };
 }
@@ -142,8 +122,6 @@ export default function ConfiguratorPage() {
     trickleVent: false, insectScreen: false, childLock: false,
     versand: 'Standard', oldWindowDisposal: false,
     delivery: 'Abholung', qty: 1,
-    // Garage-specific defaults
-    driveType: 'Manuell', remoteControl: false, serviceDoor: false, windows: false, lightBarrier: false,
     // Customer information defaults
     customerFirstName: '', customerLastName: '', customerEmail: '', customerPhone: '',
     customerStreet: '', customerCity: '', customerZip: '', customerCountry: 'Deutschland'
@@ -342,7 +320,7 @@ export default function ConfiguratorPage() {
           <div>
             <h2>Produkt auswählen</h2>
             <div className="grid" style={{ gap: 16 }}>
-              {['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen', 'Garagentore'].map(product => (
+              {['Fenster', 'Balkontüren', 'Schiebetüren', 'Haustüren', 'Rollladen'].map(product => (
                 <div
                   key={product}
                   className={['product-option', form.product === product && 'selected'].filter(Boolean).join(' ')}
@@ -378,7 +356,6 @@ export default function ConfiguratorPage() {
                     {product === 'Schiebetüren' && '🚪'}
                     {product === 'Haustüren' && '🚪'}
                     {product === 'Rollladen' && '🪟'}
-                    {product === 'Garagentore' && '🚪'}
                   </div>
                   <div style={{ fontWeight: 'bold' }}>{product}</div>
                 </div>
@@ -488,14 +465,9 @@ export default function ConfiguratorPage() {
                   value={form.width_mm}
                   onChange={(e) => setK('width_mm', Number(e.target.value))}
                   min="400"
-                  max={form.product === 'Garagentore' ? '6000' : '3000'}
+                  max="3000"
                   style={{ width: '100%', padding: '8px', marginTop: '4px' }}
                 />
-                {form.product === 'Garagentore' && (
-                  <small style={{ color: '#666', fontSize: '0.85rem' }}>
-                    Einzelgarage: 2375-3000mm, Doppelgarage: 4500-6000mm
-                  </small>
-                )}
               </div>
               <div>
                 <label htmlFor="height">Höhe (mm)</label>
@@ -508,11 +480,6 @@ export default function ConfiguratorPage() {
                   max="3000"
                   style={{ width: '100%', padding: '8px', marginTop: '4px' }}
                 />
-                {form.product === 'Garagentore' && (
-                  <small style={{ color: '#666', fontSize: '0.85rem' }}>
-                    Standard: 1900-2500mm
-                  </small>
-                )}
               </div>
               <div>
                 <label htmlFor="opening">Öffnungsart</label>
@@ -568,84 +535,9 @@ export default function ConfiguratorPage() {
         {/* === STEP 2: Ausführung & Sicherheit === */}
         {step === 2 && (
           <div>
-            <h2>{form.product === 'Garagentore' ? 'Antrieb & Ausstattung' : 'Ausführung & Sicherheit'}</h2>
-            {form.product === 'Garagentore' ? (
-              // Garage-specific options
-              <div>
-                <div className="grid" style={{ gap: 16 }}>
-                  <div>
-                    <label htmlFor="driveType">Antriebsart</label>
-                    <select
-                      id="driveType"
-                      value={form.driveType}
-                      onChange={(e) => setK('driveType', e.target.value as any)}
-                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                    >
-                      <option value="Manuell">Manuell</option>
-                      <option value="Elektrisch">Elektrisch</option>
-                      <option value="Elektrisch mit Notentriegelung">Elektrisch mit Notentriegelung</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label htmlFor="material">Material</label>
-                    <select
-                      id="material"
-                      value={form.material}
-                      onChange={(e) => setK('material', e.target.value as any)}
-                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                    >
-                      <option value="PVC">PVC</option>
-                      <option value="Aluminium">Aluminium</option>
-                      <option value="Holz">Holz</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div style={{ marginTop: '24px' }}>
-                  <h3>Zusatzausstattung</h3>
-                  <div className="grid" style={{ gap: 8 }}>
-                    {(form.driveType === 'Elektrisch' || form.driveType === 'Elektrisch mit Notentriegelung') && (
-                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <input
-                          type="checkbox"
-                          checked={form.remoteControl}
-                          onChange={(e) => setK('remoteControl', e.target.checked)}
-                        />
-                        Fernbedienung
-                      </label>
-                    )}
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <input
-                        type="checkbox"
-                        checked={form.serviceDoor}
-                        onChange={(e) => setK('serviceDoor', e.target.checked)}
-                      />
-                      Servicetür / Schlupftür
-                    </label>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <input
-                        type="checkbox"
-                        checked={form.windows}
-                        onChange={(e) => setK('windows', e.target.checked)}
-                      />
-                      Fenster im Tor
-                    </label>
-                    {(form.driveType === 'Elektrisch' || form.driveType === 'Elektrisch mit Notentriegelung') && (
-                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <input
-                          type="checkbox"
-                          checked={form.lightBarrier}
-                          onChange={(e) => setK('lightBarrier', e.target.checked)}
-                        />
-                        Lichtschranke / Fotowelle
-                      </label>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              // Regular window/door options
-              <div>
+            <h2>Ausführung & Sicherheit</h2>
+            {/* Regular window/door options */}
+            <div>
                 <div className="grid" style={{ gap: 16 }}>
                   <div>
                     <label htmlFor="material">Material</label>
@@ -730,7 +622,6 @@ export default function ConfiguratorPage() {
                   </div>
                 </div>
               </div>
-            )}
           </div>
         )}
 

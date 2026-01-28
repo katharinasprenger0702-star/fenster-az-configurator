@@ -1,7 +1,7 @@
 export type Material = 'PVC' | 'Aluminium' | 'Holz';
 export type Glazing = '2-fach' | '3-fach';
 export type Color = 'Weiß' | 'RAL' | 'Holzdekor';
-export type Product = 'Fenster' | 'Balkontüren' | 'Schiebetüren' | 'Haustüren' | 'Rollladen' | 'Garagentore';
+export type Product = 'Fenster' | 'Balkontüren' | 'Schiebetüren' | 'Haustüren' | 'Rollladen';
 export type Manufacturer = 'DRUTEX' | 'Eko-Okna' | 'Gabit' | 'Inotherm' | 'HOOPE' | 'Schüco';
 export type OpeningType = string;
 export type SecurityLevel = 'Basis' | 'RC1N' | 'RC2N';
@@ -16,8 +16,7 @@ export type HebeschiebetuerSystem = 'Kunststoff' | 'Aluminium' | 'Kunststoff-Alu
 export type SchiebetuerSystem = PSKTuerSystem | HebeschiebetuerSystem;
 export type BalkontuerSystem = 'Kunststoffbalkontüren' | 'Holzbalkontüren' | 'Aluminiumbalkontüren' | 'Kunststoff-Alubalkontüren';
 export type RollladenSystem = 'Aufputz-Rollladen' | 'Unterputz-Rollladen' | 'Vorbau-Rollladen' | 'Aufsatz-Rollladen';
-export type GaragentorSystem = 'Sektionaltor' | 'Schwingtor' | 'Rolltor' | 'Flügeltor';
-export type SystemType = FensterSystem | TuerSystem | SchiebetuerSystem | BalkontuerSystem | RollladenSystem | GaragentorSystem;
+export type SystemType = FensterSystem | TuerSystem | SchiebetuerSystem | BalkontuerSystem | RollladenSystem;
 
 export interface Config {
   product: Product;
@@ -44,12 +43,6 @@ export interface Config {
   oldWindowDisposal: boolean;
   delivery: Lieferzone;
   qty: number;
-  // Garage-specific options
-  driveType?: 'Manuell' | 'Elektrisch' | 'Elektrisch mit Notentriegelung';
-  remoteControl?: boolean;
-  serviceDoor?: boolean;
-  windows?: boolean;
-  lightBarrier?: boolean;
   // Customer information
   customerFirstName: string;
   customerLastName: string;
@@ -131,20 +124,6 @@ const PER_UNIT_ADDONS = {
   childLock: 12
 };
 
-// Garage-specific addons
-const GARAGE_DRIVE_SURCHARGE = {
-  'Manuell': 0,
-  'Elektrisch': 450,
-  'Elektrisch mit Notentriegelung': 650
-};
-
-const GARAGE_ADDONS = {
-  remoteControl: 89,
-  serviceDoor: 450,
-  windows: 150,
-  lightBarrier: 120
-};
-
 const VERSAND_PER_UNIT: Record<Versand, number> = {
   'Standard': 89,
   'Premium': 149,
@@ -189,18 +168,6 @@ export function calculatePrice(c: Config): PriceBreakdown {
   if (c.trickleVent) perUnit.push({ label: 'Falzlüfter', amount: PER_UNIT_ADDONS.trickleVent });
   if (c.insectScreen) perUnit.push({ label: 'Insektenschutz', amount: PER_UNIT_ADDONS.insectScreen });
   if (c.childLock) perUnit.push({ label: 'Kindersicherung', amount: PER_UNIT_ADDONS.childLock });
-  
-  // Add garage-specific addons
-  if (c.product === 'Garagentore') {
-    if (c.driveType && c.driveType !== 'Manuell') {
-      const driveSurcharge = GARAGE_DRIVE_SURCHARGE[c.driveType] ?? 0;
-      perUnit.push({ label: `Antrieb: ${c.driveType}`, amount: driveSurcharge });
-    }
-    if (c.remoteControl) perUnit.push({ label: 'Fernbedienung', amount: GARAGE_ADDONS.remoteControl });
-    if (c.serviceDoor) perUnit.push({ label: 'Servicetür', amount: GARAGE_ADDONS.serviceDoor });
-    if (c.windows) perUnit.push({ label: 'Fenster im Tor', amount: GARAGE_ADDONS.windows });
-    if (c.lightBarrier) perUnit.push({ label: 'Lichtschranke', amount: GARAGE_ADDONS.lightBarrier });
-  }
 
   const versand = VERSAND_PER_UNIT[c.versand] + (c.oldWindowDisposal ? 25 : 0);
   const deliveryTotal = DELIVERY_PER_ORDER[c.delivery];
@@ -249,8 +216,6 @@ export function getSystemsForProduct(product: Product, doorType?: 'PSK-Türen' |
       return ['Kunststoff-Türen', 'Holz-Türen', 'Aluminium-Türen', 'Holz-Aluminium-Türen'];
     case 'Rollladen':
       return ['Aufputz-Rollladen', 'Unterputz-Rollladen', 'Vorbau-Rollladen', 'Aufsatz-Rollladen'];
-    case 'Garagentore':
-      return ['Sektionaltor', 'Schwingtor', 'Rolltor', 'Flügeltor'];
     default:
       return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
   }
