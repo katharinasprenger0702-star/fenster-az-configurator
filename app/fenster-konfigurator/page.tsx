@@ -395,331 +395,38 @@ export default function ConfiguratorPage() {
               </div>
             )}
 
-            {/* System Selection */}
+            {/* Manufacturer Selection - Simplified to show only manufacturers */}
             <div style={{ marginTop: '24px' }}>
-              <h3>Material</h3>
+              <h3>Hersteller</h3>
               <div className="grid" style={{ gap: 16 }}>
-                {getSystemsForProduct(form.product, form.doorType).map(system => (
+                {(['Drutex', 'Kömmerling', 'Aluplast', 'Salamander', 'Schüco', 'Gealan', 'Veka'] as const).map(manufacturer => (
                   <div
-                    key={system}
-                    className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
+                    key={manufacturer}
+                    className={['manufacturer-option', form.manufacturer === manufacturer && 'selected'].filter(Boolean).join(' ')}
                     onClick={() => {
-                      // Only process if the system is actually changing
-                      if (form.system !== system) {
-                        setK('system', system);
-                        // Get available manufacturers for the new system
-                        const availableManufacturers = getManufacturersForSystem(system);
-                        // Clear manufacturer if it's not available for the new system
-                        if (form.manufacturer && !availableManufacturers.includes(form.manufacturer)) {
-                          setK('manufacturer', undefined);
-                          setK('serie', undefined);
-                        } else if (availableManufacturers.length > 0 && !form.manufacturer) {
-                          // Set default manufacturer when switching to supported systems
-                          setK('manufacturer', availableManufacturers[0]);
-                        } else if (availableManufacturers.length === 0) {
-                          // Clear manufacturer and serie when switching to systems without manufacturers
-                          setK('manufacturer', undefined);
-                          setK('serie', undefined);
-                        } else {
-                          // When switching between different systems, clear serie as they have different profiles
-                          setK('serie', undefined);
-                        }
+                      // Set manufacturer and automatically select appropriate system
+                      setK('manufacturer', manufacturer);
+                      // Set default system based on manufacturer
+                      // Most manufacturers work with Kunststoff, Drutex also supports Holz and Aluminium
+                      if (!form.system || form.system === 'Kunststoff-Aluminium') {
+                        setK('system', 'Kunststoff');
                       }
+                      // Clear serie to avoid invalid combinations
+                      setK('serie', undefined);
                     }}
                     style={{
                       padding: '16px',
-                      border: form.system === system ? '2px solid #007bff' : '1px solid #ddd',
+                      border: form.manufacturer === manufacturer ? '2px solid #007bff' : '1px solid #ddd',
                       borderRadius: '8px',
                       cursor: 'pointer',
                       textAlign: 'center'
                     }}
                   >
-                    <div style={{ fontWeight: 'bold' }}>{system}</div>
+                    <div style={{ fontWeight: 'bold' }}>{manufacturer}</div>
                   </div>
                 ))}
               </div>
             </div>
-
-            {/* Manufacturer Selection for Kunststoff, Holz, Aluminium, and Kunststoff-Aluminium */}
-            {(form.system === 'Kunststoff' || form.system === 'Holz' || form.system === 'Aluminium' || form.system === 'Kunststoff-Aluminium') && (
-              <div style={{ marginTop: '24px' }}>
-                <h3>Hersteller</h3>
-                <div className="grid" style={{ gap: 16 }}>
-                  {getManufacturersForSystem(form.system).map(manufacturer => (
-                    <div
-                      key={manufacturer}
-                      className={['manufacturer-option', form.manufacturer === manufacturer && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => {
-                        // Always clear serie when switching manufacturers to avoid invalid combinations
-                        if (form.manufacturer !== manufacturer) {
-                          setK('serie', undefined);
-                        }
-                        setK('manufacturer', manufacturer);
-                      }}
-                      style={{
-                        padding: '16px',
-                        border: form.manufacturer === manufacturer ? '2px solid #007bff' : '1px solid #ddd',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold' }}>{manufacturer}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Profile Selection for Drutex + Kunststoff */}
-            {form.system === 'Kunststoff' && form.manufacturer === 'Drutex' && (
-              <div style={{ marginTop: '24px' }}>
-                <h3>Profil auswählen</h3>
-                <div className="grid" style={{ gap: 16 }}>
-                  {(['Iglo 5 Classic', 'Iglo 5', 'Iglo Energy Classic', 'Iglo Energy', 'Iglo EDGE', 'IGLO Light', 'IGLO 5 Classic EXT'] as const).map(profile => (
-                    <div
-                      key={profile}
-                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('serie', profile)}
-                      style={{
-                        padding: '16px',
-                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Profile Selection for Kömmerling + Kunststoff */}
-            {form.system === 'Kunststoff' && form.manufacturer === 'Kömmerling' && (
-              <div style={{ marginTop: '24px' }}>
-                <h3>Profil auswählen</h3>
-                <div className="grid" style={{ gap: 16 }}>
-                  {(['70 AD', '76 AD', '76 MD', '88 MD'] as const).map(profile => (
-                    <div
-                      key={profile}
-                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('serie', profile)}
-                      style={{
-                        padding: '16px',
-                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Profile Selection for Aluplast + Kunststoff */}
-            {form.system === 'Kunststoff' && form.manufacturer === 'Aluplast' && (
-              <div style={{ marginTop: '24px' }}>
-                <h3>Profil auswählen</h3>
-                <div className="grid" style={{ gap: 16 }}>
-                  {(['Ideal 4000', 'Ideal 76 NEO', 'Idela 4000 round', 'Ideal 5000', 'Ideal 5000 round', 'Ideal 7000', 'Ideal 8000'] as const).map(profile => (
-                    <div
-                      key={profile}
-                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('serie', profile)}
-                      style={{
-                        padding: '16px',
-                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Profile Selection for Salamander + Kunststoff */}
-            {form.system === 'Kunststoff' && form.manufacturer === 'Salamander' && (
-              <div style={{ marginTop: '24px' }}>
-                <h3>Profil auswählen</h3>
-                <div className="grid" style={{ gap: 16 }}>
-                  {(['GreenEvo 76 2D', 'GreenEvo 76 3D', 'BluEvolution 82', 'BluEvolution 92'] as const).map(profile => (
-                    <div
-                      key={profile}
-                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('serie', profile)}
-                      style={{
-                        padding: '16px',
-                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Profile Selection for Schüco + Kunststoff */}
-            {form.system === 'Kunststoff' && form.manufacturer === 'Schüco' && (
-              <div style={{ marginTop: '24px' }}>
-                <h3>Profil auswählen</h3>
-                <div className="grid" style={{ gap: 16 }}>
-                  {(['Focusing', 'Living 82 MD'] as const).map(profile => (
-                    <div
-                      key={profile}
-                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('serie', profile)}
-                      style={{
-                        padding: '16px',
-                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Profile Selection for Gealan + Kunststoff */}
-            {form.system === 'Kunststoff' && form.manufacturer === 'Gealan' && (
-              <div style={{ marginTop: '24px' }}>
-                <h3>Profil auswählen</h3>
-                <div className="grid" style={{ gap: 16 }}>
-                  {(['Gealan S8000', 'Gealan S9000'] as const).map(profile => (
-                    <div
-                      key={profile}
-                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('serie', profile)}
-                      style={{
-                        padding: '16px',
-                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Profile Selection for Veka + Kunststoff */}
-            {form.system === 'Kunststoff' && form.manufacturer === 'Veka' && (
-              <div style={{ marginTop: '24px' }}>
-                <h3>Profil auswählen</h3>
-                <div className="grid" style={{ gap: 16 }}>
-                  {(['Veka Softline 70 AD Classic', 'Veka Softline 82 MD Classic'] as const).map(profile => (
-                    <div
-                      key={profile}
-                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('serie', profile)}
-                      style={{
-                        padding: '16px',
-                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Profile Selection for Drutex + Holz */}
-            {form.system === 'Holz' && form.manufacturer === 'Drutex' && (
-              <div style={{ marginTop: '24px' }}>
-                <h3>Profil auswählen</h3>
-                <div className="grid" style={{ gap: 16 }}>
-                  {(['Softline 68mm (Kiefer)', 'Softline 78mm (Kiefer)', 'Softline 88mm (Kiefer)', 'Softline 68mm (Meranti)', 'Softline 78mm (Meranti)', 'Softline 88mm (Meranti)'] as const).map(profile => (
-                    <div
-                      key={profile}
-                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('serie', profile)}
-                      style={{
-                        padding: '16px',
-                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Profile Selection for Drutex + Aluminium */}
-            {form.system === 'Aluminium' && form.manufacturer === 'Drutex' && (
-              <div style={{ marginTop: '24px' }}>
-                <h3>Profil auswählen</h3>
-                <div className="grid" style={{ gap: 16 }}>
-                  {(['MB-70', 'MB-70 HI', 'MB-86 SI'] as const).map(profile => (
-                    <div
-                      key={profile}
-                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('serie', profile)}
-                      style={{
-                        padding: '16px',
-                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Profile Selection for Aluplast + Kunststoff-Aluminium */}
-            {form.system === 'Kunststoff-Aluminium' && form.manufacturer === 'Aluplast' && (
-              <div style={{ marginTop: '24px' }}>
-                <h3>Profil auswählen</h3>
-                <div className="grid" style={{ gap: 16 }}>
-                  {(['Ideal 5000', 'Ideal 8000'] as const).map(profile => (
-                    <div
-                      key={profile}
-                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('serie', profile)}
-                      style={{
-                        padding: '16px',
-                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         )}
 
