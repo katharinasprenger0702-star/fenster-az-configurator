@@ -22,7 +22,7 @@ export interface Config {
   product: Product;
   doorType?: 'PSK-Türen' | 'Hebeschiebetüren';
   system?: SystemType;
-  serie?: 'Iglo 5 Classic' | 'Iglo 5' | 'Iglo Energy Classic' | 'Iglo Energy' | 'Iglo EDGE' | 'IGLO Light' | 'IGLO 5 Classic EXT' | 'Softline 68mm (Kiefer)' | 'Softline 78mm (Kiefer)' | 'Softline 88mm (Kiefer)' | 'Softline 68mm (Meranti)' | 'Softline 78mm (Meranti)' | 'Softline 88mm (Meranti)' | 'Standard' | 'Premium';
+  serie?: 'Iglo 5 Classic' | 'Iglo 5' | 'Iglo Energy Classic' | 'Iglo Energy' | 'Iglo EDGE' | 'IGLO Light' | 'IGLO 5 Classic EXT' | 'Softline 68mm (Kiefer)' | 'Softline 78mm (Kiefer)' | 'Softline 88mm (Kiefer)' | 'Softline 68mm (Meranti)' | 'Softline 78mm (Meranti)' | 'Softline 88mm (Meranti)' | 'MB-70' | 'MB-70 HI' | 'MB-86 SI' | 'Standard' | 'Premium';
   manufacturer?: Manufacturer;
   width_mm: number;
   height_mm: number;
