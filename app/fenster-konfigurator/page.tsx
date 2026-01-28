@@ -67,7 +67,7 @@ function getOpeningTypesForProduct(product: string): string[] {
     case 'Haustüren':
       return ['Dreh links', 'Dreh rechts'];
     case 'Rollladen':
-      return ['Aufputz', 'Unterputz', 'Vorbaurollladen', 'Aufsatzrollladen'];
+      return ['Vorbaurollladen', 'Aufsatzrollladen'];
     default:
       return ['Dreh-Kipp links'];
   }
@@ -396,7 +396,7 @@ export default function ConfiguratorPage() {
 
             {/* System Selection */}
             <div style={{ marginTop: '24px' }}>
-              <h3>System auswählen</h3>
+              <h3>Material</h3>
               <div className="grid" style={{ gap: 16 }}>
                 {getSystemsForProduct(form.product, form.doorType).map(system => (
                   <div
@@ -539,19 +539,6 @@ export default function ConfiguratorPage() {
             {/* Regular window/door options */}
             <div>
                 <div className="grid" style={{ gap: 16 }}>
-                  <div>
-                    <label htmlFor="material">Material</label>
-                    <select
-                      id="material"
-                      value={form.material}
-                      onChange={(e) => setK('material', e.target.value as any)}
-                      style={{ width: '100%', padding: '8px', marginTop: '4px' }}
-                    >
-                      <option value="PVC">PVC</option>
-                      <option value="Aluminium">Aluminium</option>
-                      <option value="Holz">Holz</option>
-                    </select>
-                  </div>
                   <div>
                     <label htmlFor="profile">Profil</label>
                     <select

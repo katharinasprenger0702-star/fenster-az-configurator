@@ -15,7 +15,7 @@ export type PSKTuerSystem = 'Kunststoff-PSK Türen' | 'Holz' | 'Aluminium' | 'Ku
 export type HebeschiebetuerSystem = 'Kunststoff' | 'Aluminium' | 'Kunststoff-Alu';
 export type SchiebetuerSystem = PSKTuerSystem | HebeschiebetuerSystem;
 export type BalkontuerSystem = 'Kunststoffbalkontüren' | 'Holzbalkontüren' | 'Aluminiumbalkontüren' | 'Kunststoff-Alubalkontüren';
-export type RollladenSystem = 'Aufputz-Rollladen' | 'Unterputz-Rollladen' | 'Vorbau-Rollladen' | 'Aufsatz-Rollladen';
+export type RollladenSystem = 'Vorbau-Rollladen' | 'Aufsatz-Rollladen';
 export type SystemType = FensterSystem | TuerSystem | SchiebetuerSystem | BalkontuerSystem | RollladenSystem;
 
 export interface Config {
@@ -215,7 +215,7 @@ export function getSystemsForProduct(product: Product, doorType?: 'PSK-Türen' |
     case 'Haustüren':
       return ['Kunststoff-Türen', 'Holz-Türen', 'Aluminium-Türen', 'Holz-Aluminium-Türen'];
     case 'Rollladen':
-      return ['Aufputz-Rollladen', 'Unterputz-Rollladen', 'Vorbau-Rollladen', 'Aufsatz-Rollladen'];
+      return ['Vorbau-Rollladen', 'Aufsatz-Rollladen'];
     default:
       return ['Kunststofffenster', 'Holzfenster', 'Aluminiumfenster', 'Holz-Aluminium-Fenster'];
   }
