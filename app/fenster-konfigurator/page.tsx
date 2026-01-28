@@ -395,7 +395,7 @@ export default function ConfiguratorPage() {
               </div>
             )}
 
-            {/* Manufacturer Selection - Simplified to show only manufacturers */}
+            {/* Simplified Manufacturer Selection */}
             <div style={{ marginTop: '24px' }}>
               <h3>Hersteller</h3>
               <div className="grid" style={{ gap: 16 }}>
@@ -404,13 +404,10 @@ export default function ConfiguratorPage() {
                     key={manufacturer}
                     className={['manufacturer-option', form.manufacturer === manufacturer && 'selected'].filter(Boolean).join(' ')}
                     onClick={() => {
-                      // Set manufacturer and automatically select appropriate system
+                      // Set manufacturer and automatically select default system
                       setK('manufacturer', manufacturer);
-                      // Set default system based on manufacturer
-                      // Most manufacturers work with Kunststoff, Drutex also supports Holz and Aluminium
-                      if (!form.system || form.system === 'Kunststoff-Aluminium') {
-                        setK('system', 'Kunststoff');
-                      }
+                      // Always set to Kunststoff as default system for all manufacturers
+                      setK('system', 'Kunststoff');
                       // Clear serie to avoid invalid combinations
                       setK('serie', undefined);
                     }}
