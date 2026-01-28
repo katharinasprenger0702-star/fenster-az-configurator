@@ -396,7 +396,7 @@ export default function ConfiguratorPage() {
 
             {/* System Selection */}
             <div style={{ marginTop: '24px' }}>
-              <h3>Material</h3>
+              <h3>Hersteller</h3>
               <div className="grid" style={{ gap: 16 }}>
                 {getSystemsForProduct(form.product, form.doorType).map(system => (
                   <div
