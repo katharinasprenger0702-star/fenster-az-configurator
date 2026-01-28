@@ -250,11 +250,6 @@ export default function Home() {
               <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Deutsche Markenqualität</div>
             </div>
             <div>
-              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>💰</div>
-              <div style={{ fontWeight: '600', marginBottom: '4px' }}>Transparente Preise</div>
-              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Keine versteckten Kosten</div>
-            </div>
-            <div>
               <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🚚</div>
               <div style={{ fontWeight: '600', marginBottom: '4px' }}>Versand-Service</div>
               <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Deutschlandweit verfügbar</div>
@@ -895,44 +890,6 @@ export default function Home() {
                 margin: '0 auto 20px auto',
                 fontSize: '1.5rem'
               }}>
-                💰
-              </div>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: '700',
-                color: '#111827',
-                marginBottom: '12px'
-              }}>
-                Transparente Preise
-              </h3>
-              <p style={{
-                color: '#6b7280',
-                lineHeight: '1.6'
-              }}>
-                Sofort sehen, was es kostet. Keine versteckten Kosten, 
-                faire Festpreise ohne Überraschungen.
-              </p>
-            </div>
-
-            {/* Advantage 2 */}
-            <div style={{
-              background: 'white',
-              padding: '32px',
-              borderRadius: '12px',
-              border: '1px solid #e5e7eb',
-              textAlign: 'center'
-            }}>
-              <div style={{
-                width: '60px',
-                height: '60px',
-                background: '#eff6ff',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 20px auto',
-                fontSize: '1.5rem'
-              }}>
                 🎯
               </div>
               <h3 style={{
@@ -952,7 +909,7 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Advantage 3 */}
+            {/* Advantage 2 */}
             <div style={{
               background: 'white',
               padding: '32px',
@@ -990,7 +947,7 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Advantage 4 */}
+            {/* Advantage 3 */}
             <div style={{
               background: 'white',
               padding: '32px',
