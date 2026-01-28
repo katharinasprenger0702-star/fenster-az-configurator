@@ -15,7 +15,7 @@ const schema = z.object({
   doorType: z.enum(['PSK-Türen', 'Hebeschiebetüren']).optional(),
   // System uses z.string() because valid values are dynamically determined by getSystemsForProduct()
   system: z.string().optional(),
-  serie: z.enum(['Iglo 5 Classic', 'Iglo 5', 'Iglo Energy Classic', 'Iglo Energy', 'Iglo EDGE', 'IGLO Light', 'IGLO 5 Classic EXT', 'Softline 68mm (Kiefer)', 'Softline 78mm (Kiefer)', 'Softline 88mm (Kiefer)', 'Softline 68mm (Meranti)', 'Softline 78mm (Meranti)', 'Softline 88mm (Meranti)', 'MB-70', 'MB-70 HI', 'MB-86 SI', 'Standard', 'Premium']).optional(),
+  serie: z.enum(['Iglo 5 Classic', 'Iglo 5', 'Iglo Energy Classic', 'Iglo Energy', 'Iglo EDGE', 'IGLO Light', 'IGLO 5 Classic EXT', 'Softline 68mm (Kiefer)', 'Softline 78mm (Kiefer)', 'Softline 88mm (Kiefer)', 'Softline 68mm (Meranti)', 'Softline 78mm (Meranti)', 'Softline 88mm (Meranti)', 'MB-70', 'MB-70 HI', 'MB-86 SI', '70 AD', '76 AD', '76 MD', '88 MD', 'Standard', 'Premium']).optional(),
   manufacturer: z.enum(['Schüco', 'Drutex', 'Aluplast', 'Gealan', 'Salamander', 'Veka', 'Kömmerling', 'Aluprof', 'Inotherm']).optional(),
   width_mm: z.coerce.number().int().min(400).max(6000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -441,8 +441,8 @@ export default function ConfiguratorPage() {
                       className={['manufacturer-option', form.manufacturer === manufacturer && 'selected'].filter(Boolean).join(' ')}
                       onClick={() => {
                         setK('manufacturer', manufacturer);
-                        // Clear serie/profile when switching away from Drutex
-                        if (manufacturer !== 'Drutex') {
+                        // Clear serie/profile when switching away from manufacturers with profiles
+                        if (manufacturer !== 'Drutex' && manufacturer !== 'Kömmerling') {
                           setK('serie', undefined);
                         }
                       }}
@@ -467,6 +467,31 @@ export default function ConfiguratorPage() {
                 <h3>Profil auswählen</h3>
                 <div className="grid" style={{ gap: 16 }}>
                   {(['Iglo 5 Classic', 'Iglo 5', 'Iglo Energy Classic', 'Iglo Energy', 'Iglo EDGE', 'IGLO Light', 'IGLO 5 Classic EXT'] as const).map(profile => (
+                    <div
+                      key={profile}
+                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
+                      onClick={() => setK('serie', profile)}
+                      style={{
+                        padding: '16px',
+                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Profile Selection for Kömmerling + Kunststoff */}
+            {form.system === 'Kunststoff' && form.manufacturer === 'Kömmerling' && (
+              <div style={{ marginTop: '24px' }}>
+                <h3>Profil auswählen</h3>
+                <div className="grid" style={{ gap: 16 }}>
+                  {(['70 AD', '76 AD', '76 MD', '88 MD'] as const).map(profile => (
                     <div
                       key={profile}
                       className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
