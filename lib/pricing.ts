@@ -2,7 +2,7 @@ export type Material = 'PVC' | 'Aluminium' | 'Holz';
 export type Glazing = '2-fach' | '3-fach';
 export type Color = 'Weiß' | 'RAL' | 'Holzdekor';
 export type Product = 'Fenster' | 'Balkontüren' | 'Schiebetüren' | 'Haustüren' | 'Rollladen';
-export type Manufacturer = 'DRUTEX' | 'Eko-Okna' | 'Gabit' | 'Inotherm' | 'HOOPE' | 'Schüco';
+export type Manufacturer = 'Schüco' | 'Drutex' | 'Aluplast' | 'Gealan' | 'Salamander' | 'Veka' | 'Kömmerling' | 'Aluprof' | 'Inotherm';
 export type OpeningType = string;
 export type SecurityLevel = 'Basis' | 'RC1N' | 'RC2N';
 export type Versand = 'Standard' | 'Premium' | 'Express';
@@ -23,6 +23,7 @@ export interface Config {
   doorType?: 'PSK-Türen' | 'Hebeschiebetüren';
   system?: SystemType;
   serie?: 'Iglo 5' | 'Standard' | 'Premium';
+  manufacturer?: Manufacturer;
   width_mm: number;
   height_mm: number;
   material: Material;

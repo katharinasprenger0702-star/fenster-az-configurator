@@ -16,6 +16,7 @@ const schema = z.object({
   // System uses z.string() because valid values are dynamically determined by getSystemsForProduct()
   system: z.string().optional(),
   serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
+  manufacturer: z.enum(['Schüco', 'Drutex', 'Aluplast', 'Gealan', 'Salamander', 'Veka', 'Kömmerling', 'Aluprof', 'Inotherm']).optional(),
   width_mm: z.coerce.number().int().min(400).max(6000),
   height_mm: z.coerce.number().int().min(400).max(3000),
   material: z.enum(['PVC', 'Aluminium', 'Holz']).default('PVC'),
@@ -115,7 +116,7 @@ function pickDatasetAndFilter(form: any) {
 
 export default function ConfiguratorPage() {
   const [form, setForm] = useState<Config>({
-    product: 'Fenster', system: 'Kunststoff', serie: 'Iglo 5', width_mm: 1200, height_mm: 1200,
+    product: 'Fenster', system: 'Kunststoff', serie: 'Iglo 5', manufacturer: 'Drutex', width_mm: 1200, height_mm: 1200,
     material: 'PVC', profile: 'Standard', opening: 'Dreh-Kipp links',
     glazing: '2-fach', color: 'Weiß', handle: 'Standard', security: 'Basis',
     warmEdge: false, soundInsulation: false, safetyGlass: false, sunProtection: false,
@@ -404,11 +405,11 @@ export default function ConfiguratorPage() {
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
                     onClick={() => {
                       setK('system', system);
-                      // Set default serie when switching to Kunststoff, reset when switching away
-                      if (system === 'Kunststoff' && !form.serie) {
-                        setK('serie', 'Iglo 5');
+                      // Set default manufacturer when switching to Kunststoff, reset when switching away
+                      if (system === 'Kunststoff' && !form.manufacturer) {
+                        setK('manufacturer', 'Drutex');
                       } else if (system !== 'Kunststoff') {
-                        setK('serie', undefined);
+                        setK('manufacturer', undefined);
                       }
                     }}
                     style={{
@@ -425,25 +426,25 @@ export default function ConfiguratorPage() {
               </div>
             </div>
 
-            {/* Serie Selection for Kunststoff */}
+            {/* Manufacturer Selection for Kunststoff */}
             {form.system === 'Kunststoff' && (
               <div style={{ marginTop: '24px' }}>
                 <h3>Hersteller</h3>
                 <div className="grid" style={{ gap: 16 }}>
-                  {(['Iglo 5', 'Standard', 'Premium'] as const).map(serie => (
+                  {(['Schüco', 'Drutex', 'Aluplast', 'Gealan', 'Salamander', 'Veka', 'Kömmerling', 'Aluprof', 'Inotherm'] as const).map(manufacturer => (
                     <div
-                      key={serie}
-                      className={['serie-option', form.serie === serie && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('serie', serie)}
+                      key={manufacturer}
+                      className={['manufacturer-option', form.manufacturer === manufacturer && 'selected'].filter(Boolean).join(' ')}
+                      onClick={() => setK('manufacturer', manufacturer)}
                       style={{
                         padding: '16px',
-                        border: form.serie === serie ? '2px solid #007bff' : '1px solid #ddd',
+                        border: form.manufacturer === manufacturer ? '2px solid #007bff' : '1px solid #ddd',
                         borderRadius: '8px',
                         cursor: 'pointer',
                         textAlign: 'center'
                       }}
                     >
-                      <div style={{ fontWeight: 'bold' }}>{serie}</div>
+                      <div style={{ fontWeight: 'bold' }}>{manufacturer}</div>
                     </div>
                   ))}
                 </div>
@@ -736,6 +737,7 @@ export default function ConfiguratorPage() {
               <div className="config-summary" style={{ padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
                 <div><strong>Produkt:</strong> {form.product}</div>
                 {form.system && <div><strong>System:</strong> {form.system}</div>}
+                {form.manufacturer && <div><strong>Hersteller:</strong> {form.manufacturer}</div>}
                 {form.serie && <div><strong>Serie:</strong> {form.serie}</div>}
                 <div><strong>Abmessungen:</strong> {form.width_mm} × {form.height_mm} mm</div>
                 <div><strong>Material:</strong> {form.material}</div>
