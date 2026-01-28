@@ -227,3 +227,22 @@ export function getDefaultSystemForProduct(product: Product, doorType?: 'PSK-Tü
   const systems = getSystemsForProduct(product, doorType);
   return systems[0];
 }
+
+// Helper function to get available manufacturers for a specific system
+export function getManufacturersForSystem(system: SystemType | undefined): Manufacturer[] {
+  if (!system) {
+    return [];
+  }
+
+  // Map of systems to manufacturers based on the profile configurations in the configurator
+  const systemManufacturerMap: Partial<Record<SystemType, Manufacturer[]>> = {
+    'Kunststoff': ['Drutex', 'Kömmerling', 'Aluplast', 'Salamander', 'Schüco', 'Gealan', 'Veka'],
+    'Holz': ['Drutex'],
+    'Aluminium': ['Drutex'],
+    'Kunststoff-Aluminium': ['Aluplast'],
+    'Vorbau-Rollladen': [],
+    'Aufsatz-Rollladen': []
+  };
+
+  return systemManufacturerMap[system] || [];
+}
