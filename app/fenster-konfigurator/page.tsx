@@ -396,7 +396,7 @@ export default function ConfiguratorPage() {
 
             {/* System Selection */}
             <div style={{ marginTop: '24px' }}>
-              <h3>Hersteller</h3>
+              <h3>Material</h3>
               <div className="grid" style={{ gap: 16 }}>
                 {getSystemsForProduct(form.product, form.doorType).map(system => (
                   <div
@@ -428,7 +428,7 @@ export default function ConfiguratorPage() {
             {/* Serie Selection for Kunststoff */}
             {form.system === 'Kunststoff' && (
               <div style={{ marginTop: '24px' }}>
-                <h3>Serie auswählen</h3>
+                <h3>Hersteller</h3>
                 <div className="grid" style={{ gap: 16 }}>
                   {(['Iglo 5', 'Standard', 'Premium'] as const).map(serie => (
                     <div
