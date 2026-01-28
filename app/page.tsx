@@ -1,6 +1,31 @@
+'use client';
+
 import Link from "next/link";
+import { useState, useEffect } from 'react';
+import SplashScreen from './components/SplashScreen';
 
 export default function Home() {
+  const [showSplash, setShowSplash] = useState(true);
+  const [splashSeen, setSplashSeen] = useState(false);
+
+  useEffect(() => {
+    // Check if splash was already seen in this session
+    const seen = sessionStorage.getItem('splashSeen');
+    if (seen) {
+      setShowSplash(false);
+      setSplashSeen(true);
+    }
+  }, []);
+
+  const handleEnter = () => {
+    sessionStorage.setItem('splashSeen', 'true');
+    setShowSplash(false);
+    setSplashSeen(true);
+  };
+
+  if (showSplash && !splashSeen) {
+    return <SplashScreen onEnter={handleEnter} />;
+  }
   return (
     <div style={{ background: '#ffffff' }}>
       {/* CLEAN HERO SECTION */}

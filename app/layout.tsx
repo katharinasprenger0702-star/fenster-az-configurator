@@ -3,6 +3,7 @@ import './globals.css';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import Chatbot from './components/Chatbot';
+import CookieConsent from './components/CookieConsent';
 
 export const metadata = {
   title: 'Fenstermann24 – Online‑Konfigurator',
@@ -86,9 +87,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         
         <main className="container">{children}</main>
         <footer className="footer">
-          © {new Date().getFullYear()} Fenstermann24.de — eine Marke der AZ Fenster und Türen GmbH · <a href="/impressum">Impressum</a>
+          © {new Date().getFullYear()} Fenstermann24.de — eine Marke der AZ Fenster und Türen GmbH · <a href="/impressum">Impressum</a> · <a href="/datenschutz">Datenschutz</a>
         </footer>
         <Chatbot />
+        <CookieConsent />
       </body>
     </html>
   );
