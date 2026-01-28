@@ -15,7 +15,7 @@ const schema = z.object({
   doorType: z.enum(['PSK-Türen', 'Hebeschiebetüren']).optional(),
   // System uses z.string() because valid values are dynamically determined by getSystemsForProduct()
   system: z.string().optional(),
-  serie: z.enum(['Iglo 5 Classic', 'Iglo 5', 'Iglo Energy Classic', 'Iglo Energy', 'Iglo EDGE', 'IGLO Light', 'IGLO 5 Classic EXT', 'Softline 68mm (Kiefer)', 'Softline 78mm (Kiefer)', 'Softline 88mm (Kiefer)', 'Softline 68mm (Meranti)', 'Softline 78mm (Meranti)', 'Softline 88mm (Meranti)', 'MB-70', 'MB-70 HI', 'MB-86 SI', '70 AD', '76 AD', '76 MD', '88 MD', 'Ideal 4000', 'Ideal 76 NEO', 'Idela 4000 round', 'Ideal 5000', 'Ideal 5000 round', 'Ideal 7000', 'Ideal 8000', 'GreenEvo 76 2D', 'GreenEvo 76 3D', 'BluEvolution 82', 'BluEvolution 92', 'Focusing', 'Living 82 MD', 'Gealan S8000', 'Gealan S9000', 'Standard', 'Premium']).optional(),
+  serie: z.enum(['Iglo 5 Classic', 'Iglo 5', 'Iglo Energy Classic', 'Iglo Energy', 'Iglo EDGE', 'IGLO Light', 'IGLO 5 Classic EXT', 'Softline 68mm (Kiefer)', 'Softline 78mm (Kiefer)', 'Softline 88mm (Kiefer)', 'Softline 68mm (Meranti)', 'Softline 78mm (Meranti)', 'Softline 88mm (Meranti)', 'MB-70', 'MB-70 HI', 'MB-86 SI', '70 AD', '76 AD', '76 MD', '88 MD', 'Ideal 4000', 'Ideal 76 NEO', 'Idela 4000 round', 'Ideal 5000', 'Ideal 5000 round', 'Ideal 7000', 'Ideal 8000', 'GreenEvo 76 2D', 'GreenEvo 76 3D', 'BluEvolution 82', 'BluEvolution 92', 'Focusing', 'Living 82 MD', 'Gealan S8000', 'Gealan S9000', 'Veka Softline 70 AD Classic', 'Veka Softline 82 MD Classic', 'Standard', 'Premium']).optional(),
   manufacturer: z.enum(['Schüco', 'Drutex', 'Aluplast', 'Gealan', 'Salamander', 'Veka', 'Kömmerling', 'Aluprof', 'Inotherm']).optional(),
   width_mm: z.coerce.number().int().min(400).max(6000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -442,7 +442,7 @@ export default function ConfiguratorPage() {
                       onClick={() => {
                         setK('manufacturer', manufacturer);
                         // Clear serie/profile when switching away from manufacturers with profiles
-                        if (manufacturer !== 'Drutex' && manufacturer !== 'Kömmerling' && manufacturer !== 'Aluplast' && manufacturer !== 'Salamander' && manufacturer !== 'Schüco' && manufacturer !== 'Gealan') {
+                        if (manufacturer !== 'Drutex' && manufacturer !== 'Kömmerling' && manufacturer !== 'Aluplast' && manufacturer !== 'Salamander' && manufacturer !== 'Schüco' && manufacturer !== 'Gealan' && manufacturer !== 'Veka') {
                           setK('serie', undefined);
                         }
                       }}
@@ -592,6 +592,31 @@ export default function ConfiguratorPage() {
                 <h3>Profil auswählen</h3>
                 <div className="grid" style={{ gap: 16 }}>
                   {(['Gealan S8000', 'Gealan S9000'] as const).map(profile => (
+                    <div
+                      key={profile}
+                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
+                      onClick={() => setK('serie', profile)}
+                      style={{
+                        padding: '16px',
+                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Profile Selection for Veka + Kunststoff */}
+            {form.system === 'Kunststoff' && form.manufacturer === 'Veka' && (
+              <div style={{ marginTop: '24px' }}>
+                <h3>Profil auswählen</h3>
+                <div className="grid" style={{ gap: 16 }}>
+                  {(['Veka Softline 70 AD Classic', 'Veka Softline 82 MD Classic'] as const).map(profile => (
                     <div
                       key={profile}
                       className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
