@@ -235,7 +235,7 @@ export function getManufacturersForSystem(system: SystemType | undefined): Manuf
   }
 
   // Map of systems to manufacturers based on the profile configurations in the configurator
-  const systemManufacturerMap: Record<string, Manufacturer[]> = {
+  const systemManufacturerMap: Partial<Record<SystemType, Manufacturer[]>> = {
     'Kunststoff': ['Drutex', 'Kömmerling', 'Aluplast', 'Salamander', 'Schüco', 'Gealan', 'Veka'],
     'Holz': ['Drutex'],
     'Aluminium': ['Drutex'],

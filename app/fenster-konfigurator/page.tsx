@@ -404,23 +404,26 @@ export default function ConfiguratorPage() {
                     key={system}
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
                     onClick={() => {
-                      setK('system', system);
-                      // Get available manufacturers for the new system
-                      const availableManufacturers = getManufacturersForSystem(system);
-                      // Clear manufacturer if it's not available for the new system
-                      if (form.manufacturer && !availableManufacturers.includes(form.manufacturer)) {
-                        setK('manufacturer', undefined);
-                        setK('serie', undefined);
-                      } else if (availableManufacturers.length > 0 && !form.manufacturer) {
-                        // Set default manufacturer when switching to supported systems
-                        setK('manufacturer', availableManufacturers[0]);
-                      } else if (availableManufacturers.length === 0) {
-                        // Clear manufacturer and serie when switching to systems without manufacturers
-                        setK('manufacturer', undefined);
-                        setK('serie', undefined);
-                      } else {
-                        // When switching between different systems, clear serie as they have different profiles
-                        setK('serie', undefined);
+                      // Only process if the system is actually changing
+                      if (form.system !== system) {
+                        setK('system', system);
+                        // Get available manufacturers for the new system
+                        const availableManufacturers = getManufacturersForSystem(system);
+                        // Clear manufacturer if it's not available for the new system
+                        if (form.manufacturer && !availableManufacturers.includes(form.manufacturer)) {
+                          setK('manufacturer', undefined);
+                          setK('serie', undefined);
+                        } else if (availableManufacturers.length > 0 && !form.manufacturer) {
+                          // Set default manufacturer when switching to supported systems
+                          setK('manufacturer', availableManufacturers[0]);
+                        } else if (availableManufacturers.length === 0) {
+                          // Clear manufacturer and serie when switching to systems without manufacturers
+                          setK('manufacturer', undefined);
+                          setK('serie', undefined);
+                        } else {
+                          // When switching between different systems, clear serie as they have different profiles
+                          setK('serie', undefined);
+                        }
                       }
                     }}
                     style={{
