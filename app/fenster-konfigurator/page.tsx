@@ -15,7 +15,7 @@ const schema = z.object({
   doorType: z.enum(['PSK-Türen', 'Hebeschiebetüren']).optional(),
   // System uses z.string() because valid values are dynamically determined by getSystemsForProduct()
   system: z.string().optional(),
-  serie: z.enum(['Iglo 5 Classic', 'Iglo 5', 'Iglo Energy Classic', 'Iglo Energy', 'Iglo EDGE', 'IGLO Light', 'IGLO 5 Classic EXT', 'Softline 68mm (Kiefer)', 'Softline 78mm (Kiefer)', 'Softline 88mm (Kiefer)', 'Softline 68mm (Meranti)', 'Softline 78mm (Meranti)', 'Softline 88mm (Meranti)', 'MB-70', 'MB-70 HI', 'MB-86 SI', '70 AD', '76 AD', '76 MD', '88 MD', 'Standard', 'Premium']).optional(),
+  serie: z.enum(['Iglo 5 Classic', 'Iglo 5', 'Iglo Energy Classic', 'Iglo Energy', 'Iglo EDGE', 'IGLO Light', 'IGLO 5 Classic EXT', 'Softline 68mm (Kiefer)', 'Softline 78mm (Kiefer)', 'Softline 88mm (Kiefer)', 'Softline 68mm (Meranti)', 'Softline 78mm (Meranti)', 'Softline 88mm (Meranti)', 'MB-70', 'MB-70 HI', 'MB-86 SI', '70 AD', '76 AD', '76 MD', '88 MD', 'Ideal 4000', 'Ideal 76 NEO', 'Idela 4000 round', 'Ideal 5000', 'Ideal 5000 round', 'Ideal 7000', 'Ideal 8000', 'Standard', 'Premium']).optional(),
   manufacturer: z.enum(['Schüco', 'Drutex', 'Aluplast', 'Gealan', 'Salamander', 'Veka', 'Kömmerling', 'Aluprof', 'Inotherm']).optional(),
   width_mm: z.coerce.number().int().min(400).max(6000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -405,14 +405,14 @@ export default function ConfiguratorPage() {
                     className={['system-option', form.system === system && 'selected'].filter(Boolean).join(' ')}
                     onClick={() => {
                       setK('system', system);
-                      // Set default manufacturer when switching to Kunststoff, Holz, or Aluminium, reset when switching away
-                      if ((system === 'Kunststoff' || system === 'Holz' || system === 'Aluminium') && !form.manufacturer) {
+                      // Set default manufacturer when switching to supported systems, reset when switching away
+                      if ((system === 'Kunststoff' || system === 'Holz' || system === 'Aluminium' || system === 'Kunststoff-Aluminium') && !form.manufacturer) {
                         setK('manufacturer', 'Drutex');
-                      } else if (system !== 'Kunststoff' && system !== 'Holz' && system !== 'Aluminium') {
+                      } else if (system !== 'Kunststoff' && system !== 'Holz' && system !== 'Aluminium' && system !== 'Kunststoff-Aluminium') {
                         setK('manufacturer', undefined);
                         setK('serie', undefined);
                       } else {
-                        // When switching between Kunststoff, Holz, and Aluminium, clear serie as they have different profiles
+                        // When switching between different systems, clear serie as they have different profiles
                         setK('serie', undefined);
                       }
                     }}
@@ -430,8 +430,8 @@ export default function ConfiguratorPage() {
               </div>
             </div>
 
-            {/* Manufacturer Selection for Kunststoff, Holz, and Aluminium */}
-            {(form.system === 'Kunststoff' || form.system === 'Holz' || form.system === 'Aluminium') && (
+            {/* Manufacturer Selection for Kunststoff, Holz, Aluminium, and Kunststoff-Aluminium */}
+            {(form.system === 'Kunststoff' || form.system === 'Holz' || form.system === 'Aluminium' || form.system === 'Kunststoff-Aluminium') && (
               <div style={{ marginTop: '24px' }}>
                 <h3>Hersteller</h3>
                 <div className="grid" style={{ gap: 16 }}>
@@ -442,7 +442,7 @@ export default function ConfiguratorPage() {
                       onClick={() => {
                         setK('manufacturer', manufacturer);
                         // Clear serie/profile when switching away from manufacturers with profiles
-                        if (manufacturer !== 'Drutex' && manufacturer !== 'Kömmerling') {
+                        if (manufacturer !== 'Drutex' && manufacturer !== 'Kömmerling' && manufacturer !== 'Aluplast') {
                           setK('serie', undefined);
                         }
                       }}
@@ -511,6 +511,31 @@ export default function ConfiguratorPage() {
               </div>
             )}
 
+            {/* Profile Selection for Aluplast + Kunststoff */}
+            {form.system === 'Kunststoff' && form.manufacturer === 'Aluplast' && (
+              <div style={{ marginTop: '24px' }}>
+                <h3>Profil auswählen</h3>
+                <div className="grid" style={{ gap: 16 }}>
+                  {(['Ideal 4000', 'Ideal 76 NEO', 'Idela 4000 round', 'Ideal 5000', 'Ideal 5000 round', 'Ideal 7000', 'Ideal 8000'] as const).map(profile => (
+                    <div
+                      key={profile}
+                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
+                      onClick={() => setK('serie', profile)}
+                      style={{
+                        padding: '16px',
+                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Profile Selection for Drutex + Holz */}
             {form.system === 'Holz' && form.manufacturer === 'Drutex' && (
               <div style={{ marginTop: '24px' }}>
@@ -542,6 +567,31 @@ export default function ConfiguratorPage() {
                 <h3>Profil auswählen</h3>
                 <div className="grid" style={{ gap: 16 }}>
                   {(['MB-70', 'MB-70 HI', 'MB-86 SI'] as const).map(profile => (
+                    <div
+                      key={profile}
+                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
+                      onClick={() => setK('serie', profile)}
+                      style={{
+                        padding: '16px',
+                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Profile Selection for Aluplast + Kunststoff-Aluminium */}
+            {form.system === 'Kunststoff-Aluminium' && form.manufacturer === 'Aluplast' && (
+              <div style={{ marginTop: '24px' }}>
+                <h3>Profil auswählen</h3>
+                <div className="grid" style={{ gap: 16 }}>
+                  {(['Ideal 5000', 'Ideal 8000'] as const).map(profile => (
                     <div
                       key={profile}
                       className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
