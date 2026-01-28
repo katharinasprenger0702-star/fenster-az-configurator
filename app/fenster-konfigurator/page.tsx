@@ -440,11 +440,11 @@ export default function ConfiguratorPage() {
                       key={manufacturer}
                       className={['manufacturer-option', form.manufacturer === manufacturer && 'selected'].filter(Boolean).join(' ')}
                       onClick={() => {
-                        setK('manufacturer', manufacturer);
-                        // Clear serie/profile when switching away from manufacturers with profiles
-                        if (manufacturer !== 'Drutex' && manufacturer !== 'Kömmerling' && manufacturer !== 'Aluplast' && manufacturer !== 'Salamander' && manufacturer !== 'Schüco' && manufacturer !== 'Gealan' && manufacturer !== 'Veka') {
+                        // Always clear serie when switching manufacturers to avoid invalid combinations
+                        if (form.manufacturer !== manufacturer) {
                           setK('serie', undefined);
                         }
+                        setK('manufacturer', manufacturer);
                       }}
                       style={{
                         padding: '16px',
