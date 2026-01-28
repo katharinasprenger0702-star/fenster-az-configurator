@@ -443,7 +443,7 @@ export default function ConfiguratorPage() {
             {/* Manufacturer Selection for Kunststoff, Holz, Aluminium, and Kunststoff-Aluminium */}
             {(form.system === 'Kunststoff' || form.system === 'Holz' || form.system === 'Aluminium' || form.system === 'Kunststoff-Aluminium') && (
               <div style={{ marginTop: '24px' }}>
-                <h3>Hersteller</h3>
+                <h3>Profilhersteller</h3>
                 <div className="grid" style={{ gap: 16 }}>
                   {getManufacturersForSystem(form.system).map(manufacturer => (
                     <div
@@ -1007,7 +1007,7 @@ export default function ConfiguratorPage() {
               <div className="config-summary" style={{ padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
                 <div><strong>Produkt:</strong> {form.product}</div>
                 {form.system && <div><strong>System:</strong> {form.system}</div>}
-                {form.manufacturer && <div><strong>Hersteller:</strong> {form.manufacturer}</div>}
+                {form.manufacturer && <div><strong>Profilhersteller:</strong> {form.manufacturer}</div>}
                 {form.serie && <div><strong>Produktlinie:</strong> {form.serie}</div>}
                 <div><strong>Abmessungen:</strong> {form.width_mm} × {form.height_mm} mm</div>
                 <div><strong>Material:</strong> {form.material}</div>
