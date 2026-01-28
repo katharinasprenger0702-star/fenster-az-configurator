@@ -15,7 +15,7 @@ const schema = z.object({
   doorType: z.enum(['PSK-Türen', 'Hebeschiebetüren']).optional(),
   // System uses z.string() because valid values are dynamically determined by getSystemsForProduct()
   system: z.string().optional(),
-  serie: z.enum(['Iglo 5', 'Standard', 'Premium']).optional(),
+  serie: z.enum(['Iglo 5 Classic', 'Iglo 5', 'Iglo Energy Classic', 'Iglo Energy', 'Iglo EDGE', 'IGLO Light', 'IGLO 5 Classic EXT', 'Standard', 'Premium']).optional(),
   manufacturer: z.enum(['Schüco', 'Drutex', 'Aluplast', 'Gealan', 'Salamander', 'Veka', 'Kömmerling', 'Aluprof', 'Inotherm']).optional(),
   width_mm: z.coerce.number().int().min(400).max(6000),
   height_mm: z.coerce.number().int().min(400).max(3000),
@@ -410,6 +410,7 @@ export default function ConfiguratorPage() {
                         setK('manufacturer', 'Drutex');
                       } else if (system !== 'Kunststoff') {
                         setK('manufacturer', undefined);
+                        setK('serie', undefined);
                       }
                     }}
                     style={{
@@ -435,7 +436,13 @@ export default function ConfiguratorPage() {
                     <div
                       key={manufacturer}
                       className={['manufacturer-option', form.manufacturer === manufacturer && 'selected'].filter(Boolean).join(' ')}
-                      onClick={() => setK('manufacturer', manufacturer)}
+                      onClick={() => {
+                        setK('manufacturer', manufacturer);
+                        // Clear serie/profile when switching away from Drutex
+                        if (manufacturer !== 'Drutex') {
+                          setK('serie', undefined);
+                        }
+                      }}
                       style={{
                         padding: '16px',
                         border: form.manufacturer === manufacturer ? '2px solid #007bff' : '1px solid #ddd',
@@ -445,6 +452,31 @@ export default function ConfiguratorPage() {
                       }}
                     >
                       <div style={{ fontWeight: 'bold' }}>{manufacturer}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Profile Selection for Drutex + Kunststoff */}
+            {form.system === 'Kunststoff' && form.manufacturer === 'Drutex' && (
+              <div style={{ marginTop: '24px' }}>
+                <h3>Profil auswählen</h3>
+                <div className="grid" style={{ gap: 16 }}>
+                  {(['Iglo 5 Classic', 'Iglo 5', 'Iglo Energy Classic', 'Iglo Energy', 'Iglo EDGE', 'IGLO Light', 'IGLO 5 Classic EXT'] as const).map(profile => (
+                    <div
+                      key={profile}
+                      className={['profile-option', form.serie === profile && 'selected'].filter(Boolean).join(' ')}
+                      onClick={() => setK('serie', profile)}
+                      style={{
+                        padding: '16px',
+                        border: form.serie === profile ? '2px solid #007bff' : '1px solid #ddd',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold' }}>{profile}</div>
                     </div>
                   ))}
                 </div>
@@ -738,7 +770,7 @@ export default function ConfiguratorPage() {
                 <div><strong>Produkt:</strong> {form.product}</div>
                 {form.system && <div><strong>System:</strong> {form.system}</div>}
                 {form.manufacturer && <div><strong>Hersteller:</strong> {form.manufacturer}</div>}
-                {form.serie && <div><strong>Serie:</strong> {form.serie}</div>}
+                {form.serie && <div><strong>Produktlinie:</strong> {form.serie}</div>}
                 <div><strong>Abmessungen:</strong> {form.width_mm} × {form.height_mm} mm</div>
                 <div><strong>Material:</strong> {form.material}</div>
                 <div><strong>Profil:</strong> {form.profile}</div>

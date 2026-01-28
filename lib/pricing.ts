@@ -22,7 +22,7 @@ export interface Config {
   product: Product;
   doorType?: 'PSK-Türen' | 'Hebeschiebetüren';
   system?: SystemType;
-  serie?: 'Iglo 5' | 'Standard' | 'Premium';
+  serie?: 'Iglo 5 Classic' | 'Iglo 5' | 'Iglo Energy Classic' | 'Iglo Energy' | 'Iglo EDGE' | 'IGLO Light' | 'IGLO 5 Classic EXT' | 'Standard' | 'Premium';
   manufacturer?: Manufacturer;
   width_mm: number;
   height_mm: number;
