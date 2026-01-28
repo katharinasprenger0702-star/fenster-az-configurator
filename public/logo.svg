@@ -1,30 +1,30 @@
 <svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
   <!-- Main window frame with modern rounded corners -->
-  <rect x="4" y="8" width="44" height="44" rx="10" ry="10" stroke="url(#frameGradient)" stroke-width="3" fill="url(#backgroundGradient)"/>
+  <rect x="4" y="8" width="44" height="44" rx="10" ry="10" stroke="url(#logoFull-frameGradient)" stroke-width="3" fill="url(#logoFull-backgroundGradient)"/>
   
   <!-- Glass panes with subtle shine effect -->
-  <rect x="8" y="12" width="16" height="16" rx="3" fill="url(#glassGradient)" opacity="0.7"/>
-  <rect x="28" y="12" width="16" height="16" rx="3" fill="url(#glassGradient)" opacity="0.7"/>
-  <rect x="8" y="32" width="16" height="16" rx="3" fill="url(#glassGradient)" opacity="0.7"/>
-  <rect x="28" y="32" width="16" height="16" rx="3" fill="url(#glassGradient)" opacity="0.7"/>
+  <rect x="8" y="12" width="16" height="16" rx="3" fill="url(#logoFull-glassGradient)" opacity="0.7"/>
+  <rect x="28" y="12" width="16" height="16" rx="3" fill="url(#logoFull-glassGradient)" opacity="0.7"/>
+  <rect x="8" y="32" width="16" height="16" rx="3" fill="url(#logoFull-glassGradient)" opacity="0.7"/>
+  <rect x="28" y="32" width="16" height="16" rx="3" fill="url(#logoFull-glassGradient)" opacity="0.7"/>
   
   <!-- Window dividers -->
-  <rect x="24.5" y="12" width="3" height="36" rx="1.5" fill="url(#dividerGradient)"/>
-  <rect x="8" y="28.5" width="36" height="3" rx="1.5" fill="url(#dividerGradient)"/>
+  <rect x="24.5" y="12" width="3" height="36" rx="1.5" fill="url(#logoFull-dividerGradient)"/>
+  <rect x="8" y="28.5" width="36" height="3" rx="1.5" fill="url(#logoFull-dividerGradient)"/>
   
   <!-- Modern handle accent -->
-  <circle cx="42" cy="22" r="3" fill="url(#accentGradient)"/>
-  <rect x="38" y="20" width="8" height="4" rx="2" fill="url(#accentGradient)" opacity="0.85"/>
+  <circle cx="42" cy="22" r="3" fill="url(#logoFull-accentGradient)"/>
+  <rect x="38" y="20" width="8" height="4" rx="2" fill="url(#logoFull-accentGradient)" opacity="0.85"/>
   
   <!-- Shine/reflection effect on glass -->
   <path d="M 12 16 L 14 14 L 18 14 L 16 16 Z" fill="white" opacity="0.4"/>
   <path d="M 32 16 L 34 14 L 38 14 L 36 16 Z" fill="white" opacity="0.4"/>
   
   <!-- Company name "Fenstermann24" in modern, bold font -->
-  <text x="58" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="url(#textGradient)" letter-spacing="-0.5">
+  <text x="58" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="url(#logoFull-textGradient)" letter-spacing="-0.5">
     Fenstermann
   </text>
-  <text x="58" y="47" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="url(#textAccent)" letter-spacing="-0.5">
+  <text x="58" y="47" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="url(#logoFull-textAccent)" letter-spacing="-0.5">
     24
   </text>
   
@@ -35,39 +35,39 @@
   
   <defs>
     <!-- Gradients for modern, professional look -->
-    <linearGradient id="frameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="logoFull-frameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#1e40af"/>
       <stop offset="50%" stop-color="#2563eb"/>
       <stop offset="100%" stop-color="#3b82f6"/>
     </linearGradient>
     
-    <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="logoFull-backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#f8fafc" stop-opacity="0.95"/>
       <stop offset="100%" stop-color="#e2e8f0" stop-opacity="0.95"/>
     </linearGradient>
     
-    <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="logoFull-glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#dbeafe"/>
       <stop offset="40%" stop-color="#bfdbfe"/>
       <stop offset="100%" stop-color="#93c5fd"/>
     </linearGradient>
     
-    <linearGradient id="dividerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="logoFull-dividerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#475569"/>
       <stop offset="100%" stop-color="#64748b"/>
     </linearGradient>
     
-    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="logoFull-accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#dc2626"/>
       <stop offset="100%" stop-color="#f97316"/>
     </linearGradient>
     
-    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="logoFull-textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#1e3a8a"/>
       <stop offset="100%" stop-color="#2563eb"/>
     </linearGradient>
     
-    <linearGradient id="textAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="logoFull-textAccent" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#dc2626"/>
       <stop offset="100%" stop-color="#f97316"/>
     </linearGradient>

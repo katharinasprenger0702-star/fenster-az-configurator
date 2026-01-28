@@ -1,59 +1,59 @@
 <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
   <!-- Compact window frame logo for icon/favicon use -->
-  <rect x="4" y="4" width="40" height="40" rx="8" ry="8" stroke="url(#frameGradient)" stroke-width="3" fill="url(#backgroundGradient)"/>
+  <rect x="4" y="4" width="40" height="40" rx="8" ry="8" stroke="url(#favicon-frameGradient)" stroke-width="3" fill="url(#favicon-backgroundGradient)"/>
   
   <!-- Glass panes -->
-  <rect x="8" y="8" width="14" height="14" rx="2" fill="url(#glassGradient)" opacity="0.7"/>
-  <rect x="26" y="8" width="14" height="14" rx="2" fill="url(#glassGradient)" opacity="0.7"/>
-  <rect x="8" y="26" width="14" height="14" rx="2" fill="url(#glassGradient)" opacity="0.7"/>
-  <rect x="26" y="26" width="14" height="14" rx="2" fill="url(#glassGradient)" opacity="0.7"/>
+  <rect x="8" y="8" width="14" height="14" rx="2" fill="url(#favicon-glassGradient)" opacity="0.7"/>
+  <rect x="26" y="8" width="14" height="14" rx="2" fill="url(#favicon-glassGradient)" opacity="0.7"/>
+  <rect x="8" y="26" width="14" height="14" rx="2" fill="url(#favicon-glassGradient)" opacity="0.7"/>
+  <rect x="26" y="26" width="14" height="14" rx="2" fill="url(#favicon-glassGradient)" opacity="0.7"/>
   
   <!-- Window dividers -->
-  <rect x="22.5" y="8" width="3" height="32" rx="1.5" fill="url(#dividerGradient)"/>
-  <rect x="8" y="22.5" width="32" height="3" rx="1.5" fill="url(#dividerGradient)"/>
+  <rect x="22.5" y="8" width="3" height="32" rx="1.5" fill="url(#favicon-dividerGradient)"/>
+  <rect x="8" y="22.5" width="32" height="3" rx="1.5" fill="url(#favicon-dividerGradient)"/>
   
   <!-- Handle accent -->
-  <circle cx="38" cy="16" r="2.5" fill="url(#accentGradient)"/>
-  <rect x="35" y="14.5" width="6" height="3" rx="1.5" fill="url(#accentGradient)" opacity="0.85"/>
+  <circle cx="38" cy="16" r="2.5" fill="url(#favicon-accentGradient)"/>
+  <rect x="35" y="14.5" width="6" height="3" rx="1.5" fill="url(#favicon-accentGradient)" opacity="0.85"/>
   
   <!-- Shine effect -->
   <path d="M 12 12 L 13 10 L 16 10 L 15 12 Z" fill="white" opacity="0.5"/>
   <path d="M 30 12 L 31 10 L 34 10 L 33 12 Z" fill="white" opacity="0.5"/>
   
   <!-- "F24" branding -->
-  <text x="24" y="31" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="700" fill="url(#textGradient)" letter-spacing="0.5">
+  <text x="24" y="31" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="700" fill="url(#favicon-textGradient)" letter-spacing="0.5">
     F24
   </text>
   
   <defs>
-    <linearGradient id="frameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="favicon-frameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#1e40af"/>
       <stop offset="50%" stop-color="#2563eb"/>
       <stop offset="100%" stop-color="#3b82f6"/>
     </linearGradient>
     
-    <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="favicon-backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#f8fafc" stop-opacity="0.95"/>
       <stop offset="100%" stop-color="#e2e8f0" stop-opacity="0.95"/>
     </linearGradient>
     
-    <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="favicon-glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#dbeafe"/>
       <stop offset="40%" stop-color="#bfdbfe"/>
       <stop offset="100%" stop-color="#93c5fd"/>
     </linearGradient>
     
-    <linearGradient id="dividerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="favicon-dividerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#475569"/>
       <stop offset="100%" stop-color="#64748b"/>
     </linearGradient>
     
-    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="favicon-accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#dc2626"/>
       <stop offset="100%" stop-color="#f97316"/>
     </linearGradient>
     
-    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="favicon-textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#1e3a8a"/>
       <stop offset="100%" stop-color="#2563eb"/>
     </linearGradient>
